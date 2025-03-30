@@ -5,7 +5,9 @@ module.exports = {
   ],
   theme: {
     extend: {
-      // Remove any custom font references
+      fontFamily: {
+        clash: ['"Clash Display"', 'sans-serif'],
+      },
     },
   },
   plugins: [require("daisyui")],

@@ -1,8 +1,8 @@
-// src/app/layout.tsx
 import { ThemeProvider } from '@/components/ui/ThemeProvider';
 import AppBar from '@/components/ui/AppBar';
 import './globals.css';
 import type { Metadata } from 'next';
+import { inter } from './fonts';
 
 export const metadata: Metadata = {
   title: 'Omar Espinoza | Portfolio',
@@ -16,7 +16,7 @@ export default function RootLayout({
 }) {
   return (
     <html lang="en" suppressHydrationWarning>
-      <body className="min-h-screen bg-base-100 text-base-content">
+      <body className={`min-h-screen bg-base-100 text-base-content ${inter.className}`}>
         <ThemeProvider>
           <AppBar />
           <main>
