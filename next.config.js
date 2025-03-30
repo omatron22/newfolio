@@ -2,20 +2,11 @@
 const nextConfig = {
   reactStrictMode: true,
   images: {
-    remotePatterns: [
-      {
-        protocol: 'https',
-        hostname: '**',
-      },
-    ],
+    domains: [], // Add any external image domains here
+    formats: ['image/avif', 'image/webp'],
   },
-  webpack(config) {
-    config.module.rules.push({
-      test: /\.(woff|woff2|eot|ttf|otf)$/i,
-      type: 'asset/resource',
-    });
-    return config;
-  },
+  // If you want to ensure faster page loads, you can enable this
+  swcMinify: true,
 };
 
 module.exports = nextConfig;
