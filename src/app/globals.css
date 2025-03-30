@@ -19,10 +19,27 @@
 body {
   background: var(--background);
   color: var(--foreground);
+  min-height: 100vh;
+  overflow-y: auto !important;
 }
 
 @layer base {
   .font-clash {
     font-family: 'Clash Display', sans-serif;
+  }
+}
+
+/* Footer styles */
+footer {
+  position: relative;
+  z-index: 20;
+  width: 100%;
+}
+
+/* Mobile-specific styles */
+@media (max-width: 768px) {
+  .mobile-container {
+    overflow-x: hidden;
+    width: 100%;
   }
 }
