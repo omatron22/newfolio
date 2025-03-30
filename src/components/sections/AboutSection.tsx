@@ -1,4 +1,4 @@
-// src/components/sections/AboutSection.tsx
+// src/components/sections/AboutSection.tsx - Improved responsive design
 'use client';
 
 import React from 'react';
@@ -6,10 +6,10 @@ import ImageSlider from '@/components/ui/ImageSlider';
 
 export default function AboutSection() {
   return (
-    <section id="about" className="relative about bg-base-200 py-10 flex">
-      <div className="w-3/5 text-left px-6 z-20">
+    <section id="about" className="relative about bg-base-200 py-10 flex flex-col md:flex-row">
+      <div className="w-full md:w-3/5 text-left px-4 md:px-6 z-20 order-2 md:order-1 mt-6 md:mt-0">
         {/* Content Section as Modern Card */}
-        <div className="bg-base-100 shadow-md border border-base-300 p-6 rounded-lg w-full">
+        <div className="bg-base-100 shadow-md border border-base-300 p-4 md:p-6 rounded-lg w-full">
           {/* Card Header */}
           <h2 className="text-xl font-bold mb-4">
             About Me
@@ -22,11 +22,11 @@ export default function AboutSection() {
         </div>
       </div>
 
-      <div className="w-2/5 flex items-center justify-center z-10">
+      <div className="w-full md:w-2/5 flex items-center justify-center z-10 order-1 md:order-2">
         {/* Image Slider Section */}
         <div 
-          className="relative overflow-hidden shadow-lg border border-base-300 rounded-lg transition-transform"
-          style={{ maxWidth: '450px', aspectRatio: '3 / 2' }} 
+          className="relative overflow-hidden shadow-lg border border-base-300 rounded-lg transition-transform max-w-[320px] md:max-w-[450px] w-full"
+          style={{ aspectRatio: '3 / 2' }} 
         >
           <div 
             className="bg-base-100 relative h-full w-full overflow-hidden"

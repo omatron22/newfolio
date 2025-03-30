@@ -1,11 +1,11 @@
-// src/components/sections/EducationSection.tsx
+// src/components/sections/EducationSection.tsx - Preserving structure and spacing
 import React from 'react';
 import { Icon } from '@iconify-icon/react';
 import Link from 'next/link';
 
 export default function EducationSection() {
   return (
-    <section className="relative education bg-base-200 py-10 flex">
+    <section className="relative education bg-base-200 py-10 flex z-20">
       <div className="w-1/2 flex items-center justify-start z-10">
         {/* Empty left space */}
       </div>

@@ -1,4 +1,4 @@
-// src/components/sections/ExperienceSection.tsx
+// src/components/sections/ExperienceSection.tsx - Improved responsive design
 import React from 'react';
 import { Icon } from '@iconify-icon/react';
 import Link from 'next/link';
@@ -6,7 +6,7 @@ import Link from 'next/link';
 export default function ExperienceSection() {
   return (
     <section className="relative experience bg-base-100 py-10 flex">
-      <div className="w-1/2 text-left px-10 z-20">
+      <div className="w-full md:w-1/2 text-left px-4 md:px-10 z-20">
         {/* Content Section as Modern Floating Card */}
         <div className="relative bg-base-100 shadow-md border border-base-300 rounded-lg overflow-hidden">
           
@@ -16,7 +16,7 @@ export default function ExperienceSection() {
           </div>
 
           {/* Card Content */}
-          <div className="p-6">
+          <div className="p-4 md:p-6">
             <h3 className="text-lg">
               <Link
                 href="https://experiorlabs.com/"
@@ -30,7 +30,7 @@ export default function ExperienceSection() {
             
             <p className="text-lg text-secondary">Programming Intern (Summer 2023)</p>
             
-            <p className="text-lg">
+            <p className="text-base md:text-lg">
               Developed shortcuts for the LabVIEW software using C, SQLite, and other technologies. Learn more about the project{" "}
               <Link
                 href="https://github.com/omatron22/GPIB-to-SQL-DLL"
@@ -44,26 +44,26 @@ export default function ExperienceSection() {
 
             <div className="mt-4 space-y-4">
               <div className="flex items-center">
-                <Icon icon="mdi:tools" className="text-2xl text-base-400 mr-3" />
-                <p className="text-lg">Automation Project Lead</p>
+                <Icon icon="mdi:tools" className="text-2xl text-base-400 min-w-[1.5rem] mr-3" />
+                <p className="text-base md:text-lg">Automation Project Lead</p>
               </div>
 
               <div className="flex items-center">
-                <Icon icon="mdi:database" className="text-2xl text-base-400 mr-3" />
-                <p className="text-lg">Optimized Data Management Processes</p>
+                <Icon icon="mdi:database" className="text-2xl text-base-400 min-w-[1.5rem] mr-3" />
+                <p className="text-base md:text-lg">Optimized Data Management Processes</p>
               </div>
 
               <div className="flex items-center">
-                <Icon icon="mdi:code-tags" className="text-2xl text-base-400 mr-3" />
-                <p className="text-lg">C, SQLite, LabVIEW Expertise</p>
+                <Icon icon="mdi:code-tags" className="text-2xl text-base-400 min-w-[1.5rem] mr-3" />
+                <p className="text-base md:text-lg">C, SQLite, LabVIEW Expertise</p>
               </div>
             </div>
           </div>
         </div>
       </div>
 
-      <div className="w-1/2 flex items-center justify-center z-10">
-        {/* Empty right space */}
+      <div className="hidden md:block md:w-1/2 z-10">
+        {/* Empty right space on larger screens */}
       </div>
     </section>
   );
