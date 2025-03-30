@@ -1,3 +1,4 @@
+// src/components/ui/AppBar.tsx
 'use client';
 
 import React, { useState, useEffect } from "react";
@@ -20,8 +21,8 @@ export default function AppBar() {
 
   const handleThemeChange = () => {
     const html = document.documentElement;
-    const currentTheme = html.getAttribute("data-theme") || themes[0];
-    const currentIndex = themes.indexOf(currentTheme);
+    const currentThemeValue = html.getAttribute("data-theme") || themes[0];
+    const currentIndex = themes.indexOf(currentThemeValue);
     const nextIndex = (currentIndex + 1) % themes.length;
     const nextTheme = themes[nextIndex];
     
@@ -37,8 +38,7 @@ export default function AppBar() {
     aqua: "mdi:waves",
   };
 
-  // Don't render the theme icon until after client-side hydration
-  // This prevents hydration mismatch errors
+  // Don't render until client-side hydration is complete
   if (!mounted) {
     return null;
   }
