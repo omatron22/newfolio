@@ -1,3 +1,4 @@
+// src/app/layout.tsx
 import { ThemeProvider } from '@/components/ui/ThemeProvider';
 import AppBar from '@/components/ui/AppBar';
 import './globals.css';
@@ -19,7 +20,7 @@ export default function RootLayout({
       <body className={`min-h-screen bg-base-100 text-base-content ${inter.className}`}>
         <ThemeProvider>
           <AppBar />
-          <main>
+          <main className="min-h-screen">
             {children}
           </main>
         </ThemeProvider>
