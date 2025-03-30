@@ -2,7 +2,7 @@
 'use client';
 
 import React from 'react';
-import ImageSlider from '@/components/ui/ImageSlider';
+import SimpleImageSlider from '@/components/ui/SimpleImageSlider';
 
 export default function AboutSection() {
   return (
@@ -23,25 +23,25 @@ export default function AboutSection() {
       </div>
 
       <div className="w-full md:w-2/5 flex items-center justify-center z-10 order-1 md:order-2">
-        {/* Image Slider Section */}
-        <div 
-          className="relative overflow-hidden shadow-lg border border-base-300 rounded-lg transition-transform max-w-[320px] md:max-w-[450px] w-full"
-          style={{ aspectRatio: '3 / 2' }} 
-        >
-          <div 
-            className="bg-base-100 relative h-full w-full overflow-hidden"
-          >
-            <ImageSlider
-              width={450}
-              height={300}
-              images={[
-                "/images/three.jpeg",
-                "/images/one.JPG",
-                "/images/two.jpeg"
-              ]}
-            />
-          </div>
-        </div>
+{/* Image Slider Section */}
+<div 
+  className="relative overflow-hidden shadow-lg border border-base-300 rounded-lg transition-transform"
+  style={{ maxWidth: '450px', aspectRatio: '3 / 2' }} 
+>
+  <div 
+    className="bg-base-100 relative h-full w-full overflow-hidden"
+  >
+    <SimpleImageSlider
+      width={450} 
+      height={300}
+      images={[
+        "/images/three.jpeg",
+        "/images/one.JPG",
+        "/images/two.jpeg"
+      ]}
+    />
+  </div>
+</div>
       </div>
     </section>
   );
