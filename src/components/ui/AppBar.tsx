@@ -4,30 +4,31 @@
 import React, { useState, useEffect } from "react";
 import { Icon } from "@iconify-icon/react";
 import Link from "next/link";
+import { usePathname } from "next/navigation";
 
 export default function AppBar() {
-  const themes = ['corporate', 'dracula', 'retro', 'aqua'];
-  const [currentTheme, setCurrentTheme] = useState<string>("corporate");
+  const [themes] = useState<string[]>(['corporate', 'dracula', 'retro', 'aqua']);
+  const [currentTheme, setCurrentTheme] = useState('corporate');
   const [menuOpen, setMenuOpen] = useState(false);
   const [mounted, setMounted] = useState(false);
+  const pathname = usePathname();
 
-  // Only run this effect on the client side to prevent hydration mismatch
+  // Initialize from localStorage on client-side
   useEffect(() => {
     setMounted(true);
-    const savedTheme = localStorage.getItem("theme") || "corporate";
-    document.documentElement.setAttribute("data-theme", savedTheme);
+    const savedTheme = localStorage.getItem('theme') || 'corporate';
     setCurrentTheme(savedTheme);
   }, []);
 
   const handleThemeChange = () => {
-    const html = document.documentElement;
-    const currentThemeValue = html.getAttribute("data-theme") || themes[0];
-    const currentIndex = themes.indexOf(currentThemeValue);
+    if (themes.length === 0) return;
+    
+    const currentIndex = themes.indexOf(currentTheme);
     const nextIndex = (currentIndex + 1) % themes.length;
     const nextTheme = themes[nextIndex];
     
-    html.setAttribute("data-theme", nextTheme);
-    localStorage.setItem("theme", nextTheme);
+    document.documentElement.setAttribute('data-theme', nextTheme);
+    localStorage.setItem('theme', nextTheme);
     setCurrentTheme(nextTheme);
   };
 
@@ -38,9 +39,13 @@ export default function AppBar() {
     aqua: "mdi:waves",
   };
 
-  // Don't render until client-side hydration is complete
+  // Prevent hydration mismatch
   if (!mounted) {
-    return null;
+    return <nav className="navbar bg-base-200 text-base-content shadow-none px-4 sm:px-6 lg:px-8">
+      <div className="flex justify-between items-center w-full">
+        <span className="text-xl font-bold">Omar&apos;s Portfolio</span>
+      </div>
+    </nav>;
   }
 
   return (
@@ -63,26 +68,26 @@ export default function AppBar() {
         {/* Navigation Links */}
         <div
           className={`${
-            menuOpen ? "block" : "hidden"
-          } md:flex items-center space-x-0 md:space-x-4 mt-4 md:mt-0`}
+            menuOpen ? "block absolute top-16 left-0 right-0 bg-base-200 z-50 p-4" : "hidden"
+          } md:flex md:relative md:top-0 md:bg-transparent md:p-0 items-center space-x-0 md:space-x-4 mt-4 md:mt-0`}
         >
           <Link
             href="/"
-            className="btn btn-ghost w-full md:w-auto text-left font-semibold md:text-center rounded-none"
+            className={`btn btn-ghost w-full md:w-auto text-left font-semibold md:text-center rounded-none ${pathname === "/" ? "text-primary" : ""}`}
             onClick={() => setMenuOpen(false)}
           >
             Home
           </Link>
           <Link
             href="/projects"
-            className="btn btn-ghost w-full md:w-auto text-left font-semibold md:text-center rounded-none"
+            className={`btn btn-ghost w-full md:w-auto text-left font-semibold md:text-center rounded-none ${pathname === "/projects" ? "text-primary" : ""}`}
             onClick={() => setMenuOpen(false)}
           >
             Projects
           </Link>
           <Link
             href="/video-game"
-            className="btn btn-ghost w-full md:w-auto text-left font-semibold md:text-center rounded-none"
+            className={`btn btn-ghost w-full md:w-auto text-left font-semibold md:text-center rounded-none ${pathname === "/video-game" ? "text-primary" : ""}`}
             onClick={() => setMenuOpen(false)}
           >
             Play me!
@@ -101,7 +106,7 @@ export default function AppBar() {
             }}
           >
             <Icon
-              icon={themeIcons[currentTheme]}
+              icon={themeIcons[currentTheme] || "mdi:brightness-auto"}
               width="24"
               height="24"
               className="inherit"

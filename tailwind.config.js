@@ -5,12 +5,9 @@ module.exports = {
   ],
   theme: {
     extend: {
-      fontFamily: {
-        // If you're using system fonts, you don't need to declare them here
-      },
+      // Remove any custom font references
     },
   },
-  // eslint-disable-next-line @typescript-eslint/no-require-imports
   plugins: [require("daisyui")],
   daisyui: {
     themes: ["corporate", "dracula", "retro", "aqua"],

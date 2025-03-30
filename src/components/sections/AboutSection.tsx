@@ -1,6 +1,8 @@
 // src/components/sections/AboutSection.tsx
+'use client';
+
 import React from 'react';
-import Image from 'next/image';
+import ImageSlider from '@/components/ui/ImageSlider';
 
 export default function AboutSection() {
   return (
@@ -21,21 +23,22 @@ export default function AboutSection() {
       </div>
 
       <div className="w-2/5 flex items-center justify-center z-10">
-        {/* Image Section */}
-        <div
+        {/* Image Slider Section */}
+        <div 
           className="relative overflow-hidden shadow-lg border border-base-300 rounded-lg transition-transform"
-          style={{ maxWidth: '450px', aspectRatio: '3 / 2' }}
+          style={{ maxWidth: '450px', aspectRatio: '3 / 2' }} 
         >
-          <div
+          <div 
             className="bg-base-100 relative h-full w-full overflow-hidden"
           >
-            {/* Next.js Image Component */}
-            <Image
-              src="/images/three.jpeg"
-              alt="Omar Espinoza"
-              fill
-              className="object-cover"
-              priority
+            <ImageSlider
+              width={450}
+              height={300}
+              images={[
+                "/images/three.jpeg",
+                "/images/one.JPG",
+                "/images/two.jpeg"
+              ]}
             />
           </div>
         </div>
