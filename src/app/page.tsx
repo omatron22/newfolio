@@ -1,4 +1,3 @@
-// src/app/page.tsx - Redesigned Hero Section
 'use client';
 
 import React, { useRef } from 'react';
@@ -46,139 +45,198 @@ export default function Home() {
 
   return (
     <div className="bg-base-100 text-base-content min-h-screen">
-      {/* Hero Section - Redesigned with larger SVG coming from left */}
-      <section className="min-h-screen flex items-center relative overflow-hidden">
-        {/* Background gradient */}
-        <div className="absolute inset-0 bg-gradient-to-br from-primary/5 via-base-100 to-secondary/5 z-0"></div>
-        
-        {/* Animated particles background */}
-        <div className="absolute inset-0 opacity-10 z-0">
-          <div className="absolute w-24 h-24 rounded-full bg-primary/20 top-1/4 left-1/5 animate-pulse"></div>
-          <div className="absolute w-32 h-32 rounded-full bg-secondary/20 bottom-1/4 right-1/5 animate-pulse" style={{ animationDelay: '1s' }}></div>
-          <div className="absolute w-16 h-16 rounded-full bg-accent/20 top-2/3 left-1/3 animate-pulse" style={{ animationDelay: '2s' }}></div>
-        </div>
+{/* Hero Section - Balanced Layout with Stacked Roles on Left */}
+<section className="h-screen flex relative overflow-hidden">
+  {/* Background gradient */}
+  <div className="absolute inset-0 bg-gradient-to-br from-primary/5 via-base-100 to-secondary/5 z-0"></div>
+  
+  {/* SVG Component - Fixed position */}
+  <motion.div 
+    className="absolute z-10"
+    initial={{ opacity: 0, x: 150 }}
+    animate={{ opacity: 1, x: 0 }}
+    transition={{ duration: 0.8, delay: 0.2 }}
+    style={{ 
+      right: "22%",
+      top: "40%",
+      transform: "translateY(-50%)"
+    }}
+  >
+    <div className="relative z-10 scale-[2] lg:scale-[3.3]">
+      <MySVGComponent className="w-full h-auto max-w-none" />
+    </div>
+    
+    <motion.div 
+      className="absolute -z-10 right-1/2 top-1/2 w-full h-full rounded-full bg-gradient-radial from-primary/20 via-secondary/15 to-transparent blur-3xl transform translate-x-1/2 -translate-y-1/2"
+      animate={{
+        scale: [1, 1.2, 1],
+        opacity: [0.4, 0.6, 0.4]
+      }}
+      transition={{
+        duration: 8,
+        repeat: Infinity,
+        repeatType: "reverse"
+      }}
+    ></motion.div>
+  </motion.div>
 
-        {/* Content container */}
-        <div className="container mx-auto px-4 md:px-8 z-10 flex items-center h-full pt-16 pb-24">
-          <div className="flex flex-col lg:flex-row items-center justify-between relative">
-            {/* Left side - SVG Component */}
-            <motion.div 
-              className="w-full lg:w-3/5 flex justify-center lg:justify-start relative -ml-16 lg:-ml-32"
-              initial={{ opacity: 0, x: -50 }}
-              animate={{ opacity: 1, x: 0 }}
-              transition={{ duration: 0.8, delay: 0.2 }}
-            >
-              <div 
-                className="transform hover:scale-105 transition-all duration-500 cursor-pointer relative z-10"
-                onClick={handleScrollToAbout}
-              >
-                {/* SVG Component */}
-                <MySVGComponent className="w-full h-auto max-w-4xl" />
-              </div>
-              
-              {/* Decorative gradient circles behind SVG */}
-              <div className="absolute -z-10 left-1/2 top-1/2 w-96 h-96 rounded-full bg-gradient-to-r from-primary/20 to-secondary/20 blur-3xl transform -translate-x-1/2 -translate-y-1/2"></div>
-            </motion.div>
-            
-            {/* Right side - Text Content */}
-            <motion.div 
-              className="w-full lg:w-2/5 text-center lg:text-right mb-8 lg:mb-0 relative z-10"
-              initial={{ opacity: 0, x: 30 }}
-              animate={{ opacity: 1, x: 0 }}
-              transition={{ duration: 0.8 }}
-            >
-              <h1 className="text-4xl md:text-5xl lg:text-6xl font-clash font-bold mb-4 leading-tight">
-                <span className="text-primary">Hey,</span> I'm Omar!
-              </h1>
-              
-              <h2 className="text-xl md:text-2xl lg:text-3xl font-clash font-medium mb-6">
-                <span className="text-secondary">Web Developer</span> <span className="text-primary">|</span> <span className="text-accent">Designer</span> <span className="text-primary">|</span> <span className="text-secondary">Creator</span>
-              </h2>
-              
-              <p className="mb-8 text-base md:text-lg leading-relaxed">
-                I build things for the web, design beautiful interfaces, and create digital experiences that make a difference.
-              </p>
-              
-              {/* Call to action buttons */}
-              <div className="flex flex-wrap gap-4 justify-center lg:justify-end">
-                <motion.button 
-                  onClick={handleScrollToAbout}
-                  className="btn btn-primary px-6"
-                  whileHover={{ scale: 1.05 }}
-                  whileTap={{ scale: 0.95 }}
-                >
-                  Explore My Work
-                </motion.button>
-                
-                <motion.a 
-                  href="/images/resume.pdf" 
-                  target="_blank" 
-                  rel="noopener noreferrer"
-                  className="btn btn-outline btn-secondary px-6"
-                  whileHover={{ scale: 1.05 }}
-                  whileTap={{ scale: 0.95 }}
-                >
-                  View Resume
-                </motion.a>
-              </div>
-              
-              {/* Social media links */}
-              <div className="flex gap-4 mt-8 justify-center lg:justify-end">
-                <motion.a 
-                  href="https://www.linkedin.com/in/omaresp22/" 
-                  target="_blank" 
-                  rel="noopener noreferrer"
-                  whileHover={{ y: -5, color: '#0077B5' }}
-                  className="text-2xl hover:text-info transition-colors duration-300"
-                >
-                  <Icon icon="mdi:linkedin" />
-                </motion.a>
-                <motion.a 
-                  href="https://github.com/omatron22" 
-                  target="_blank" 
-                  rel="noopener noreferrer"
-                  whileHover={{ y: -5, color: '#6e5494' }}
-                  className="text-2xl hover:text-success transition-colors duration-300"
-                >
-                  <Icon icon="mdi:github" />
-                </motion.a>
-                <motion.a 
-                  href="mailto:your-email@example.com" 
-                  whileHover={{ y: -5, color: '#ea4335' }}
-                  className="text-2xl hover:text-error transition-colors duration-300"
-                >
-                  <Icon icon="mdi:email-outline" />
-                </motion.a>
-              </div>
-            </motion.div>
-          </div>
-        </div>
-        
-        {/* Scroll Indicator */}
-        <motion.div 
-          className="absolute bottom-8 left-1/2 transform -translate-x-1/2 flex flex-col items-center"
-          initial={{ opacity: 0, y: 10 }}
+  {/* Stacked Role Labels - Left side */}
+  <motion.div
+    className="absolute left-8 md:left-16 lg:left-24 top-1/3 transform -translate-y-1/2 z-20"
+    initial={{ opacity: 0, x: -30 }}
+    animate={{ opacity: 1, x: 0 }}
+    transition={{ duration: 0.8, delay: 0.3 }}
+  >
+    <div className="flex flex-col gap-6">
+      <motion.div 
+        className="text-3xl md:text-4xl lg:text-5xl font-clash font-medium"
+        whileHover={{ x: 10, color: 'var(--color-secondary)' }}
+        transition={{ duration: 0.3 }}
+      >
+        <span className="text-secondary">Web Developer</span>
+      </motion.div>
+      <motion.div 
+        className="text-3xl md:text-4xl lg:text-5xl font-clash font-medium"
+        whileHover={{ x: 10, color: 'var(--color-accent)' }}
+        transition={{ duration: 0.3 }}
+      >
+        <span className="text-accent">Designer</span>
+      </motion.div>
+      <motion.div 
+        className="text-3xl md:text-4xl lg:text-5xl font-clash font-medium"
+        whileHover={{ x: 10, color: 'var(--color-secondary)' }}
+        transition={{ duration: 0.3 }}
+      >
+        <span className="text-secondary">Creator</span>
+      </motion.div>
+    </div>
+  </motion.div>
+
+  {/* Content layout with left alignment */}
+  <div className="w-full flex">
+    {/* Content column */}
+    <div className="w-full flex flex-col justify-between py-12 lg:py-16 z-20">
+      {/* Top content */}
+      <div className="mt-6">
+        {/* Name - aligned with left side elements */}
+        <motion.div
+          initial={{ opacity: 0, y: -20 }}
           animate={{ opacity: 1, y: 0 }}
-          transition={{ delay: 1.2, duration: 0.8 }}
-          onClick={handleScrollToAbout}
-          style={{ cursor: 'pointer' }}
+          transition={{ duration: 0.6 }}
+          className="absolute left-8 md:left-16 lg:left-24"
+          style={{ top: "14%" }}
         >
-          <p className="text-sm mb-2 font-medium">Scroll to explore</p>
-          <div className="w-6 h-10 border-2 border-primary rounded-full flex justify-center p-1">
-            <motion.div 
-              className="w-1 h-2 bg-primary rounded-full"
+          <h1 className="text-5xl md:text-6xl lg:text-7xl font-clash font-bold leading-tight">
+            <motion.span 
+              className="text-primary inline-block"
               animate={{ 
-                y: [0, 10, 0],
+                scale: [1, 1.05, 1],
               }}
               transition={{ 
                 duration: 1.5, 
                 repeat: Infinity,
-                ease: "easeInOut" 
+                repeatType: "reverse"
               }}
-            />
-          </div>
+            >
+              Hey,
+            </motion.span>{" "}
+            I'm Omar!
+          </h1>
         </motion.div>
-      </section>
+      </div>
+      
+      {/* Bottom content */}
+      <div className="flex justify-between items-end mt-auto">
+        {/* Action buttons - aligned with role labels */}
+        <motion.div 
+          className="flex flex-wrap gap-6 absolute left-8 md:left-16 lg:left-24"
+          initial={{ opacity: 0, y: 30 }}
+          animate={{ opacity: 1, y: 0 }}
+          transition={{ duration: 0.8, delay: 0.4 }}
+        >
+          <motion.button 
+            onClick={handleScrollToAbout}
+            className="btn btn-primary btn-lg px-8 shadow-lg"
+            whileHover={{ scale: 1.05, boxShadow: "0 10px 25px -5px rgba(0, 0, 0, 0.1), 0 10px 10px -5px rgba(0, 0, 0, 0.04)" }}
+            whileTap={{ scale: 0.95 }}
+          >
+            Explore My Work
+          </motion.button>
+          
+          <motion.a 
+            href="/images/resume.pdf" 
+            target="_blank" 
+            rel="noopener noreferrer"
+            className="btn btn-outline btn-secondary btn-lg px-8"
+            whileHover={{ scale: 1.05 }}
+            whileTap={{ scale: 0.95 }}
+          >
+            View Resume
+          </motion.a>
+        </motion.div>
+        
+        {/* Social media links */}
+        <motion.div 
+          className="flex gap-8 absolute right-8 md:right-16 lg:right-24"
+          initial={{ opacity: 0, y: 30 }}
+          animate={{ opacity: 1, y: 0 }}
+          transition={{ duration: 0.8, delay: 0.6 }}
+          style={{ bottom: "calc(19% + 3px)" }} 
+        >
+          <motion.a 
+            href="https://www.linkedin.com/in/omaresp22/" 
+            target="_blank" 
+            rel="noopener noreferrer"
+            whileHover={{ y: -8, color: '#0077B5' }}
+            className="text-4xl hover:text-info transition-colors duration-300"
+          >
+            <Icon icon="mdi:linkedin" />
+          </motion.a>
+          <motion.a 
+            href="https://github.com/omatron22" 
+            target="_blank" 
+            rel="noopener noreferrer"
+            whileHover={{ y: -8, color: '#6e5494' }}
+            className="text-4xl hover:text-success transition-colors duration-300"
+          >
+            <Icon icon="mdi:github" />
+          </motion.a>
+          <motion.a 
+            href="mailto:your-email@example.com" 
+            whileHover={{ y: -8, color: '#ea4335' }}
+            className="text-4xl hover:text-error transition-colors duration-300"
+          >
+            <Icon icon="mdi:email-outline" />
+          </motion.a>
+        </motion.div>
+      </div>
+      
+      {/* Scroll Indicator - Positioned within the viewport */}
+      <motion.div 
+        className="mt-16 mx-auto"
+        initial={{ opacity: 0, y: 10 }}
+        animate={{ opacity: 1, y: 0 }}
+        transition={{ delay: 1.2, duration: 0.8 }}
+        onClick={handleScrollToAbout}
+        style={{ cursor: 'pointer' }}
+      >
+        <motion.div
+          animate={{ 
+            y: [0, 8, 0],
+          }}
+          transition={{ 
+            duration: 1.5, 
+            repeat: Infinity,
+            ease: "easeInOut" 
+          }}
+          className="text-primary"
+        >
+          <Icon icon="mdi:chevron-down" className="text-4xl" />
+        </motion.div>
+      </motion.div>
+    </div>
+  </div>
+</section>
 
       {/* About Section */}
       <motion.section 
@@ -195,9 +253,6 @@ export default function Home() {
               className="inline-block mb-3"
               variants={itemVariants}
             >
-              <span className="bg-primary text-base-100 text-sm font-medium py-1 px-3 rounded-full">
-                About Me
-              </span>
             </motion.div>
             <motion.h2 
               className="text-3xl md:text-4xl font-clash font-bold text-center"
@@ -282,9 +337,6 @@ export default function Home() {
               className="inline-block mb-3"
               variants={itemVariants}
             >
-              <span className="bg-primary text-base-100 text-sm font-medium py-1 px-3 rounded-full">
-                Background
-              </span>
             </motion.div>
             <motion.h2 
               className="text-3xl md:text-4xl font-clash font-bold text-center"
@@ -460,9 +512,7 @@ export default function Home() {
               className="inline-block mb-3"
               variants={itemVariants}
             >
-              <span className="bg-primary text-base-100 text-sm font-medium py-1 px-3 rounded-full">
-                Expertise
-              </span>
+
             </motion.div>
             <motion.h2 
               className="text-3xl md:text-4xl font-clash font-bold text-center"
@@ -552,9 +602,7 @@ export default function Home() {
               className="inline-block mb-3"
               variants={itemVariants}
             >
-              <span className="bg-primary text-base-100 text-sm font-medium py-1 px-3 rounded-full">
-                Technologies
-              </span>
+
             </motion.div>
             <motion.h2 
               className="text-3xl md:text-4xl font-clash font-bold text-center"
@@ -603,97 +651,10 @@ export default function Home() {
         </div>
       </motion.section>
 
-      {/* Contact Section */}
-      <motion.section 
-        className="py-24 bg-base-200"
-        initial="hidden"
-        whileInView="visible"
-        viewport={{ once: true, margin: "-100px" }}
-        variants={containerVariants}
-      >
-        <div className="container mx-auto px-4 md:px-8">
-          <div className="flex flex-col items-center mb-16">
-            <motion.div 
-              className="inline-block mb-3"
-              variants={itemVariants}
-            >
-              <span className="bg-primary text-base-100 text-sm font-medium py-1 px-3 rounded-full">
-                Connect
-              </span>
-            </motion.div>
-            <motion.h2 
-              className="text-3xl md:text-4xl font-clash font-bold text-center"
-              variants={itemVariants}
-            >
-              Get In <span className="text-primary">Touch</span>
-            </motion.h2>
-          </div>
-          
-          <motion.div 
-            className="max-w-3xl mx-auto bg-base-100 rounded-lg shadow-xl p-8 border border-base-300"
-            variants={itemVariants}
-          >
-            <p className="text-center text-lg mb-8">
-              I'm always open to new opportunities and collaborations. Feel free to reach out through any of the platforms below!
-            </p>
-            
-            <div className="flex flex-wrap justify-center gap-6">
-              <Link 
-                href="https://www.linkedin.com/in/omaresp22/" 
-                target="_blank" 
-                rel="noopener noreferrer"
-                className="flex flex-col items-center p-4 bg-base-200 rounded-lg hover:bg-primary/10 transition-all duration-300 transform hover:scale-105"
-              >
-                <Icon icon="mdi:linkedin" className="text-4xl text-primary mb-2" />
-                <span className="font-medium">LinkedIn</span>
-              </Link>
-              
-              <Link 
-                href="https://github.com/omatron22" 
-                target="_blank" 
-                rel="noopener noreferrer"
-                className="flex flex-col items-center p-4 bg-base-200 rounded-lg hover:bg-primary/10 transition-all duration-300 transform hover:scale-105"
-              >
-                <Icon icon="mdi:github" className="text-4xl text-primary mb-2" />
-                <span className="font-medium">GitHub</span>
-              </Link>
-              
-              <Link 
-                href="mailto:your-email@example.com" 
-                className="flex flex-col items-center p-4 bg-base-200 rounded-lg hover:bg-primary/10 transition-all duration-300 transform hover:scale-105"
-              >
-                <Icon icon="mdi:email-outline" className="text-4xl text-primary mb-2" />
-                <span className="font-medium">Email</span>
-              </Link>
-              
-              <Link 
-                href="/images/resume.pdf" 
-                target="_blank" 
-                rel="noopener noreferrer"
-                className="flex flex-col items-center p-4 bg-base-200 rounded-lg hover:bg-primary/10 transition-all duration-300 transform hover:scale-105"
-              >
-                <Icon icon="mdi:file-document-outline" className="text-4xl text-primary mb-2" />
-                <span className="font-medium">Resume</span>
-              </Link>
-            </div>
-          </motion.div>
-        </div>
-      </motion.section>
 
       {/* Footer */}
       <footer className="bg-base-300 py-8 text-center">
         <div className="container mx-auto px-4">
-          <div className="flex justify-center space-x-6 mb-4">
-            <Link href="https://www.linkedin.com/in/omaresp22/" target="_blank" rel="noopener noreferrer" aria-label="LinkedIn">
-              <Icon icon="mdi:linkedin" className="text-3xl hover:text-info hover:scale-110 transition-transform duration-300" />
-            </Link>
-            <Link href="https://github.com/omatron22" target="_blank" rel="noopener noreferrer" aria-label="GitHub">
-              <Icon icon="mdi:github" className="text-3xl hover:text-success hover:scale-110 transition-transform duration-300" />
-            </Link>
-            <Link href="/images/resume.pdf" target="_blank" rel="noopener noreferrer" aria-label="Download CV">
-              <Icon icon="mdi:file-document-outline" className="text-3xl hover:text-error hover:scale-110 transition-transform duration-300" />
-            </Link>
-          </div>
           <p className="text-sm font-clash mb-1">Designed & Built by Omar Espinoza</p>
           <p className="text-sm font-clash">© 2024 Omar Espinoza</p>
         </div>

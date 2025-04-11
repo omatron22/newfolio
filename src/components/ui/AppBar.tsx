@@ -46,80 +46,59 @@ export default function AppBar() {
   // Prevent hydration mismatch
   if (!mounted) {
     return (
-      <nav className="navbar sticky top-0 bg-base-200 text-base-content shadow-md z-50 px-4 sm:px-6 lg:px-8">
-        <div className="flex justify-between items-center w-full">
-          <span className="text-xl font-clash font-bold tracking-tight">Omar&apos;s Portfolio</span>
-        </div>
+      <nav className="navbar sticky top-0 bg-base-200/80 backdrop-blur-sm text-base-content shadow-sm z-50 px-0">
+        <div className="w-full"></div>
       </nav>
     );
   }
 
   return (
-    <nav className="navbar sticky top-0 bg-base-200 text-base-content shadow-md z-50 px-4 sm:px-6 lg:px-8">
-      <div className="container mx-auto flex justify-between items-center w-full">
-        {/* Logo */}
-        <Link 
-          href="/" 
-          className="text-xl font-clash font-bold tracking-tight hover:text-primary transition-colors duration-300"
-        >
-          Omar&apos;s Portfolio
-        </Link>
+    <nav className="navbar sticky top-0 bg-base-200/80 backdrop-blur-sm text-base-content shadow-sm z-50 px-0">
+      {/* Mobile Menu Button */}
+      <button
+        className="md:hidden absolute left-4 flex items-center justify-center p-2 rounded-md hover:bg-base-300 transition-colors duration-200"
+        onClick={() => setMenuOpen(!menuOpen)}
+        aria-label="Toggle Menu"
+        aria-expanded={menuOpen}
+      >
+        <Icon icon={menuOpen ? "mdi:close" : "mdi:menu"} className="text-xl" />
+      </button>
 
-        {/* Mobile Menu Button */}
-        <button
-          className="md:hidden flex items-center justify-center p-2 rounded-md hover:bg-base-300 transition-colors duration-200"
-          onClick={() => setMenuOpen(!menuOpen)}
-          aria-label="Toggle Menu"
-          aria-expanded={menuOpen}
-        >
-          <Icon icon={menuOpen ? "mdi:close" : "mdi:menu"} className="text-2xl" />
-        </button>
-
-        {/* Navigation Links */}
-        <div
-          className={`${
-            menuOpen ? "flex flex-col absolute top-16 left-0 right-0 bg-base-200 z-50 p-4 shadow-lg" : "hidden"
-          } md:flex md:flex-row md:relative md:top-0 md:bg-transparent md:p-0 md:shadow-none items-center space-y-2 md:space-y-0 md:space-x-4 mt-4 md:mt-0`}
-        >
-          {[
-            { href: "/", label: "Home" },
-            { href: "/projects", label: "Projects" },
-            { href: "/video-game", label: "Play me!" }
-          ].map((link) => (
-            <Link
-              key={link.href}
-              href={link.href}
-              className={`btn btn-ghost w-full md:w-auto text-left font-clash font-semibold md:text-center rounded-md hover:bg-base-300 transition-colors duration-200 ${
-                pathname === link.href ? "text-primary border-b-2 border-primary md:rounded-none md:border-b-2" : ""
-              }`}
-              onClick={closeMenu}
-            >
-              {link.label}
-            </Link>
-          ))}
-          
-          {/* Theme Toggle Button */}
-          <button
-            className={`p-2 flex items-center justify-center mt-2 md:mt-0 rounded-md border-2 border-base-content bg-base-100 hover:bg-primary hover:border-primary hover:text-base-100 transition-all duration-300 focus:outline-none focus:ring-2 focus:ring-primary ${
-              menuOpen ? "w-full" : "md:w-10 md:h-10"
+      {/* Right-aligned Navigation Links */}
+      <div
+        className={`${
+          menuOpen ? "flex flex-col absolute top-16 left-0 right-0 bg-base-200/95 backdrop-blur-sm z-50 p-4 shadow-md" : "hidden"
+        } md:flex md:flex-row md:relative md:top-0 md:bg-transparent md:p-0 md:shadow-none items-center space-y-2 md:space-y-0 md:space-x-6 mt-4 md:mt-0 ml-auto mr-14`}
+      >
+        {[
+          { href: "/", label: "Home" },
+          { href: "/projects", label: "Projects" },
+          { href: "/video-game", label: "Play me!" }
+        ].map((link) => (
+          <Link
+            key={link.href}
+            href={link.href}
+            className={`px-3 py-1.5 w-full md:w-auto text-left font-clash font-medium md:text-center hover:text-primary transition-colors duration-200 ${
+              pathname === link.href ? "text-primary underline underline-offset-4" : ""
             }`}
-            aria-label={`Change Theme (Current: ${currentTheme})`}
-            onClick={() => {
-              handleThemeChange();
-              closeMenu();
-            }}
-            style={{
-              boxShadow: "0 4px 6px rgba(0, 0, 0, 0.1)",
-            }}
+            onClick={closeMenu}
           >
-            <Icon
-              icon={THEME_ICONS[currentTheme]}
-              width="24"
-              height="24"
-              className="transform transition-transform duration-300 hover:scale-110"
-            />
-          </button>
-        </div>
+            {link.label}
+          </Link>
+        ))}
+        
+        {/* Theme Toggle Button - Inline with navigation */}
+        <button
+          className="p-2 flex items-center justify-center rounded-full bg-transparent hover:bg-base-300 transition-all duration-300 focus:outline-none"
+          aria-label={`Change Theme (Current: ${currentTheme})`}
+          onClick={handleThemeChange}
+        >
+          <Icon
+            icon={THEME_ICONS[currentTheme]}
+            width="20"
+            height="20"
+          />
+        </button>
       </div>
     </nav>
   );
