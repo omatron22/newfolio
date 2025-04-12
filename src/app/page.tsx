@@ -238,427 +238,156 @@ export default function Home() {
   </div>
 </section>
 
-      {/* About Section */}
-      <motion.section 
-        ref={aboutSectionRef} 
-        className="py-24 bg-base-200"
-        initial="hidden"
-        whileInView="visible"
-        viewport={{ once: true, margin: "-100px" }}
-        variants={containerVariants}
-      >
-        <div className="container mx-auto px-4 md:px-8">
-          <div className="flex flex-col items-center mb-16">
-            <motion.div 
-              className="inline-block mb-3"
-              variants={itemVariants}
-            >
-            </motion.div>
-            <motion.h2 
-              className="text-3xl md:text-4xl font-clash font-bold text-center"
-              variants={itemVariants}
-            >
-              Get to Know <span className="text-primary">Me</span>
-            </motion.h2>
-          </div>
-          
-          <div className="flex flex-col md:flex-row gap-12 items-center">
-            <motion.div 
-              className="w-full md:w-2/5"
-              variants={itemVariants}
-            >
-              <div className="relative">
-                {/* Image with frame and decorative elements */}
-                <div className="rounded-lg overflow-hidden shadow-xl relative z-10">
-                  <div className="absolute inset-0 bg-gradient-to-t from-black/40 to-transparent z-10"></div>
-                  <Image 
-                    src="/images/three.jpeg" 
-                    alt="Profile Image" 
-                    width={450}
-                    height={300}
-                    className="object-cover w-full h-auto"
-                  />
-                </div>
-                {/* Decorative elements */}
-                <div className="absolute -bottom-6 -right-6 w-32 h-32 bg-primary rounded-full opacity-10 z-0"></div>
-                <div className="absolute -top-6 -left-6 w-24 h-24 bg-secondary rounded-full opacity-10 z-0"></div>
-                <div className="absolute bottom-4 left-4 p-3 bg-base-100 shadow-lg rounded-lg z-20">
-                  <p className="text-sm font-medium">Ventura, California</p>
-                </div>
-              </div>
-            </motion.div>
-            
-            <motion.div 
-              className="w-full md:w-3/5"
-              variants={itemVariants}
-            >
-              <div className="bg-base-100 shadow-lg border border-base-300 p-8 rounded-lg">
-                <p className="text-base leading-relaxed text-base-content mb-6">
-                  Hi, I&apos;m Omar Espinoza from Ventura, California. I like creating things – whether I&apos;m coding a web application, redesigning old furniture, or improvising on my guitar and piano. I aim to channel my passion into unique, thoughtful creations that bring ideas to life.
-                </p>
-                <p className="text-base leading-relaxed text-base-content mb-6">
-                  Few things are more satisfying than transforming a vision into something real that resonates with others. I&apos;m looking to apply my technical and creative skills in a role where I can keep learning and improve how people interact with technology.
-                </p>
-                <div className="flex flex-wrap gap-4 mt-8">
-                  <div className="flex items-center">
-                    <Icon icon="mdi:code-braces" className="text-xl text-primary mr-2" />
-                    <span>Web Development</span>
-                  </div>
-                  <div className="flex items-center">
-                    <Icon icon="mdi:palette" className="text-xl text-primary mr-2" />
-                    <span>UI/UX Design</span>
-                  </div>
-                  <div className="flex items-center">
-                    <Icon icon="mdi:music" className="text-xl text-primary mr-2" />
-                    <span>Music</span>
-                  </div>
-                  <div className="flex items-center">
-                    <Icon icon="mdi:hammer-wrench" className="text-xl text-primary mr-2" />
-                    <span>DIY Projects</span>
-                  </div>
-                </div>
-              </div>
-            </motion.div>
-          </div>
+{/* Unified Overview Section */}
+<motion.section
+  className="py-24 px-6 max-w-5xl mx-auto space-y-24"
+  initial="hidden"
+  whileInView="visible"
+  viewport={{ once: true }}
+  variants={containerVariants}
+  id="overview"
+>
+  {/* About */}
+  <motion.div 
+  variants={itemVariants} 
+  className="grid md:grid-cols-2 gap-12 items-center text-center md:text-left"
+>
+{/* Image Side – Perfected Cluster Position */}
+<div className="relative w-full md:w-[600px] h-[520px] flex justify-center items-center -translate-x-6 translate-y-10">
+  {/* Glow Aura */}
+  <div className="absolute w-[420px] h-[420px] bg-primary/10 blur-3xl rounded-full -left-14 top-1/2 -translate-y-1/2 -z-10" />
+
+  {/* Photo 1 – Left */}
+  <div className="absolute top-12 left-0 rotate-[-4deg] hover:rotate-[-1deg] transition-transform duration-300 z-20">
+    <div className="bg-base-100 border border-base-300 rounded-xl p-2 shadow-md">
+      <Image 
+        src="/images/one.JPG"
+        alt="Climbing"
+        width={220}
+        height={280}
+        className="rounded-lg object-cover"
+      />
+    </div>
+  </div>
+
+  {/* Photo 2 – Right */}
+  <div className="absolute top-12 left-60 rotate-[3deg] hover:rotate-[1deg] transition-transform duration-300 z-30">
+    <div className="bg-base-100 border border-base-300 rounded-xl p-2 shadow-lg">
+      <Image 
+        src="/images/three.jpeg"
+        alt="Grad"
+        width={230}
+        height={290}
+        className="rounded-lg object-cover"
+      />
+    </div>
+  </div>
+
+  {/* Photo 3 – Lower Middle */}
+  <div className="absolute top-[190px] left-36 rotate-[6deg] hover:rotate-[3deg] transition-transform duration-300 z-10">
+    <div className="bg-base-100 border border-base-300 rounded-xl p-2 shadow-md">
+      <Image 
+        src="/images/two.jpeg"
+        alt="Travel"
+        width={220}
+        height={270}
+        className="rounded-lg object-cover"
+      />
+    </div>
+  </div>
+</div>
+
+
+
+  {/* Text Side */}
+  <div>
+    <h2 className="text-4xl font-clash font-bold mb-4">
+      About <span className="text-primary">Me</span>
+    </h2>
+    <p className="text-base-content leading-relaxed mb-6">
+      I’m Omar Espinoza from Ventura, California. I love building things — whether it's software, music, or handmade furniture. 
+      My background in Linguistics & CS from UCLA taught me how to think deeply and create intentionally. I'm excited to keep learning, designing, and making tech that feels human.
+    </p>
+    <div className="flex justify-center md:justify-start gap-4 flex-wrap">
+      {[
+        ["mdi:code-braces", "Web Development"],
+        ["mdi:palette", "UI/UX Design"],
+        ["mdi:music", "Music"],
+        ["mdi:hammer-wrench", "DIY Projects"]
+      ].map(([icon, label]) => (
+        <div key={label} className="flex items-center gap-2 bg-base-200 rounded-full px-4 py-2 shadow-sm">
+          <Icon icon={icon} className="text-primary" />
+          <span className="text-sm font-medium">{label}</span>
         </div>
-      </motion.section>
+      ))}
+    </div>
+  </div>
+</motion.div>
 
-      {/* Education & Experience Section */}
-      <motion.section 
-        className="py-24"
-        initial="hidden"
-        whileInView="visible"
-        viewport={{ once: true, margin: "-100px" }}
-        variants={containerVariants}
-      >
-        <div className="container mx-auto px-4 md:px-8">
-          <div className="flex flex-col items-center mb-16">
-            <motion.div 
-              className="inline-block mb-3"
-              variants={itemVariants}
-            >
-            </motion.div>
-            <motion.h2 
-              className="text-3xl md:text-4xl font-clash font-bold text-center"
-              variants={itemVariants}
-            >
-              Education & <span className="text-primary">Experience</span>
-            </motion.h2>
-          </div>
-          
-          <div className="grid grid-cols-1 md:grid-cols-2 gap-8">
-            {/* Education Card */}
-            <motion.div 
-              className="bg-base-100 shadow-xl border border-base-300 rounded-lg overflow-hidden transform transition-all hover:scale-105 duration-300 h-full"
-              variants={itemVariants}
-            >
-              <div className="bg-gradient-to-r from-secondary to-secondary/70 text-base-100 py-6 px-6">
-                <h3 className="text-xl font-clash font-bold flex items-center">
-                  <Icon icon="mdi:school-outline" className="mr-3 text-2xl" />
-                  Education
-                </h3>
-              </div>
 
-              <div className="p-6">
-                <div className="bg-base-200/50 p-4 rounded-lg mb-6">
-                  <h4 className="font-clash text-xl mb-2">
-                    <Link
-                      href="https://www.ucla.edu/"
-                      target="_blank"
-                      rel="noopener noreferrer"
-                      className="hover:text-info transition-colors duration-300 flex items-center"
-                    >
-                      <span className="mr-2">University of California, Los Angeles</span>
-                      <Icon icon="mdi:open-in-new" className="text-sm" />
-                    </Link>
-                  </h4>
-                  
-                  <div className="flex items-center text-secondary mb-3">
-                    <Icon icon="mdi:calendar" className="mr-2" />
-                    <p className="font-medium">2020-2024</p>
-                  </div>
-                  
-                  <p className="text-lg mb-3 font-medium">B.A. Linguistics and Computer Science</p>
-                  
-                  <div className="mt-6 space-y-4">
-                    <div className="flex items-center p-3 bg-base-100 rounded-lg">
-                      <div className="bg-info/10 p-2 rounded-full mr-4">
-                        <Icon icon="mdi:snowflake" className="text-xl text-info" />
-                      </div>
-                      <div>
-                        <Link
-                          href="https://uclaclubsports.com/sports/mens-skiing"
-                          target="_blank"
-                          rel="noopener noreferrer"
-                          className="hover:text-info transition-colors duration-300 text-base font-medium"
-                        >
-                          UCLA Snowteam Athlete
-                        </Link>
-                      </div>
-                    </div>
-                    
-                    <div className="flex items-center p-3 bg-base-100 rounded-lg">
-                      <div className="bg-info/10 p-2 rounded-full mr-4">
-                        <Icon icon="mdi:account-group" className="text-xl text-info" />
-                      </div>
-                      <div>
-                        <Link
-                          href="https://uclasoles.org/"
-                          target="_blank"
-                          rel="noopener noreferrer"
-                          className="hover:text-info transition-colors duration-300 text-base font-medium"
-                        >
-                          Society of LatinX Engineers 
-                        </Link>
-                        <p className="text-sm"><em>Web Developer</em></p>
-                      </div>
-                    </div>
-                  </div>
-                </div>
-              </div>
-            </motion.div>
+  {/* Education + Experience Timeline */}
+  <motion.div className="space-y-10" variants={itemVariants}>
+    <h2 className="text-4xl font-clash font-bold text-center">Journey</h2>
+    <div className="space-y-10">
+      {/* UCLA */}
+      <div className="bg-base-100 border border-base-300 rounded-lg p-6 shadow-md">
+        <h3 className="text-xl font-bold flex items-center gap-2 mb-2">
+          <Icon icon="mdi:school-outline" className="text-secondary" /> UCLA – B.A. Linguistics & Computer Science
+        </h3>
+        <p className="text-sm text-base-content/80 mb-2">2020–2024 · Los Angeles, CA</p>
+        <ul className="list-disc ml-6 text-base-content/90 text-sm space-y-1">
+          <li>Snow Team Athlete</li>
+          <li>Web Developer @ Society of LatinX Engineers</li>
+        </ul>
+      </div>
 
-            {/* Experience Card */}
-            <motion.div 
-              className="bg-base-100 shadow-xl border border-base-300 rounded-lg overflow-hidden transform transition-all hover:scale-105 duration-300 h-full"
-              variants={itemVariants}
-            >
-              <div className="bg-gradient-to-r from-primary to-primary/70 text-base-100 py-6 px-6">
-                <h3 className="text-xl font-clash font-bold flex items-center">
-                  <Icon icon="mdi:briefcase-outline" className="mr-3 text-2xl" />
-                  Experience
-                </h3>
-              </div>
+      {/* Experior Labs */}
+      <div className="bg-base-100 border border-base-300 rounded-lg p-6 shadow-md">
+        <h3 className="text-xl font-bold flex items-center gap-2 mb-2">
+          <Icon icon="mdi:briefcase-outline" className="text-primary" /> Experior Laboratories – Programming Intern
+        </h3>
+        <p className="text-sm text-base-content/80 mb-2">Summer 2023 · Oxnard, CA</p>
+        <ul className="list-disc ml-6 text-base-content/90 text-sm space-y-1">
+          <li>Built automation scripts in C + LabVIEW</li>
+          <li>Improved data parsing with SQLite</li>
+          <li>
+            <Link href="https://github.com/omatron22/GPIB-to-SQL-DLL" target="_blank" className="text-info underline">
+              View Project
+            </Link>
+          </li>
+        </ul>
+      </div>
+    </div>
+  </motion.div>
 
-              <div className="p-6">
-                <div className="bg-base-200/50 p-4 rounded-lg mb-6">
-                  <h4 className="font-clash text-xl mb-2">
-                    <Link
-                      href="https://experiorlabs.com/"
-                      target="_blank"
-                      rel="noopener noreferrer"
-                      className="hover:text-info transition-colors duration-300 flex items-center"
-                    >
-                      <span className="mr-2">Experior Laboratories</span>
-                      <Icon icon="mdi:open-in-new" className="text-sm" />
-                    </Link>
-                  </h4>
-                  
-                  <div className="flex items-center text-primary mb-3">
-                    <Icon icon="mdi:calendar" className="mr-2" />
-                    <p className="font-medium">Summer 2023</p>
-                  </div>
-                  
-                  <p className="text-lg mb-3 font-medium">Programming Intern</p>
-                  
-                  <p className="text-base mb-6">
-                    Developed shortcuts for the LabVIEW software using C, SQLite, and other technologies. Learn more about the project{" "}
-                    <Link
-                      href="https://github.com/omatron22/GPIB-to-SQL-DLL"
-                      target="_blank"
-                      rel="noopener noreferrer"
-                      className="text-info hover:underline font-medium"
-                    >
-                      here
-                    </Link>.
-                  </p>
+  {/* Skills */}
+  <motion.div variants={itemVariants} className="space-y-6">
+    <h2 className="text-4xl font-clash font-bold text-center">Skills & Tools</h2>
+    <div className="flex flex-wrap justify-center gap-4 text-sm">
+      {[
+        "HTML", "CSS", "JavaScript", "TypeScript", "React", "Tailwind",
+        "Next.js", "Node.js", "MongoDB", "SQL", "Firebase",
+        "Python", "C/C++", "Git", "Google Cloud", "Docker",
+        "Figma", "Photoshop", "Illustrator", "Adobe XD"
+      ].map((skill) => (
+        <span key={skill} className="bg-base-200 px-4 py-2 rounded-full shadow-sm border border-base-300">
+          {skill}
+        </span>
+      ))}
+    </div>
+  </motion.div>
+</motion.section>
 
-                  <div className="mt-6 space-y-4">
-                    <div className="flex items-center p-3 bg-base-100 rounded-lg">
-                      <div className="bg-primary/10 p-2 rounded-full mr-4">
-                        <Icon icon="mdi:tools" className="text-xl text-primary" />
-                      </div>
-                      <div>
-                        <p className="text-base font-medium">Automation Project Lead</p>
-                      </div>
-                    </div>
-
-                    <div className="flex items-center p-3 bg-base-100 rounded-lg">
-                      <div className="bg-primary/10 p-2 rounded-full mr-4">
-                        <Icon icon="mdi:database" className="text-xl text-primary" />
-                      </div>
-                      <div>
-                        <p className="text-base font-medium">Optimized Data Management Processes</p>
-                      </div>
-                    </div>
-
-                    <div className="flex items-center p-3 bg-base-100 rounded-lg">
-                      <div className="bg-primary/10 p-2 rounded-full mr-4">
-                        <Icon icon="mdi:code-tags" className="text-xl text-primary" />
-                      </div>
-                      <div>
-                        <p className="text-base font-medium">C, SQLite, LabVIEW Expertise</p>
-                      </div>
-                    </div>
-                  </div>
-                </div>
-              </div>
-            </motion.div>
-          </div>
-        </div>
-      </motion.section>
-
-      {/* Skills Section */}
-      <motion.section 
-        className="py-24 bg-base-200"
-        initial="hidden"
-        whileInView="visible"
-        viewport={{ once: true, margin: "-100px" }}
-        variants={containerVariants}
-      >
-        <div className="container mx-auto px-4 md:px-8">
-          <div className="flex flex-col items-center mb-16">
-            <motion.div 
-              className="inline-block mb-3"
-              variants={itemVariants}
-            >
-
-            </motion.div>
-            <motion.h2 
-              className="text-3xl md:text-4xl font-clash font-bold text-center"
-              variants={itemVariants}
-            >
-              My <span className="text-primary">Skills</span>
-            </motion.h2>
-          </div>
-          
-          <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6">
-            {[
-              { 
-                title: 'Frontend Development', 
-                skills: 'HTML, CSS, JavaScript, React, Tailwind CSS, DaisyUI',
-                icon: 'mdi:code-tags'
-              },
-              { 
-                title: 'Backend Development', 
-                skills: 'Node.js, MongoDB, SQL',
-                icon: 'mdi:server'
-              },
-              { 
-                title: 'UI/UX Design', 
-                skills: 'Figma, Adobe XD, Adobe Photoshop, Adobe Illustrator',
-                icon: 'mdi:palette'
-              },
-              { 
-                title: 'Database Management', 
-                skills: 'Relational Databases (MySQL), NoSQL Databases (Firebase)',
-                icon: 'mdi:database'
-              },
-              { 
-                title: 'Version Control', 
-                skills: 'Git, GitHub',
-                icon: 'mdi:git'
-              },
-              { 
-                title: 'Cloud Services', 
-                skills: 'Google Cloud, Firebase Hosting',
-                icon: 'mdi:cloud'
-              },
-              { 
-                title: 'Automation', 
-                skills: 'Python Scripting, C/C++',
-                icon: 'mdi:robot'
-              },
-              { 
-                title: 'DevOps', 
-                skills: 'Docker, CI/CD',
-                icon: 'mdi:cog-sync'
-              }
-            ].map((skill, index) => (
-              <motion.div 
-                key={index} 
-                className="bg-base-100 shadow-lg p-6 flex flex-col items-center text-center space-y-4 rounded-lg transform transition-all hover:scale-105 hover:shadow-xl duration-300 border border-base-300"
-                variants={itemVariants}
-                whileHover={{ y: -5 }}
-              >
-                <div className="bg-primary/10 p-4 rounded-full mb-2">
-                  <Icon icon={skill.icon} className="text-4xl text-primary" />
-                </div>
-                
-                <h3 className="text-xl font-clash font-semibold">
-                  {skill.title}
-                </h3>
-                
-                <p className="text-base leading-relaxed">
-                  {skill.skills}
-                </p>
-              </motion.div>
-            ))}
-          </div>
-        </div>
-      </motion.section>
-
-      {/* Tech Stack Section */}
-      <motion.section 
-        className="py-24"
-        initial="hidden"
-        whileInView="visible"
-        viewport={{ once: true, margin: "-100px" }}
-        variants={containerVariants}
-      >
-        <div className="container mx-auto px-4 md:px-8">
-          <div className="flex flex-col items-center mb-16">
-            <motion.div 
-              className="inline-block mb-3"
-              variants={itemVariants}
-            >
-
-            </motion.div>
-            <motion.h2 
-              className="text-3xl md:text-4xl font-clash font-bold text-center"
-              variants={itemVariants}
-            >
-              Tech <span className="text-primary">Stack</span>
-            </motion.h2>
-          </div>
-          
-          <motion.div 
-            className="grid grid-cols-3 sm:grid-cols-4 md:grid-cols-5 lg:grid-cols-7 gap-6 justify-items-center"
-            variants={itemVariants}
-          >
-            {[
-              { src: "/images/c:c++.png", alt: "C/C++", width: 86, height: 86 },
-              { src: "/images/python.png", alt: "Python", width: 56, height: 56 },
-              { src: "/images/javascript.png", alt: "JavaScript", width: 56, height: 56 },
-              { src: "/images/html.png", alt: "HTML", width: 56, height: 56 },
-              { src: "/images/css.png", alt: "CSS", width: 56, height: 56 },
-              { src: "/images/logo192.png", alt: "React.JS", width: 56, height: 56 },
-              { src: "/images/git.png", alt: "Git", width: 56, height: 56 },
-              { src: "/images/SQL.png", alt: "SQL", width: 56, height: 56 },
-              { src: "/images/mongo.png", alt: "MongoDB", width: 56, height: 56 },
-              { src: "/images/firebase.png", alt: "Firebase", width: 56, height: 56 },
-              { src: "/images/google.png", alt: "Google Cloud", width: 48, height: 48 },
-              { src: "/images/photoshop.png", alt: "Photoshop", width: 44, height: 44 },
-              { src: "/images/illustrator.png", alt: "illustrator", width: 64, height: 64 }, 
-              { src: "/images/xd.png", alt: "xd", width: 84, height: 84 }
-            ].map((icon, index) => (
-              <motion.div 
-                key={index} 
-                className="flex items-center justify-center bg-base-100 p-4 rounded-lg shadow-md hover:shadow-lg transition-all duration-300 transform hover:scale-110 border border-base-300/50"
-                whileHover={{ y: -5 }}
-                variants={itemVariants}
-              >
-                <Image 
-                  src={icon.src} 
-                  alt={icon.alt} 
-                  width={icon.width}
-                  height={icon.height}
-                  className="object-contain" 
-                />
-              </motion.div>
-            ))}
-          </motion.div>
-        </div>
-      </motion.section>
 
 
       {/* Footer */}
-      <footer className="bg-base-300 py-8 text-center">
-        <div className="container mx-auto px-4">
-          <p className="text-sm font-clash mb-1">Designed & Built by Omar Espinoza</p>
-          <p className="text-sm font-clash">© 2024 Omar Espinoza</p>
-        </div>
-      </footer>
+      <footer className="bg-base-300 py-10 border-t border-base-200">
+  <div className="max-w-5xl mx-auto px-6 text-center space-y-3">
+    <p className="text-sm font-clash text-base-content/80">Designed & Built by Omar Espinoza</p>
+    <p className="text-xs font-clash text-base-content/60">© {new Date().getFullYear()} Omar Espinoza. All rights reserved.</p>
+  </div>
+</footer>
+
     </div>
   );
 }

@@ -1,4 +1,3 @@
-// src/components/ui/AppBar.tsx
 'use client';
 
 import React, { useState, useEffect } from "react";
@@ -6,7 +5,6 @@ import { Icon } from "@iconify-icon/react";
 import Link from "next/link";
 import { usePathname } from "next/navigation";
 
-// Theme configuration
 const THEMES = ['corporate', 'dracula', 'retro', 'aqua'] as const;
 type Theme = typeof THEMES[number];
 
@@ -23,7 +21,6 @@ export default function AppBar() {
   const [mounted, setMounted] = useState(false);
   const pathname = usePathname();
 
-  // Initialize from localStorage on client-side
   useEffect(() => {
     setMounted(true);
     const savedTheme = localStorage.getItem('theme') as Theme || 'corporate';
@@ -32,10 +29,8 @@ export default function AppBar() {
   }, []);
 
   const handleThemeChange = () => {
-    const currentIndex = THEMES.indexOf(currentTheme);
-    const nextIndex = (currentIndex + 1) % THEMES.length;
+    const nextIndex = (THEMES.indexOf(currentTheme) + 1) % THEMES.length;
     const nextTheme = THEMES[nextIndex];
-    
     document.documentElement.setAttribute('data-theme', nextTheme);
     localStorage.setItem('theme', nextTheme);
     setCurrentTheme(nextTheme);
@@ -43,63 +38,83 @@ export default function AppBar() {
 
   const closeMenu = () => setMenuOpen(false);
 
-  // Prevent hydration mismatch
-  if (!mounted) {
-    return (
-      <nav className="navbar sticky top-0 bg-base-200/80 backdrop-blur-sm text-base-content shadow-sm z-50 px-0">
-        <div className="w-full"></div>
-      </nav>
-    );
-  }
+  if (!mounted) return <div className="h-16" />;
 
   return (
-    <nav className="navbar sticky top-0 bg-base-200/80 backdrop-blur-sm text-base-content shadow-sm z-50 px-0">
-      {/* Mobile Menu Button */}
-      <button
-        className="md:hidden absolute left-4 flex items-center justify-center p-2 rounded-md hover:bg-base-300 transition-colors duration-200"
-        onClick={() => setMenuOpen(!menuOpen)}
-        aria-label="Toggle Menu"
-        aria-expanded={menuOpen}
-      >
-        <Icon icon={menuOpen ? "mdi:close" : "mdi:menu"} className="text-xl" />
-      </button>
+    <nav className="navbar sticky top-0 bg-base-200/70 backdrop-blur-md shadow-md z-50 px-6 py-2 border-b border-base-300 transition-all duration-300">
+      <div className="flex w-full items-center justify-between max-w-6xl mx-auto">
+        {/* Left - Logo or Name */}
+        <Link href="/" className="text-xl font-bold tracking-wide hover:text-primary transition-colors">
+          
+        </Link>
 
-      {/* Right-aligned Navigation Links */}
-      <div
-        className={`${
-          menuOpen ? "flex flex-col absolute top-16 left-0 right-0 bg-base-200/95 backdrop-blur-sm z-50 p-4 shadow-md" : "hidden"
-        } md:flex md:flex-row md:relative md:top-0 md:bg-transparent md:p-0 md:shadow-none items-center space-y-2 md:space-y-0 md:space-x-6 mt-4 md:mt-0 ml-auto mr-14`}
-      >
-        {[
-          { href: "/", label: "Home" },
-          { href: "/projects", label: "Projects" },
-          { href: "/video-game", label: "Play me!" }
-        ].map((link) => (
-          <Link
-            key={link.href}
-            href={link.href}
-            className={`px-3 py-1.5 w-full md:w-auto text-left font-clash font-medium md:text-center hover:text-primary transition-colors duration-200 ${
-              pathname === link.href ? "text-primary underline underline-offset-4" : ""
-            }`}
-            onClick={closeMenu}
-          >
-            {link.label}
-          </Link>
-        ))}
-        
-        {/* Theme Toggle Button - Inline with navigation */}
+        {/* Mobile Menu Button */}
         <button
-          className="p-2 flex items-center justify-center rounded-full bg-transparent hover:bg-base-300 transition-all duration-300 focus:outline-none"
-          aria-label={`Change Theme (Current: ${currentTheme})`}
-          onClick={handleThemeChange}
+          className="md:hidden flex items-center justify-center p-2 rounded-md hover:bg-base-300 transition"
+          onClick={() => setMenuOpen(!menuOpen)}
+          aria-label="Toggle Menu"
         >
-          <Icon
-            icon={THEME_ICONS[currentTheme]}
-            width="20"
-            height="20"
-          />
+          <Icon icon={menuOpen ? "mdi:close" : "mdi:menu"} className="text-2xl" />
         </button>
+
+        {/* Desktop Nav */}
+        <div className="hidden md:flex items-center space-x-8">
+          {[
+            { href: "/", label: "Home" },
+            { href: "/projects", label: "Projects" },
+            { href: "/video-game", label: "Play me!" }
+          ].map(link => (
+            <Link
+              key={link.href}
+              href={link.href}
+              className={`relative font-medium transition-transform hover:scale-105 ${
+                pathname === link.href ? "text-primary underline underline-offset-4" : "hover:text-primary"
+              }`}
+            >
+              {link.label}
+            </Link>
+          ))}
+
+          {/* Theme Toggle */}
+          <button
+            onClick={handleThemeChange}
+            className="p-2 hover:rotate-180 transition-transform duration-500"
+            aria-label="Change Theme"
+          >
+            <Icon icon={THEME_ICONS[currentTheme]} width={22} height={22} />
+          </button>
+        </div>
       </div>
+
+      {/* Mobile Dropdown */}
+      {menuOpen && (
+        <div className="md:hidden mt-3 flex flex-col items-end space-y-2 px-6 transition-all animate-fadeIn">
+          {[
+            { href: "/", label: "Home" },
+            { href: "/projects", label: "Projects" },
+            { href: "/video-game", label: "Play me!" }
+          ].map(link => (
+            <Link
+              key={link.href}
+              href={link.href}
+              onClick={closeMenu}
+              className={`w-full text-right font-medium py-2 border-b border-base-300 ${
+                pathname === link.href ? "text-primary underline underline-offset-4" : "hover:text-primary"
+              }`}
+            >
+              {link.label}
+            </Link>
+          ))}
+
+          <button
+            onClick={handleThemeChange}
+            className="mt-2 self-end p-2 hover:rotate-180 transition-transform duration-500"
+            aria-label="Change Theme"
+          >
+            <Icon icon={THEME_ICONS[currentTheme]} width={22} height={22} />
+          </button>
+        </div>
+      )}
     </nav>
   );
 }
