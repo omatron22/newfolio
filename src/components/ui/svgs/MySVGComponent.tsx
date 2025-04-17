@@ -1,4 +1,5 @@
 // MySVGComponent.tsx
+import path from 'path';
 import React from 'react';
 
 interface MySVGComponentProps {

@@ -86,9 +86,9 @@ export default function AppBar() {
         </div>
       </div>
 
-      {/* Mobile Dropdown */}
-      {menuOpen && (
-        <div className="md:hidden mt-3 flex flex-col items-end space-y-2 px-6 transition-all animate-fadeIn">
+      {/* Mobile Dropdown - Similar to Example */}
+      <div className={`${menuOpen ? "block" : "hidden"} md:hidden mt-2`}>
+        <div className="flex flex-col">
           {[
             { href: "/", label: "Home" },
             { href: "/projects", label: "Projects" },
@@ -98,23 +98,31 @@ export default function AppBar() {
               key={link.href}
               href={link.href}
               onClick={closeMenu}
-              className={`w-full text-right font-medium py-2 border-b border-base-300 ${
-                pathname === link.href ? "text-primary underline underline-offset-4" : "hover:text-primary"
-              }`}
+              className="btn btn-ghost w-full text-left font-medium rounded-none"
             >
               {link.label}
             </Link>
           ))}
-
+          
           <button
-            onClick={handleThemeChange}
-            className="mt-2 self-end p-2 hover:rotate-180 transition-transform duration-500"
+            onClick={() => {
+              handleThemeChange();
+              closeMenu();
+            }}
+            className="p-2 flex items-center justify-center mt-2 w-full border-2 border-base-content bg-base-100 hover:bg-primary hover:border-primary hover:text-base-100 transition-all duration-300 focus:outline-none focus:ring-2 focus:ring-primary"
             aria-label="Change Theme"
+            style={{
+              boxShadow: "0 4px 6px rgba(0, 0, 0, 0.1)",
+            }}
           >
-            <Icon icon={THEME_ICONS[currentTheme]} width={22} height={22} />
+            <Icon 
+              icon={THEME_ICONS[currentTheme]} 
+              width="24" 
+              height="24" 
+            />
           </button>
         </div>
-      )}
+      </div>
     </nav>
   );
 }

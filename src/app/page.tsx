@@ -133,7 +133,7 @@ export default function Home() {
             whileHover={{ x: 10, color: 'var(--color-accent)' }}
             transition={{ duration: 0.3 }}
           >
-            <span className="text-accent">Designer</span>
+            <span className="text-primary">Software Engineer</span>
           </motion.div>
           <motion.div 
             className="text-3xl md:text-4xl lg:text-5xl font-clash font-medium"
@@ -168,7 +168,7 @@ export default function Home() {
             href="/images/resume.pdf" 
             target="_blank" 
             rel="noopener noreferrer"
-            className="btn btn-outline btn-secondary btn-lg px-8"
+            className="btn btn-outline btn-primary btn-lg px-8"
             whileHover={{ scale: 1.05 }}
             whileTap={{ scale: 0.95 }}
           >
@@ -288,7 +288,7 @@ export default function Home() {
               whileHover={{ scale: 1.05 }}
               transition={{ duration: 0.3 }}
             >
-              <span className="text-accent">Designer</span>
+              <span className="text-primary">Software Engineer</span>
             </motion.div>
             <motion.div 
               className="text-2xl sm:text-3xl font-clash font-medium"
@@ -301,30 +301,38 @@ export default function Home() {
         </motion.div>
       </div>
       
-      {/* Middle content - SVG */}
-      <motion.div 
-        className="relative z-10 flex-shrink-0"
-        initial={{ opacity: 0, scale: 0.9 }}
-        animate={{ opacity: 1, scale: 1 }}
-        transition={{ duration: 0.8, delay: 0.5 }}
-      >
-        <div className="scale-110 sm:scale-125">
-          <MySVGComponent className="w-full h-auto max-w-none" />
-        </div>
-        
-        <motion.div 
-          className="absolute -z-10 inset-0 rounded-full bg-gradient-radial from-primary/20 via-secondary/15 to-transparent blur-3xl"
-          animate={{
-            scale: [1, 1.2, 1],
-            opacity: [0.4, 0.6, 0.4]
-          }}
-          transition={{
-            duration: 8,
-            repeat: Infinity,
-            repeatType: "reverse"
-          }}
-        ></motion.div>
-      </motion.div>
+{/* SVG Container - Taking the middle space but with absolute positioning for SVG */}
+<div className="relative h-60 w-full flex-shrink-0">
+  {/* SVG - Absolutely positioned to the right with more precision and larger scale */}
+  <motion.div 
+    className="absolute z-10"
+    initial={{ opacity: 0, x: 50 }}
+    animate={{ opacity: 1, x: 0 }}
+    transition={{ duration: 0.8, delay: 0.5 }}
+    style={{ 
+      right: "-9%",
+      top: "20%",
+      transform: "translateY(-50%)"
+    }}
+  >
+    <div className="scale-150 sm:scale-[1.8]">
+      <MySVGComponent className="w-full h-auto max-w-none" />
+    </div>
+    
+    <motion.div 
+      className="absolute -z-10 right-1/2 top-1/2 w-full h-full rounded-full bg-gradient-radial from-primary/20 via-secondary/15 to-transparent blur-3xl transform translate-x-1/2 -translate-y-1/2"
+      animate={{
+        scale: [1, 1.2, 1],
+        opacity: [0.4, 0.6, 0.4]
+      }}
+      transition={{
+        duration: 8,
+        repeat: Infinity,
+        repeatType: "reverse"
+      }}
+    ></motion.div>
+  </motion.div>
+</div>
       
       {/* Bottom content container */}
       <div className="flex flex-col items-center w-full">
@@ -346,7 +354,7 @@ export default function Home() {
             href="/images/resume.pdf" 
             target="_blank" 
             rel="noopener noreferrer"
-            className="btn btn-outline btn-secondary w-full"
+            className="btn btn-outline btn-primary w-full"
             initial={{ opacity: 0, y: 20 }}
             animate={{ opacity: 1, y: 0 }}
             transition={{ duration: 0.6, delay: 0.8 }}
