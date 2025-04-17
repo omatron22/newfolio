@@ -4,14 +4,17 @@ import React from 'react';
 
 interface MySVGComponentProps {
   className?: string; // Add className prop as optional
+  onClick?: () => void; // Add onClick handler prop as optional
 }
 
-const MySVGComponent: React.FC<MySVGComponentProps> = ({ className }) => {
+const MySVGComponent: React.FC<MySVGComponentProps> = ({ className, onClick }) => {
   return (
     <svg
       xmlns="http://www.w3.org/2fill-base-100/svg"
       viewBox="0 0 1920 1080"
       className={className}
+      onClick={onClick}
+      style={{ cursor: onClick ? 'pointer' : 'default' }} // Add cursor style only if onClick exists
     >
   <g>
     <g id="Layer_1">

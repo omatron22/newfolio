@@ -1,15 +1,36 @@
 'use client';
 
-import React, { useRef } from 'react';
-import TypingAnimation from '@/components/ui/TypingAnimation';
+import React, { useRef, useState, useEffect } from 'react';
 import { Icon } from '@iconify-icon/react';
 import MySVGComponent from '@/components/ui/svgs/MySVGComponent';
 import Image from 'next/image';
 import Link from 'next/link';
 import { motion } from 'framer-motion';
 
+// Define theme constants (same as in AppBar)
+const THEMES = ['corporate', 'dracula', 'retro', 'aqua'];
+type Theme = typeof THEMES[number];
+
 export default function Home() {
   const aboutSectionRef = useRef<HTMLDivElement | null>(null);
+  const [currentTheme, setCurrentTheme] = useState<Theme>('corporate');
+  const [mounted, setMounted] = useState(false);
+
+  // Initialize theme from localStorage on component mount
+  useEffect(() => {
+    setMounted(true);
+    const savedTheme = localStorage.getItem('theme') as Theme || 'corporate';
+    setCurrentTheme(savedTheme);
+  }, []);
+
+  // Theme switching function
+  const handleThemeChange = () => {
+    const nextIndex = (THEMES.indexOf(currentTheme) + 1) % THEMES.length;
+    const nextTheme = THEMES[nextIndex];
+    document.documentElement.setAttribute('data-theme', nextTheme);
+    localStorage.setItem('theme', nextTheme);
+    setCurrentTheme(nextTheme);
+  };
 
   const handleScrollToAbout = () => {
     if (aboutSectionRef.current) {
@@ -62,8 +83,18 @@ export default function Home() {
       transform: "translateY(-50%)"
     }}
   >
+    {/* Make SVG clickable for theme switching */}
     <div className="relative z-10 scale-[1.5] lg:scale-[2] xl:scale-[3.3]">
-      <MySVGComponent className="w-full h-auto max-w-none" />
+      <motion.div
+        whileHover={{ scale: 1.1 }}
+        transition={{ duration: 0.3 }}
+        className="inline-block"
+      >
+        <MySVGComponent 
+          className="w-full h-auto max-w-none cursor-pointer"
+          onClick={handleThemeChange}
+        />
+      </motion.div>
     </div>
     
     <motion.div 
@@ -315,8 +346,18 @@ export default function Home() {
       transform: "translateY(-50%)"
     }}
   >
+    {/* Make SVG clickable for theme switching */}
     <div className="scale-150 sm:scale-[1.8]">
-      <MySVGComponent className="w-full h-auto max-w-none" />
+      <motion.div
+        whileHover={{ scale: 1.1 }}
+        transition={{ duration: 0.3 }}
+        className="inline-block"
+      >
+        <MySVGComponent 
+          className="w-full h-auto max-w-none cursor-pointer" 
+          onClick={handleThemeChange} 
+        />
+      </motion.div>
     </div>
     
     <motion.div 
