@@ -9,13 +9,17 @@ interface MySVGComponentProps {
 
 const MySVGComponent: React.FC<MySVGComponentProps> = ({ className, onClick }) => {
   return (
-    <svg
-      xmlns="http://www.w3.org/2fill-base-100/svg"
-      viewBox="0 0 1920 1080"
-      className={className}
-      onClick={onClick}
-      style={{ cursor: onClick ? 'pointer' : 'default' }} // Add cursor style only if onClick exists
-    >
+<svg
+  xmlns="http://www.w3.org/2000/svg"
+  viewBox="0 0 1920 1080"
+  className={className}
+  /* 👇 the root never receives pointer events */
+  style={{ pointerEvents: 'none' }}
+>
+<g
+    onClick={onClick}
+    style={{ cursor: 'pointer', pointerEvents: 'visiblePainted' }}
+  >
   <g>
     <g id="Layer_1">
       <g id="Layer_3">
@@ -4367,6 +4371,7 @@ const MySVGComponent: React.FC<MySVGComponentProps> = ({ className, onClick }) =
       <polygon points="265.8201294 273.0375144 337.2111139 270.6058126 279.5695633 269.7468567 265.8201294 273.0375144" className="fill-neutral"/>
       <polygon points="268.3519097 279.8060271 265.255743 273.0235938 269.9413452 272.8633423 268.3519097 279.8060271" className="fill-info"/>
     </g>
+  </g>
   </g>
     </svg>
 

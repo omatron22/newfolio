@@ -23,14 +23,16 @@ export default function Home() {
     setCurrentTheme(savedTheme);
   }, []);
 
-  // Theme switching function
-  const handleThemeChange = () => {
-    const nextIndex = (THEMES.indexOf(currentTheme) + 1) % THEMES.length;
-    const nextTheme = THEMES[nextIndex];
-    document.documentElement.setAttribute('data-theme', nextTheme);
-    localStorage.setItem('theme', nextTheme);
-    setCurrentTheme(nextTheme);
-  };
+// Theme switching function with debugging
+const handleThemeChange = () => {
+  console.log('Theme change clicked!', currentTheme);
+  const nextIndex = (THEMES.indexOf(currentTheme) + 1) % THEMES.length;
+  const nextTheme = THEMES[nextIndex];
+  console.log(`Changing theme from ${currentTheme} to ${nextTheme}`);
+  document.documentElement.setAttribute('data-theme', nextTheme);
+  localStorage.setItem('theme', nextTheme);
+  setCurrentTheme(nextTheme);
+};
 
   const handleScrollToAbout = () => {
     if (aboutSectionRef.current) {
@@ -73,43 +75,46 @@ export default function Home() {
   
   {/* SVG Component - Desktop positioning */}
   <motion.div 
-    className="absolute z-10 hidden md:block"
-    initial={{ opacity: 0, x: 150 }}
-    animate={{ opacity: 1, x: 0 }}
-    transition={{ duration: 0.8, delay: 0.2 }}
-    style={{ 
-      right: "22%",
-      top: "40%",
-      transform: "translateY(-50%)"
-    }}
+  className="absolute z-30 hidden md:block" // Increased z-index
+  initial={{ opacity: 0, x: 150 }}
+  animate={{ opacity: 1, x: 0 }}
+  transition={{ duration: 0.8, delay: 0.2 }}
+  style={{ 
+    right: "22%",
+    top: "40%",
+    transform: "translateY(-50%)",
+    pointerEvents: "none" // Explicitly enable pointer events
+  }}
+>
+  {/* Make SVG clickable for theme switching */}
+  <div 
+    className="relative z-10 scale-[1.5] lg:scale-[2] xl:scale-[3.3]"
   >
-    {/* Make SVG clickable for theme switching */}
-    <div className="relative z-10 scale-[1.5] lg:scale-[2] xl:scale-[3.3]">
-      <motion.div
-        whileHover={{ scale: 1.1 }}
-        transition={{ duration: 0.3 }}
-        className="inline-block"
-      >
-        <MySVGComponent 
-          className="w-full h-auto max-w-none cursor-pointer"
-          onClick={handleThemeChange}
-        />
-      </motion.div>
-    </div>
-    
-    <motion.div 
-      className="absolute -z-10 right-1/2 top-1/2 w-full h-full rounded-full bg-gradient-radial from-primary/20 via-secondary/15 to-transparent blur-3xl transform translate-x-1/2 -translate-y-1/2"
-      animate={{
-        scale: [1, 1.2, 1],
-        opacity: [0.4, 0.6, 0.4]
-      }}
-      transition={{
-        duration: 8,
-        repeat: Infinity,
-        repeatType: "reverse"
-      }}
-    ></motion.div>
-  </motion.div>
+    <motion.div
+      whileHover={{ scale: 1.1 }}
+      transition={{ duration: 0.3 }}
+      className="inline-block cursor-pointer pointer-events-none"
+    >
+      <MySVGComponent 
+        className="w-full h-auto max-w-none cursor-pointer"
+        onClick={handleThemeChange} // Keep this onClick handler too for redundancy
+      />
+    </motion.div>
+  </div>
+  
+  <motion.div 
+    className="absolute -z-10 right-1/2 top-1/2 w-full h-full rounded-full bg-gradient-radial from-primary/20 via-secondary/15 to-transparent blur-3xl transform translate-x-1/2 -translate-y-1/2"
+    animate={{
+      scale: [1, 1.2, 1],
+      opacity: [0.4, 0.6, 0.4]
+    }}
+    transition={{
+      duration: 8,
+      repeat: Infinity,
+      repeatType: "reverse"
+    }}
+  ></motion.div>
+</motion.div>
 
   {/* Desktop Content - Original layout preserved */}
   <div className="w-full hidden md:flex">
@@ -334,45 +339,44 @@ export default function Home() {
       
 {/* SVG Container - Taking the middle space but with absolute positioning for SVG */}
 <div className="relative h-60 w-full flex-shrink-0">
-  {/* SVG - Absolutely positioned to the right with more precision and larger scale */}
-  <motion.div 
+  <motion.div
     className="absolute z-10"
     initial={{ opacity: 0, x: 50 }}
     animate={{ opacity: 1, x: 0 }}
     transition={{ duration: 0.8, delay: 0.5 }}
-    style={{ 
-      right: "-9%",
-      top: "20%",
-      transform: "translateY(-50%)"
+    style={{
+      right: '-9%',
+      top: '20%',
+      transform: 'translateY(-50%)',
+      pointerEvents: 'none',   /* ⬅️ ignore clicks */
     }}
   >
-    {/* Make SVG clickable for theme switching */}
-    <div className="scale-150 sm:scale-[1.8]">
+    <div className="scale-150 sm:scale-[1.8] pointer-events-none">
       <motion.div
         whileHover={{ scale: 1.1 }}
         transition={{ duration: 0.3 }}
-        className="inline-block"
+        className="inline-block cursor-pointer pointer-events-none"
       >
-        <MySVGComponent 
-          className="w-full h-auto max-w-none cursor-pointer" 
-          onClick={handleThemeChange} 
+        <MySVGComponent
+          className="w-full h-auto max-w-none cursor-pointer"
+          onClick={handleThemeChange}   /* the one and only handler */
         />
       </motion.div>
     </div>
-    
-    <motion.div 
-      className="absolute -z-10 right-1/2 top-1/2 w-full h-full rounded-full bg-gradient-radial from-primary/20 via-secondary/15 to-transparent blur-3xl transform translate-x-1/2 -translate-y-1/2"
-      animate={{
-        scale: [1, 1.2, 1],
-        opacity: [0.4, 0.6, 0.4]
-      }}
-      transition={{
-        duration: 8,
-        repeat: Infinity,
-        repeatType: "reverse"
-      }}
-    ></motion.div>
-  </motion.div>
+  
+  <motion.div 
+    className="absolute -z-10 right-1/2 top-1/2 w-full h-full rounded-full bg-gradient-radial from-primary/20 via-secondary/15 to-transparent blur-3xl transform translate-x-1/2 -translate-y-1/2"
+    animate={{
+      scale: [1, 1.2, 1],
+      opacity: [0.4, 0.6, 0.4]
+    }}
+    transition={{
+      duration: 8,
+      repeat: Infinity,
+      repeatType: "reverse"
+    }}
+  ></motion.div>
+</motion.div>
 </div>
       
       {/* Bottom content container */}

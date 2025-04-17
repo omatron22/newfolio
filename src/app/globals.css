@@ -67,9 +67,11 @@ body {
   }
 }
 
+
 /* Footer styles */
 footer {
   position: relative;
   z-index: 20;
   width: 100%;
 }
+
