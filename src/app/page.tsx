@@ -430,18 +430,12 @@ const handleThemeChange = () => {
             href="https://github.com/omatron22" 
             target="_blank" 
             rel="noopener noreferrer"
-            whileHover={{ y: -5, color: '#6e5494' }}
+            whileHover={{ y: -5, color: "#6e5494" }}
             className="text-3xl hover:text-success transition-colors duration-300"
           >
             <Icon icon="mdi:github" />
           </motion.a>
-          <motion.a 
-            href="mailto:your-email@example.com" 
-            whileHover={{ y: -5, color: '#ea4335' }}
-            className="text-3xl hover:text-error transition-colors duration-300"
-          >
-            <Icon icon="mdi:email-outline" />
-          </motion.a>
+
         </motion.div>
         
         {/* Scroll Indicator - Fixed position for mobile */}
