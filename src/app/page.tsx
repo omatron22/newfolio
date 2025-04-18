@@ -224,8 +224,8 @@ const handleThemeChange = () => {
             href="https://www.linkedin.com/in/omaresp22/" 
             target="_blank" 
             rel="noopener noreferrer"
-            whileHover={{ y: -8, color: '#0077B5' }}
-            className="text-4xl hover:text-info transition-colors duration-300"
+            whileHover={{ y: -8 }}
+            className="text-4xl hover:text-primary transition-colors duration-300"
           >
             <Icon icon="mdi:linkedin" />
           </motion.a>
@@ -233,15 +233,15 @@ const handleThemeChange = () => {
             href="https://github.com/omatron22" 
             target="_blank" 
             rel="noopener noreferrer"
-            whileHover={{ y: -8, color: '#6e5494' }}
-            className="text-4xl hover:text-success transition-colors duration-300"
+            whileHover={{ y: -8 }}
+            className="text-4xl hover:text-secondary transition-colors duration-300"
           >
             <Icon icon="mdi:github" />
           </motion.a>
           <motion.a 
             href="mailto:your-email@example.com" 
-            whileHover={{ y: -8, color: '#ea4335' }}
-            className="text-4xl hover:text-error transition-colors duration-300"
+            whileHover={{ y: -8 }}
+            className="text-4xl hover:text-primary transition-colors duration-300"
           >
             <Icon icon="mdi:email-outline" />
           </motion.a>
@@ -421,8 +421,8 @@ const handleThemeChange = () => {
             href="https://www.linkedin.com/in/omaresp22/" 
             target="_blank" 
             rel="noopener noreferrer"
-            whileHover={{ y: -5, color: '#0077B5' }}
-            className="text-3xl hover:text-info transition-colors duration-300"
+            whileHover={{ y: -5 }}
+            className="text-3xl hover:text-primary transition-colors duration-300"
           >
             <Icon icon="mdi:linkedin" />
           </motion.a>
@@ -430,8 +430,8 @@ const handleThemeChange = () => {
             href="https://github.com/omatron22" 
             target="_blank" 
             rel="noopener noreferrer"
-            whileHover={{ y: -5, color: "#6e5494" }}
-            className="text-3xl hover:text-success transition-colors duration-300"
+            whileHover={{ y: -5 }}
+            className="text-3xl hover:text-secondary transition-colors duration-300"
           >
             <Icon icon="mdi:github" />
           </motion.a>
@@ -576,11 +576,6 @@ const handleThemeChange = () => {
               <ul className="list-disc ml-6 text-base-content/90 text-xs sm:text-sm space-y-1">
                 <li>Built automation scripts in C + LabVIEW</li>
                 <li>Improved data parsing with SQLite</li>
-                <li>
-                  <Link href="https://github.com/omatron22/GPIB-to-SQL-DLL" target="_blank" className="text-info underline">
-                    View Project
-                  </Link>
-                </li>
               </ul>
             </div>
           </div>
@@ -607,8 +602,8 @@ const handleThemeChange = () => {
       {/* Footer */}
       <footer className="bg-base-300 py-8 sm:py-10 border-t border-base-200">
         <div className="max-w-5xl mx-auto px-4 sm:px-6 text-center space-y-2 sm:space-y-3">
-          <p className="text-xs sm:text-sm font-clash text-base-content/80">Designed & Built by Omar Espinoza</p>
-          <p className="text-xs font-clash text-base-content/60">© {new Date().getFullYear()} Omar Espinoza. All rights reserved.</p>
+          <p className="text-xs sm:text-sm font-clash font-bold text-base-content/80">Designed & Built by Omar Espinoza</p>
+          <p className="text-xs font-clash font-bold text-base-content/60">© {new Date().getFullYear()} Omar Espinoza. All rights reserved.</p>
         </div>
       </footer>
     </div>
