@@ -1,11 +1,19 @@
-// src/app/video-game/page.tsx
 'use client';
 
 import React, { useState, useEffect } from 'react';
-import GameComponent from '@/components/game/GameComponent';
 import Image from 'next/image';
+import GameComponent from '@/components/game/GameComponent';
+import CharacterSelect from '@/components/game/CharacterSelect';
+import IntroScreen from '@/components/game/IntroScreen';
+import GameOver from '@/components/game/GameOver';
+import HowToPlay from '@/components/game/HowToPlay';
+import AudioManager from '@/components/game/AudioManager';
 
 export default function VideoGamePage() {
+  const [currentScreen, setCurrentScreen] = useState<
+    'intro' | 'characterSelect' | 'game'
+  >('intro');
+  const [selectedCharacter, setSelectedCharacter] = useState('og');
   const [isMobile, setIsMobile] = useState(false);
 
   useEffect(() => {
@@ -18,6 +26,22 @@ export default function VideoGamePage() {
       setIsMobile(mobile);
     }
   }, []);
+
+  // Handle character selection and start game
+  const handleCharacterSelect = (character: string) => {
+    setSelectedCharacter(character);
+    setCurrentScreen('game');
+  };
+
+  // Handle navigation back to character selection screen
+  const handleGoToCharacterSelect = () => {
+    setCurrentScreen('characterSelect');
+  };
+
+  // Handle navigation back to the main menu (intro screen)
+  const handleGoToMainMenu = () => {
+    setCurrentScreen('intro');
+  };
 
   if (isMobile) {
     return (
@@ -36,7 +60,21 @@ export default function VideoGamePage() {
     <div className="min-h-screen bg-gradient-to-b from-base-100 to-base-200 text-base-content flex flex-col">
       {/* Game Section */}
       <section className="flex-grow flex items-center justify-center py-8">
-        <GameComponent />
+        {currentScreen === 'intro' && (
+          <IntroScreen onPlay={() => setCurrentScreen('characterSelect')} />
+        )}
+
+        {currentScreen === 'characterSelect' && (
+          <CharacterSelect onSelectCharacter={handleCharacterSelect} />
+        )}
+
+        {currentScreen === 'game' && (
+          <GameComponent 
+            character={selectedCharacter}
+            onCharacterSelect={handleGoToCharacterSelect}
+            onMainMenu={handleGoToMainMenu}
+          />
+        )}
       </section>
 
       {/* Dedication Section */}
