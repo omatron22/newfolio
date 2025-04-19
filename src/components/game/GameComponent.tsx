@@ -16,27 +16,28 @@ export default function GameComponent({
   onCharacterSelect, 
   onMainMenu 
 }: GameComponentProps) {
+  // Game state
   const gameContainerRef = useRef<HTMLDivElement>(null);
   const gameInstanceRef = useRef<any>(null);
   const isPausedRef = useRef(false);
   const highScoreRef = useRef(0);
+  const isGameInitializedRef = useRef(false);
 
+  // React state
   const [gameOver, setGameOver] = useState(false);
   const [isPaused, setIsPaused] = useState(false);
-  const [showGuide, setShowGuide] = useState(() => {
-    // We need to check on client side only
-    if (typeof window !== 'undefined') {
-      return sessionStorage.getItem('guideShown') !== 'true';
-    }
-    return true;
-  });
+  const [showGuide, setShowGuide] = useState(true);
   const [currentScore, setCurrentScore] = useState(0);
   const [highScore, setHighScore] = useState<number>(0);
-  const [isGameInitialized, setIsGameInitialized] = useState(false);
 
-  // Initialize highScore from localStorage
+  // Initialize highScore from localStorage once on client
   useEffect(() => {
     if (typeof window !== 'undefined') {
+      // Check for stored guide preference
+      const guideShown = sessionStorage.getItem('guideShown') === 'true';
+      setShowGuide(!guideShown);
+      
+      // Get high score
       const savedHighScore = localStorage.getItem('highScore');
       const parsedHighScore = savedHighScore ? parseInt(savedHighScore, 10) : 0;
       setHighScore(parsedHighScore);
@@ -44,25 +45,30 @@ export default function GameComponent({
     }
   }, []);
 
-  // Update the highScoreRef whenever highScore changes
+  // Update highScoreRef when highScore changes
   useEffect(() => {
     highScoreRef.current = highScore;
   }, [highScore]);
 
+  // Game over handler
   const handleGameOver = useCallback(() => {
+    console.log('Game over triggered');
     setGameOver(true);
 
     if (gameInstanceRef.current) {
-      const currentScene = gameInstanceRef.current.scene.getScene('mainScene');
-
-      if (currentScene) {
-        currentScene.physics.world.pause();
-        currentScene.scene.pause();
+      try {
+        const currentScene = gameInstanceRef.current.scene.getScene('mainScene');
+        if (currentScene) {
+          currentScene.physics.world.pause();
+          currentScene.scene.pause();
+        }
+      } catch (error) {
+        console.error('Error pausing scene on game over:', error);
       }
     }
   }, []);
 
-  // Function to handle starting the game after the guide
+  // Close guide and start game
   const handleStartGame = () => {
     setShowGuide(false);
     if (typeof window !== 'undefined') {
@@ -70,26 +76,32 @@ export default function GameComponent({
     }
   };
 
+  // Initialize game when ready and guide is dismissed
   useEffect(() => {
-    if (!gameContainerRef.current || showGuide || isGameInitialized) return;
+    // Only run when container exists and guide is closed
+    if (!gameContainerRef.current || showGuide || isGameInitializedRef.current) return;
 
+    // Define game constants
+    const scaleFactor = 0.3333;
+    const hitboxWidth = 213;
+    const hitboxHeight = 193;
+    const duckHitboxHeight = 147;
+    const groundHeightLevel = 400;
+
+    // Initialize Phaser
     const initializePhaser = async () => {
       if (typeof window !== 'undefined') {
         try {
-          // Dynamically import Phaser to avoid SSR issues
+          console.log('Initializing Phaser game...');
           const Phaser = (await import('phaser')).default;
           
-          // Ensure previous game instance is fully destroyed
+          // Cleanup existing game instance
           if (gameInstanceRef.current) {
             gameInstanceRef.current.destroy(true);
             gameInstanceRef.current = null;
           }
 
-          const scaleFactor = 0.3333;
-          const hitboxWidth = 213;
-          const hitboxHeight = 193;
-          const duckHitboxHeight = 147;
-          const groundHeightLevel = 400;
+          // Game variables
           let isDuckingPrevious = false;
           let player: Phaser.Physics.Arcade.Sprite | null = null;
           let cursors: Phaser.Types.Input.Keyboard.CursorKeys | null = null;
@@ -97,6 +109,7 @@ export default function GameComponent({
           let obstacles: Phaser.Physics.Arcade.Group;
           let score = 0;
 
+          // Game configuration
           const config: Phaser.Types.Core.GameConfig = {
             type: Phaser.AUTO,
             width: 800,
@@ -112,11 +125,13 @@ export default function GameComponent({
             scene: {
               key: 'mainScene',
               preload: function(this: Phaser.Scene) {
-                // Determine character prefix based on selected character
-                const characterPrefix =
-                  character === 'birthday' ? 'birthday' : character === 'jeans' ? 'jeans' : 'og';
+                console.log('Preloading assets...');
+                // Character prefix
+                const characterPrefix = 
+                  character === 'birthday' ? 'birthday' : 
+                  character === 'jeans' ? 'jeans' : 'og';
 
-                // Load common assets (original sizes)
+                // Load common assets
                 this.load.spritesheet('background', '/assets/background.png', {
                   frameWidth: 1200,
                   frameHeight: 690,
@@ -164,13 +179,17 @@ export default function GameComponent({
                 });
               },
               create: function(this: Phaser.Scene) {
+                console.log('Creating game scene...');
                 const characterPrefix =
-                  character === 'birthday' ? 'birthday' : character === 'jeans' ? 'jeans' : 'og';
+                  character === 'birthday' ? 'birthday' : 
+                  character === 'jeans' ? 'jeans' : 'og';
 
+                // Reset score
                 score = 0;
                 setCurrentScore(0);
 
                 // Create animations
+                // Background animations
                 this.anims.create({
                   key: 'background_animation',
                   frames: this.anims.generateFrameNumbers('background', { start: 0, end: 199 }),
@@ -248,20 +267,19 @@ export default function GameComponent({
                   repeat: -1,
                 });
 
-                // Set background sprite and add animation
+                // Set background sprites
                 const background = this.add.sprite(0, 0, 'background').setOrigin(0, 0);
-                background.setDisplaySize(800, 460); // Adjusted size
+                background.setDisplaySize(800, 460);
                 background.anims.play('background_animation');
 
-                // Set second background sprite and add animation
                 const background2 = this.add.sprite(0, 0, 'background2').setOrigin(0, 0);
-                background2.setDisplaySize(800, 460); // Adjusted size
+                background2.setDisplaySize(800, 460);
                 background2.anims.play('background2_animation');
 
                 // Set world bounds
                 this.physics.world.setBounds(0, 0, 800, groundHeightLevel);
 
-                // Create the player sprite and start with idle animation
+                // Create player
                 player = this.physics.add.sprite(100, groundHeightLevel - 50, `${characterPrefix}idle`);
                 player.setBounce(0.1).setCollideWorldBounds(true);
                 player.setScale(scaleFactor);
@@ -269,10 +287,10 @@ export default function GameComponent({
                 (player.body as Phaser.Physics.Arcade.Body).setSize(hitboxWidth, hitboxHeight);
                 player.anims.play(`${characterPrefix}idle_animation`);
 
-                // Input handling for player movement
+                // Set up input
                 cursors = this.input.keyboard?.createCursorKeys() ?? null;
 
-                // Display score on the screen
+                // Display score
                 scoreText = this.add
                   .text(11, 11, '0', {
                     fontSize: '24px',
@@ -288,11 +306,12 @@ export default function GameComponent({
                   maxSize: 10,
                 });
 
-                // Add collider for player and obstacles
-                this.physics.add.collider(player, obstacles, (player, obstacle) => {
+                // Set up collision handling
+                this.physics.add.collider(player, obstacles, (playerObj, obstacle) => {
                   const obs = obstacle as Phaser.Physics.Arcade.Sprite;
 
                   if (obs.texture.key === 'chocolate') {
+                    console.log('Collision with chocolate - game over');
                     handleGameOver();
                   } else {
                     // Collectible obstacles: bone and ball
@@ -301,7 +320,7 @@ export default function GameComponent({
                     scoreText.setText(`${score}`);
                     obs.destroy();
 
-                    // Update high score if current score is greater
+                    // Update high score if needed
                     if (score > highScoreRef.current) {
                       setHighScore(score);
                       if (typeof window !== 'undefined') {
@@ -311,11 +330,11 @@ export default function GameComponent({
                   }
                 });
 
-                // Spawning logic for obstacles
+                // Obstacle spawn timer
                 this.time.addEvent({
                   delay: 1500,
                   callback: () => {
-                    if (gameOver) return; // Stop spawning when game is over
+                    if (gameOver) return;
 
                     const randomY = Phaser.Math.Between(groundHeightLevel - 120, groundHeightLevel - 30);
                     const obstacleType = Phaser.Math.RND.pick([
@@ -352,7 +371,8 @@ export default function GameComponent({
                 if (!player || !cursors) return;
 
                 const characterPrefix =
-                  character === 'birthday' ? 'birthday' : character === 'jeans' ? 'jeans' : 'og';
+                  character === 'birthday' ? 'birthday' : 
+                  character === 'jeans' ? 'jeans' : 'og';
 
                 player.setVelocityX(0);
                 const isOnGround = player.body?.blocked.down;
@@ -384,7 +404,7 @@ export default function GameComponent({
                   isDucking = true;
                 }
 
-                // Adjust the hitbox size when ducking
+                // Adjust hitbox for ducking
                 const body = player.body as Phaser.Physics.Arcade.Body;
                 if (isDucking && !isDuckingPrevious) {
                   const deltaHeight = (hitboxHeight - duckHitboxHeight) * scaleFactor;
@@ -423,7 +443,7 @@ export default function GameComponent({
                   }
                 }
 
-                // Reset to idle or moving animation after jump animation finishes
+                // Handle landing after jump
                 if (
                   isOnGround &&
                   player.anims.currentAnim?.key === `${characterPrefix}jump_animation` &&
@@ -436,7 +456,7 @@ export default function GameComponent({
                   }
                 }
 
-                // Cleanup obstacles
+                // Clean up off-screen obstacles
                 obstacles.children.iterate((obstacle) => {
                   const obs = obstacle as Phaser.Physics.Arcade.Sprite;
 
@@ -452,25 +472,31 @@ export default function GameComponent({
             parent: gameContainerRef.current,
           };
 
+          // Create game instance
           gameInstanceRef.current = new Phaser.Game(config);
-          setIsGameInitialized(true);
+          isGameInitializedRef.current = true;
+          console.log('Phaser game initialized successfully');
         } catch (error) {
-          console.error('Could not load Phaser:', error);
+          console.error('Error initializing Phaser:', error);
         }
       }
     };
 
+    // Initialize the game
     initializePhaser();
 
     return () => {
+      // Clean up on unmount
       if (gameInstanceRef.current) {
+        console.log('Destroying Phaser game instance');
         gameInstanceRef.current.destroy(true);
         gameInstanceRef.current = null;
+        isGameInitializedRef.current = false;
       }
-      setIsGameInitialized(false);
     };
-  }, [showGuide, character, gameOver, handleGameOver, isGameInitialized]);
+  }, [showGuide, character, gameOver, handleGameOver]);
 
+  // Toggle pause state
   const togglePause = () => {
     setIsPaused((prev) => {
       if (prev) {
@@ -483,24 +509,30 @@ export default function GameComponent({
     });
   };
 
+  // Restart game after game over
   const handleRestart = () => {
     setGameOver(false);
     setCurrentScore(0);
 
     if (gameInstanceRef.current) {
-      const currentScene = gameInstanceRef.current.scene.getScene('mainScene');
-
-      if (currentScene) {
-        currentScene.scene.restart();
-        currentScene.physics.world.resume();
+      try {
+        const currentScene = gameInstanceRef.current.scene.getScene('mainScene');
+        if (currentScene) {
+          currentScene.scene.restart();
+          currentScene.physics.world.resume();
+        }
+      } catch (error) {
+        console.error('Error restarting game:', error);
+        // Fallback: Destroy and reinitialize
+        gameInstanceRef.current.destroy(true);
+        gameInstanceRef.current = null;
+        isGameInitializedRef.current = false;
       }
     }
   };
 
   return (
-    <div
-      className="relative w-[800px] h-[460px] mx-auto border-[8px] border-base-300 rounded-lg shadow-md hover:shadow-lg transition-shadow bg-gradient-to-b from-base-100 to-base-200 box-border overflow-hidden"
-    >
+    <div className="relative w-[800px] h-[460px] mx-auto border-[8px] border-base-300 rounded-lg shadow-md hover:shadow-lg transition-shadow bg-gradient-to-b from-base-100 to-base-200 box-border overflow-hidden">
       {/* Show the HowToPlay screen before starting the game */}
       {showGuide ? (
         <HowToPlay onClose={handleStartGame} />

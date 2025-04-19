@@ -1,6 +1,6 @@
 'use client';
 
-import React, { useEffect, useRef } from 'react';
+import React, { useEffect, useRef, useState } from 'react';
 import AudioManager from './AudioManager';
 
 interface IntroScreenProps {
@@ -10,23 +10,22 @@ interface IntroScreenProps {
 export default function IntroScreen({ onPlay }: IntroScreenProps) {
   const introRef = useRef<HTMLDivElement>(null);
   const phaserInstanceRef = useRef<any>(null);
+  const [isError, setIsError] = useState(false);
 
   useEffect(() => {
-    if (!introRef.current) {
-      return;
-    }
+    if (!introRef.current) return;
 
     const initPhaser = async () => {
       try {
-        // Dynamically import Phaser to avoid SSR issues
+        console.log("Initializing intro screen...");
+        // Dynamically import Phaser
         const Phaser = (await import('phaser')).default;
         
-        // Destroy previous Phaser instance if it exists
+        // Destroy previous instance
         if (phaserInstanceRef.current) {
           phaserInstanceRef.current.destroy(true);
         }
 
-        // Phaser configuration for the intro screen
         const config = {
           type: Phaser.AUTO,
           width: 800,
@@ -71,27 +70,33 @@ export default function IntroScreen({ onPlay }: IntroScreenProps) {
               samson2Sprite.setOrigin(0.5, 0.5);
               samson2Sprite.play('samson2_animation');
 
-              // Add play button image over the sprite, positioned in the middle
+              // Add play button
               const playButton = this.add
-                .image(400, 230, 'playButton')
-                .setInteractive({ useHandCursor: true });
+              .image(400, 230, 'playButton')
+              .setInteractive({ 
+                pixelPerfect: true,  // This makes the hitbox match the non-transparent parts of the image
+                alphaTolerance: 1    // This sets how strict the transparency detection is (0-255)
+              });
+            
+            playButton.setScale(0.6667);
+            playButton.setOrigin(0.5, 0.5);
+            playButton.on('pointerdown', onPlay);
+            playButton.on('pointerover', () => {
+              playButton.setScale(0.7334);
+            });
+            playButton.on('pointerout', () => {
               playButton.setScale(0.6667);
-              playButton.setOrigin(0.5, 0.5);
-              playButton.on('pointerdown', onPlay);
-              playButton.on('pointerover', () => {
-                playButton.setScale(0.7334);
-              });
-              playButton.on('pointerout', () => {
-                playButton.setScale(0.6667);
-              });
+            });
             },
           },
           parent: introRef.current,
         };
 
         phaserInstanceRef.current = new Phaser.Game(config);
+        console.log("Intro screen initialized successfully");
       } catch (error) {
-        console.error('Could not load Phaser:', error);
+        console.error('Could not load Phaser for intro screen:', error);
+        setIsError(true);
       }
     };
 
@@ -104,13 +109,28 @@ export default function IntroScreen({ onPlay }: IntroScreenProps) {
     };
   }, [onPlay]);
 
+  // Fallback UI in case of error
+  if (isError) {
+    return (
+      <div className="relative w-[800px] h-[460px] mx-auto border-[8px] border-base-300 rounded-lg shadow-md hover:shadow-lg transition-shadow bg-gradient-to-b from-base-100 to-base-200 box-border overflow-hidden flex items-center justify-center">
+        <div className="text-center">
+          <h2 className="text-2xl font-bold mb-4">Samson The Game</h2>
+          <button 
+            onClick={onPlay}
+            className="btn btn-primary px-8 py-3"
+          >
+            Start Game
+          </button>
+        </div>
+      </div>
+    );
+  }
+
   return (
     <div
       className="relative w-[800px] h-[460px] mx-auto border-[8px] border-base-300 rounded-lg shadow-md hover:shadow-lg transition-shadow bg-gradient-to-b from-base-100 to-base-200 box-border overflow-hidden"
     >
       <div ref={introRef} className="w-full h-full"></div>
-
-      {/* Include AudioManager for managing audio */}
       <AudioManager currentScreen="intro" />
     </div>
   );

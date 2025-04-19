@@ -197,7 +197,7 @@ const handleThemeChange = () => {
             whileHover={{ scale: 1.05, boxShadow: "0 10px 25px -5px rgba(0, 0, 0, 0.1), 0 10px 10px -5px rgba(0, 0, 0, 0.04)" }}
             whileTap={{ scale: 0.95 }}
           >
-            Explore My Work
+            Explore
           </motion.button>
           
           <motion.a 
@@ -237,13 +237,6 @@ const handleThemeChange = () => {
             className="text-4xl hover:text-secondary transition-colors duration-300"
           >
             <Icon icon="mdi:github" />
-          </motion.a>
-          <motion.a 
-            href="mailto:your-email@example.com" 
-            whileHover={{ y: -8 }}
-            className="text-4xl hover:text-primary transition-colors duration-300"
-          >
-            <Icon icon="mdi:email-outline" />
           </motion.a>
         </motion.div>
       </div>
@@ -392,7 +385,7 @@ const handleThemeChange = () => {
             whileHover={{ scale: 1.02 }}
             whileTap={{ scale: 0.98 }}
           >
-            Explore My Work
+            Explore
           </motion.button>
           
           <motion.a 
@@ -551,35 +544,62 @@ const handleThemeChange = () => {
           </div>
         </motion.div>
 
-        {/* Education + Experience Timeline */}
-        <motion.div className="space-y-8 sm:space-y-10" variants={itemVariants}>
-          <h2 className="text-3xl sm:text-4xl font-clash font-bold text-center">Journey</h2>
-          <div className="space-y-6 sm:space-y-10">
-            {/* UCLA */}
-            <div className="bg-base-100 border border-base-300 rounded-lg p-4 sm:p-6 shadow-md">
-              <h3 className="text-lg sm:text-xl font-bold flex items-center gap-2 mb-2">
-                <Icon icon="mdi:school-outline" className="text-secondary" /> UCLA – B.A. Linguistics & Computer Science
-              </h3>
-              <p className="text-xs sm:text-sm text-base-content/80 mb-2">2020–2024 · Los Angeles, CA</p>
-              <ul className="list-disc ml-6 text-base-content/90 text-xs sm:text-sm space-y-1">
-                <li>Snow Team Athlete</li>
-                <li>Web Developer @ Society of LatinX Engineers</li>
-              </ul>
-            </div>
+{/* Education + Experience Timeline */}
+<motion.div className="space-y-8 sm:space-y-10" variants={itemVariants}>
+  <h2 className="text-3xl sm:text-4xl font-clash font-bold text-center">Journey</h2>
+  <div className="flex flex-col items-center">
+    {/* UCLA */}
+    <div className="w-full bg-base-100 border border-base-300 rounded-lg p-4 sm:p-6 shadow-md">
+      <h3 className="text-lg sm:text-xl font-bold flex items-center gap-2 mb-2">
+        <Icon icon="mdi:school-outline" className="text-secondary" /> UCLA – B.A. Linguistics & Computer Science
+      </h3>
+      <p className="text-xs sm:text-sm text-base-content/80 mb-2">2020–2024 · Los Angeles, CA</p>
+      <ul className="list-disc ml-6 text-base-content/90 text-xs sm:text-sm space-y-1">
+        <li>Snow Team Athlete</li>
+        <li>Web Developer @ Society of LatinX Engineers</li>
+      </ul>
+    </div>
+    
+    {/* Vertical dots with more spacing */}
+    <div className="flex flex-col items-center py-4">
+      <div className="w-2 h-2 rounded-full bg-primary my-2"></div>
+      <div className="w-2 h-2 rounded-full bg-primary my-2"></div>
+    </div>
+    
+    {/* Experior Labs */}
+    <div className="w-full bg-base-100 border border-base-300 rounded-lg p-4 sm:p-6 shadow-md">
+      <h3 className="text-lg sm:text-xl font-bold flex items-center gap-2 mb-2">
+        <Icon icon="mdi:briefcase-outline" className="text-primary" /> Experior Laboratories – Programming Intern
+      </h3>
+      <p className="text-xs sm:text-sm text-base-content/80 mb-2">Summer 2023 · Oxnard, CA</p>
+      <ul className="list-disc ml-6 text-base-content/90 text-xs sm:text-sm space-y-1">
+        <li>Built automation scripts in C + LabVIEW</li>
+        <li>Improved data parsing with SQLite</li>
+      </ul>
+    </div>
+    
+    {/* Vertical dots with more spacing */}
+    <div className="flex flex-col items-center py-4">
+      <div className="w-2 h-2 rounded-full bg-primary my-2"></div>
+      <div className="w-2 h-2 rounded-full bg-primary my-2"></div>
+      <div className="w-2 h-2 rounded-full bg-primary my-2"></div>
+    </div>
+    
+    {/* QMIRAC */}
+    <div className="w-full bg-base-100 border border-base-300 rounded-lg p-4 sm:p-6 shadow-md">
+      <h3 className="text-lg sm:text-xl font-bold flex items-center gap-2 mb-2">
+        <Icon icon="mdi:briefcase-outline" className="text-primary" /> QMIRAC (Startup) – Lead Software Engineer
+      </h3>
+      <p className="text-xs sm:text-sm text-base-content/80 mb-2">2024–Present · Remote</p>
+      <ul className="list-disc ml-6 text-base-content/90 text-xs sm:text-sm space-y-1">
+        <li>Software Engineer focused on AI system development</li>
+        <li>Designing and implementing core technical infrastructure</li>
+        <li>Creating software solutions to enhance data processing capabilities</li>
+      </ul>
+    </div>
+  </div>
+</motion.div>
 
-            {/* Experior Labs */}
-            <div className="bg-base-100 border border-base-300 rounded-lg p-4 sm:p-6 shadow-md">
-              <h3 className="text-lg sm:text-xl font-bold flex items-center gap-2 mb-2">
-                <Icon icon="mdi:briefcase-outline" className="text-primary" /> Experior Laboratories – Programming Intern
-              </h3>
-              <p className="text-xs sm:text-sm text-base-content/80 mb-2">Summer 2023 · Oxnard, CA</p>
-              <ul className="list-disc ml-6 text-base-content/90 text-xs sm:text-sm space-y-1">
-                <li>Built automation scripts in C + LabVIEW</li>
-                <li>Improved data parsing with SQLite</li>
-              </ul>
-            </div>
-          </div>
-        </motion.div>
 
         {/* Skills */}
         <motion.div variants={itemVariants} className="space-y-6">
