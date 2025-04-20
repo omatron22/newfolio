@@ -52,42 +52,42 @@ export default function VideoGamePage() {
     { src: '/images/walking.jpeg', alt: 'My Best Friend 5' },
   ];
 
-  if (isMobile) {
-    return (
-      <div className="min-h-screen bg-gradient-to-b from-base-100 to-base-200 text-base-content flex items-center justify-center">
-        <div className="bg-base-100 rounded-2xl shadow-lg p-8 text-center max-w-lg mx-6">
-          <Icon icon="mdi:monitor-off" className="text-5xl text-primary mb-4 mx-auto" />
-          <h1 className="text-2xl font-clash font-bold mb-4">Game Not Supported on Mobile Devices</h1>
-          <p className="text-base-content/80">
-            Sorry, this game is not supported on mobile devices. Please access it from a desktop or laptop computer.
-          </p>
-        </div>
-      </div>
-    );
-  }
-
   return (
     <div className="min-h-screen bg-gradient-to-b from-base-100 to-base-200 text-base-content flex flex-col">
       {/* Game Section */}
       <section className="flex-grow flex items-center justify-center py-8">
-        {currentScreen === 'intro' && (
-          <IntroScreen onPlay={() => setCurrentScreen('characterSelect')} />
-        )}
+        {isMobile ? (
+          // Mobile-only message
+          <div className="bg-base-100 rounded-2xl shadow-lg p-8 text-center max-w-lg mx-6">
+            <Icon icon="mdi:monitor-off" className="text-5xl text-primary mb-4 mx-auto" />
+            <h1 className="text-2xl font-clash font-bold mb-4">Game Not Supported on Mobile Devices</h1>
+            <p className="text-base-content/80">
+              Sorry, this game is not supported on mobile devices. Please access it from a desktop or laptop computer.
+            </p>
+          </div>
+        ) : (
+          // Desktop game components
+          <>
+            {currentScreen === 'intro' && (
+              <IntroScreen onPlay={() => setCurrentScreen('characterSelect')} />
+            )}
 
-        {currentScreen === 'characterSelect' && (
-          <CharacterSelect onSelectCharacter={handleCharacterSelect} />
-        )}
+            {currentScreen === 'characterSelect' && (
+              <CharacterSelect onSelectCharacter={handleCharacterSelect} />
+            )}
 
-        {currentScreen === 'game' && (
-          <GameComponent 
-            character={selectedCharacter}
-            onCharacterSelect={handleGoToCharacterSelect}
-            onMainMenu={handleGoToMainMenu}
-          />
+            {currentScreen === 'game' && (
+              <GameComponent 
+                character={selectedCharacter}
+                onCharacterSelect={handleGoToCharacterSelect}
+                onMainMenu={handleGoToMainMenu}
+              />
+            )}
+          </>
         )}
       </section>
 
-      {/* Dedication Section */}
+      {/* Dedication Section - Always visible */}
       <section className="py-16 bg-gradient-to-b from-base-200 to-base-300">
         <div className="max-w-6xl mx-auto text-center px-6">
           <h2 className="text-3xl md:text-4xl font-clash font-bold text-base-content mb-6">
