@@ -1,4 +1,4 @@
-// src/app/layout.tsx
+// src/app/layout.tsx test
 import { ThemeProvider } from '@/components/ui/ThemeProvider';
 import AppBar from '@/components/ui/AppBar';
 import './globals.css';
