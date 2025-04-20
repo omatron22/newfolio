@@ -21,8 +21,8 @@ interface Project {
   gameLink?: string;
   tags: string[];
   status: ProjectStatus;
-  featured?: boolean;
   image?: string;
+  websiteLink?: string;
 }
 
 export default function Projects() {
@@ -37,9 +37,25 @@ export default function Projects() {
       purpose: "Automate data extraction from VISA machines and streamline SQL database integration",
       language: "C, LabVIEW (DLL integration)",
       description: `Developed a solution to automate the process of extracting data from VISA machines, which previously required manual effort and separate LabVIEW algorithms for each machine. The C code communicated with machines to retrieve measurement data, automatically adding it to an SQL database by either updating an existing entry or creating a new one. The code was converted into a DLL for integration with LabVIEW, allowing for easy replication and significantly improving efficiency.`,
-      tags: ["professional", "automation"],
+      tags: ["professional"],
       status: "completed",
-      image: "/images/project-code.jpg" // Placeholder image path
+      image: "/images/experior.jpg" // Placeholder image path
+    },
+    {
+      title: "Samson The Game",
+      company: "Personal Project",
+      purpose: "Create a unique 2D runner from scratch, combining animations, gameplay, and my own music",
+      language: "JavaScript, TypeScript, React, Phaser",
+      description: `Created a custom 2D game using React and Phaser, inspired by classic 8-bit games. 
+      Designed frame-by-frame animations for characters and backgrounds, all drawn with sprite sheets using Piskel, Illustrator, and Photoshop.
+      The game features obstacle generation, collision detection, and a scoring system.
+      You can choose between different characters, each with its own design.
+      The background music and sound effects are original, recorded and mixed by me.`,
+      githubLink: "https://github.com/omatron22/Portfolio",
+      gameLink: "/video-game", 
+      tags: ["personal"],
+      status: "completed",
+      image: "/images/videogame.png" // Placeholder image path
     },
     {
       title: "Personal Portfolio Website",
@@ -54,24 +70,24 @@ export default function Projects() {
       githubLink: "https://github.com/omatron22/Portfolio",
       tags: ["personal", "web"],
       status: "completed",
-      featured: true,
-      image: "/images/project-portfolio.jpg" // Placeholder image path
+      image: "/images/heropage.png" // Placeholder image path
     },
     {
-      title: "Samson The Game",
-      company: "Personal Project",
-      purpose: "Create a unique 2D runner from scratch, combining animations, gameplay, and my own music",
-      language: "JavaScript, TypeScript, React, Phaser",
-      description: `Created a custom 2D game using React and Phaser, inspired by classic 8-bit games. 
-      Designed frame-by-frame animations for characters and backgrounds, all drawn with sprite sheets using Piskel, Illustrator, and Photoshop.
-      The game features obstacle generation, collision detection, and a scoring system.
-      You can choose between different characters, each with its own design.
-      The background music and sound effects are original, recorded and mixed by me.`,
-      githubLink: "https://github.com/omatron22/Portfolio",
-      gameLink: "/video-game", 
-      tags: ["personal", "game"],
+      title: "Clearwater Pool and Spa Service Website",
+      company: "Family Business Project",
+      companyUrl: "https://www.clearwaterpoolandspaservice.com/",
+      purpose: "Create a professional online presence for a family pool and spa service business",
+      language: "Next.js, TypeScript, Tailwind CSS, Google Maps API",
+      description: `Designed and developed a modern, responsive website for a family-run pool and spa service business. 
+      Implemented Google reCAPTCHA for spam prevention and customer protection, ensuring secure form submissions. 
+      Integrated Google Maps API to display service areas and locations, making it easy for customers to find and contact the business.
+      The website features a clean, professional design with detailed service offerings, testimonials, and contact information.
+      Built with performance and accessibility in mind, creating a seamless experience across all devices.`,
+      githubLink: "https://github.com/omatron22/clearwater",
+      websiteLink: "https://www.clearwaterpoolandspaservice.com/",
+      tags: ["personal", "web"],
       status: "completed",
-      image: "/images/project-game.jpg" // Placeholder image path
+      image: "/images/clearwater.png" // You'll need to add a screenshot
     },
     {
       title: "BeanPod",
@@ -86,7 +102,7 @@ export default function Projects() {
       githubLink: "https://github.com/omatron22/Bean-Pod", 
       tags: ["academic", "web"],
       status: "completed",
-      image: "/images/project-chat.jpg" // Placeholder image path
+      image: "/images/beanpod.jpeg" // Placeholder image path
     },
   ];
 
@@ -94,6 +110,10 @@ export default function Projects() {
   const filteredProjects = activeFilter === 'all' 
     ? projects 
     : projects.filter(project => project.tags.includes(activeFilter));
+
+  // Split projects into two columns for masonry layout
+  const leftColumnProjects = filteredProjects.filter((_, index) => index % 2 === 0);
+  const rightColumnProjects = filteredProjects.filter((_, index) => index % 2 === 1);
 
   // Animation variants
   const containerVariants = {
@@ -124,6 +144,140 @@ export default function Projects() {
     concept: { icon: "mdi:lightbulb-outline", color: "text-info", label: "Concept" }
   };
 
+  const ProjectCard = ({ project, index }: { project: Project; index: number }) => (
+    <motion.div 
+      className="bg-base-100 border border-base-300 rounded-2xl overflow-hidden shadow-lg hover:shadow-xl transition-all duration-300 mb-8"
+      variants={itemVariants}
+    >
+      {/* Project Image - Now with a cleaner overlay design */}
+      <div className="w-full h-48 relative overflow-hidden">
+        {project.image ? (
+          <div 
+            className="absolute inset-0 bg-center bg-cover transform hover:scale-105 transition-transform duration-500" 
+            style={{ backgroundImage: `url(${project.image})` }}
+          />
+        ) : (
+          <div className="absolute inset-0 bg-gradient-to-br from-primary/20 to-secondary/20" />
+        )}
+        
+        {/* Status Badge Overlay */}
+        <div className="absolute top-3 right-3 bg-base-100/90 backdrop-blur-sm rounded-full px-3 py-1 flex items-center">
+          <Icon 
+            icon={statusIcons[project.status].icon} 
+            className={`${statusIcons[project.status].color} mr-1.5 text-lg`}
+          />
+          <span className="text-xs font-medium">{statusIcons[project.status].label}</span>
+        </div>
+      </div>
+
+      {/* Project Content */}
+      <div className="p-6">
+        {/* Title */}
+        <h2 className="text-xl font-clash font-bold text-base-content mb-1">
+          {project.title}
+        </h2>
+
+        {/* Company - More subtle */}
+        {project.company && (
+          <div className="flex items-center space-x-2 mb-4 text-sm">
+            <Icon icon="mdi:briefcase-outline" className="text-primary text-lg" />
+            <span className="text-base-content/70">
+              {project.companyUrl ? (
+                <Link
+                  href={project.companyUrl}
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  className="hover:text-primary transition-colors"
+                >
+                  {project.company}
+                </Link>
+              ) : (
+                project.company
+              )}
+            </span>
+          </div>
+        )}
+
+        {/* Purpose - With better spacing */}
+        {project.purpose && (
+          <div className="text-base-content/80 text-sm mb-6">
+            {project.purpose}
+          </div>
+        )}
+
+        {/* Technologies */}
+        {project.language && (
+          <div className="flex flex-wrap gap-2 mb-6">
+            {project.language.split(', ').map((tech, idx) => (
+              <span 
+                key={idx}
+                className="bg-base-200 text-xs px-3 py-1 rounded-full text-base-content/80"
+              >
+                {tech}
+              </span>
+            ))}
+          </div>
+        )}
+
+        {/* Description - Full text always visible */}
+        <p className="text-sm text-base-content/70 leading-relaxed">
+          {project.description}
+        </p>
+
+        {/* Tags */}
+        {project.tags && (
+          <div className="flex flex-wrap gap-2 mt-6">
+            {project.tags.map(tag => (
+              <span 
+                key={tag} 
+                className="bg-primary/10 text-xs px-2 py-1 rounded-full text-primary font-medium"
+              >
+                #{tag}
+              </span>
+            ))}
+          </div>
+        )}
+
+        {/* Action Links - Only show if there are any links */}
+        {(project.websiteLink || project.gameLink || project.githubLink) && (
+          <div className="flex gap-3 mt-6 pt-6 border-t border-base-200">
+            {project.websiteLink && (
+              <Link 
+                href={project.websiteLink} 
+                target="_blank"
+                rel="noopener noreferrer"
+                className="btn btn-ghost btn-sm flex-1 gap-2"
+              >
+                <Icon icon="mdi:web" className="text-xl" />
+                Website
+              </Link>
+            )}
+            {project.gameLink && (
+              <Link 
+                href={project.gameLink} 
+                className="btn btn-primary btn-sm flex-1 gap-2"
+              >
+                <Icon icon="mdi:game" className="text-xl" />
+                Play Game
+              </Link>
+            )}
+            {project.githubLink && (
+              <Link
+                href={project.githubLink}
+                target="_blank"
+                rel="noopener noreferrer"
+                className="btn btn-ghost btn-sm flex-1 gap-2"
+              >
+                <Icon icon="mdi:github" className="text-xl" />
+                Code
+              </Link>
+            )}
+          </div>
+        )}
+      </div>
+    </motion.div>
+  );
+
   return (
     <div className="bg-gradient-to-b from-base-100 to-base-200 min-h-screen flex flex-col items-center">
       {/* Page Header */}
@@ -141,14 +295,14 @@ export default function Projects() {
         </p>
       </motion.div>
 
-      {/* Filter Buttons */}
+      {/* Filter Buttons - Removed family, game, automation */}
       <motion.div 
         className="flex flex-wrap justify-center gap-2 mb-8 px-6"
         initial={{ opacity: 0, y: 20 }}
         animate={{ opacity: 1, y: 0 }}
         transition={{ duration: 0.6, delay: 0.2 }}
       >
-        {['all', 'personal', 'professional', 'academic', 'web', 'game', 'automation'].map(filter => (
+        {['all', 'personal', 'professional', 'academic', 'web'].map(filter => (
           <button
             key={filter}
             onClick={() => setActiveFilter(filter)}
@@ -163,7 +317,7 @@ export default function Projects() {
         ))}
       </motion.div>
 
-      {/* Projects Grid */}
+      {/* Projects Grid with Masonry Columns */}
       <div className="w-full px-6 max-w-7xl mx-auto pb-24">
         <motion.div 
           className="grid grid-cols-1 md:grid-cols-2 gap-8"
@@ -171,122 +325,19 @@ export default function Projects() {
           initial="hidden"
           animate="visible"
         >
-          {filteredProjects.map((project, index) => (
-            <motion.div 
-              key={index} 
-              className={`bg-base-100 border border-base-300 rounded-lg overflow-hidden shadow-md hover:shadow-lg transition-all duration-300 ${
-                project.featured ? 'ring-2 ring-primary ring-offset-2 ring-offset-base-100' : ''
-              }`}
-              variants={itemVariants}
-            >
-              {/* Project Image/Header */}
-              <div className="w-full h-48 bg-gradient-to-r from-primary/10 to-secondary/10 relative flex items-center justify-center">
-                {project.image && (
-                  <div className="absolute inset-0 opacity-30 bg-center bg-cover" 
-                       style={{ backgroundImage: `url(${project.image})` }}></div>
-                )}
-                <div className="relative z-10 text-center px-6">
-                  <h2 className="text-2xl font-clash font-bold text-base-content">{project.title}</h2>
-                  {project.featured && (
-                    <span className="inline-block bg-primary text-primary-content text-xs px-2 py-1 rounded-full mt-2">
-                      Featured Project
-                    </span>
-                  )}
-                </div>
-              </div>
-
-              {/* Project Content */}
-              <div className="p-6">
-                {/* Status Badge */}
-                <div className="flex items-center mb-4">
-                  <Icon 
-                    icon={statusIcons[project.status].icon} 
-                    className={`${statusIcons[project.status].color} mr-2`} 
-                  />
-                  <span className="text-xs font-medium">{statusIcons[project.status].label}</span>
-                </div>
-
-                <div className="space-y-4">
-                  {project.company && (
-                    <div className="flex items-center space-x-2">
-                      <Icon icon="mdi:briefcase-outline" className="text-primary" />
-                      <span className="font-medium text-base-content">
-                        {project.companyUrl ? (
-                          <Link
-                            href={project.companyUrl}
-                            target="_blank"
-                            rel="noopener noreferrer"
-                            className="hover:text-primary transition-colors"
-                          >
-                            {project.company}
-                          </Link>
-                        ) : (
-                          project.company
-                        )}
-                      </span>
-                    </div>
-                  )}
-                  {project.purpose && (
-                    <div className="flex items-center space-x-2">
-                      <Icon icon="mdi:target" className="text-error" />
-                      <span className="font-medium text-base-content">
-                        {project.purpose}
-                      </span>
-                    </div>
-                  )}
-                  {project.language && (
-                    <div className="flex items-center space-x-2">
-                      <Icon icon="mdi:code-tags" className="text-success" />
-                      <span className="font-medium text-base-content">
-                        {project.language}
-                      </span>
-                    </div>
-                  )}
-                </div>
-
-                <p className="text-sm text-base-content/80 leading-relaxed mt-4 line-clamp-4 hover:line-clamp-none transition-all duration-300">
-                  {project.description}
-                </p>
-
-                {/* Tags */}
-                {project.tags && (
-                  <div className="flex flex-wrap gap-2 mt-4">
-                    {project.tags.map(tag => (
-                      <span 
-                        key={tag} 
-                        className="bg-base-200 text-xs px-2 py-1 rounded-full text-base-content/70"
-                      >
-                        #{tag}
-                      </span>
-                    ))}
-                  </div>
-                )}
-
-                {/* Action Links */}
-                <div className="flex justify-end items-center mt-6 space-x-4">
-                  {project.gameLink && (
-                    <Link 
-                      href={project.gameLink} 
-                      className="flex items-center gap-2 btn btn-sm btn-primary"
-                    >
-                      <Icon icon="mdi:game" className="text-xl" />
-                      Play Game
-                    </Link>
-                  )}
-                  {project.githubLink && (
-                    <Link
-                      href={project.githubLink}
-                      target="_blank"
-                      rel="noopener noreferrer"
-                      className="text-base-content hover:text-secondary transition-transform transform hover:scale-110"
-                    >
-                      <Icon icon="mdi:github" className="text-3xl" />
-                    </Link>
-                  )}
-                </div>
-              </div>
-            </motion.div>
-          ))}
+          {/* Left Column */}
+          <div className="flex flex-col">
+            {leftColumnProjects.map((project, index) => (
+              <ProjectCard key={index * 2} project={project} index={index * 2} />
+            ))}
+          </div>
+          
+          {/* Right Column */}
+          <div className="flex flex-col">
+            {rightColumnProjects.map((project, index) => (
+              <ProjectCard key={index * 2 + 1} project={project} index={index * 2 + 1} />
+            ))}
+          </div>
         </motion.div>
       </div>
 
@@ -303,7 +354,7 @@ export default function Projects() {
           I'm always open to discussing new projects and creative ideas. Let's build something amazing together.
         </p>
         <Link 
-          href="mailto:your-email@example.com" 
+          href="mailto:omaresp35@gmail.com" 
           className="btn btn-primary"
         >
           Get In Touch

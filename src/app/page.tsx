@@ -462,7 +462,7 @@ const handleThemeChange = () => {
       {/* Unified Overview Section */}
       <motion.section
         ref={aboutSectionRef}
-        className="py-16 sm:py-24 px-4 sm:px-6 max-w-5xl mx-auto space-y-16 sm:space-y-24"
+        className="py-16 sm:py-20 px-4 sm:px-6 max-w-5xl mx-auto"
         initial="hidden"
         whileInView="visible"
         viewport={{ once: true }}
@@ -472,76 +472,67 @@ const handleThemeChange = () => {
         {/* About - Responsive Layout */}
         <motion.div 
           variants={itemVariants} 
-          className="grid md:grid-cols-2 gap-8 md:gap-12 items-center text-center md:text-left"
+          className="grid md:grid-cols-2 gap-8 md:gap-12 items-center text-center md:text-left md:items-center"
         >
-          {/* Image Side – Responsive Photo Cluster */}
-          <div className="relative w-full h-[400px] sm:h-[450px] md:h-[500px] flex justify-center items-center mx-auto md:mx-0 md:-translate-x-6 md:translate-y-10 max-w-md">
-            {/* Glow Aura */}
-            <div className="absolute w-[80%] h-[80%] bg-primary/10 blur-3xl rounded-full -left-6 top-1/2 -translate-y-1/2 -z-10" />
+          
+{/* Image Side – Responsive Photo Cluster */}
+<div className="relative w-full h-[580px] sm:h-[600px] md:h-[660px] lg:h-[720px] flex justify-center items-center mx-auto max-w-md sm:max-w-lg lg:max-w-2xl md:-translate-x-20 md:translate-y-16">
+  {/* Glow Aura */}
+  <div className="absolute w-[95%] h-[95%] bg-primary/10 blur-[50px] rounded-full top-[60px] left-[5%] md:left-0 md:top-[-50px] -z-10" />
 
-            {/* Photo 1 – Left */}
-            <div className="absolute top-12 left-[5%] sm:left-[10%] md:left-0 rotate-[-4deg] hover:rotate-[-1deg] transition-transform duration-300 z-20 scale-90 sm:scale-100">
-              <div className="bg-base-100 border border-base-300 rounded-xl p-2 shadow-md">
-                <Image 
-                  src="/images/one.JPG"
-                  alt="Climbing"
-                  width={180}
-                  height={240}
-                  className="rounded-lg object-cover"
-                />
-              </div>
-            </div>
+  {/* Travel – left side */}
+  <div className="absolute top-[100px] left-[1%] sm:left-[3%] md:left-[-4%] rotate-[5deg] hover:rotate-[2deg] z-20 scale-100 sm:scale-110 md:scale-125">
+    <div className="bg-base-100 border border-base-300 rounded-xl p-2 shadow-md">
+      <Image 
+        src="/images/two.jpeg"
+        alt="Travel"
+        width={190}
+        height={260}
+        className="rounded-lg object-cover"
+      />
+    </div>
+  </div>
 
-            {/* Photo 2 – Right */}
-            <div className="absolute top-12 right-[5%] sm:right-[10%] md:left-60 rotate-[3deg] hover:rotate-[1deg] transition-transform duration-300 z-30 scale-90 sm:scale-100">
-              <div className="bg-base-100 border border-base-300 rounded-xl p-2 shadow-lg">
-                <Image 
-                  src="/images/three.jpeg"
-                  alt="Grad"
-                  width={190}
-                  height={250}
-                  className="rounded-lg object-cover"
-                />
-              </div>
-            </div>
+  {/* Climb – right side */}
+  <div className="absolute top-[100px] right-[1%] sm:right-[3%] md:right-[-4%] rotate-[-6deg] hover:rotate-[-3deg] z-20 scale-100 sm:scale-110 md:scale-125">
+    <div className="bg-base-100 border border-base-300 rounded-xl p-2 shadow-md">
+      <Image 
+        src="/images/one.JPG"
+        alt="Climbing"
+        width={190}
+        height={260}
+        className="rounded-lg object-cover"
+      />
+    </div>
+  </div>
 
-            {/* Photo 3 – Lower Middle */}
-            <div className="absolute top-[180px] sm:top-[190px] left-[28%] sm:left-[34%] md:left-36 rotate-[6deg] hover:rotate-[3deg] transition-transform duration-300 z-10 scale-90 sm:scale-100">
-              <div className="bg-base-100 border border-base-300 rounded-xl p-2 shadow-md">
-                <Image 
-                  src="/images/two.jpeg"
-                  alt="Travel"
-                  width={180}
-                  height={230}
-                  className="rounded-lg object-cover"
-                />
-              </div>
-            </div>
-          </div>
+  {/* Grad – center bottom */}
+  <div className="absolute top-[260px] md:top-[310px] left-1/2 -translate-x-1/2 rotate-[1deg] hover:rotate-[0deg] z-30 scale-105 sm:scale-110 md:scale-125">
+    <div className="bg-base-100 border border-base-300 rounded-xl p-2 shadow-lg">
+      <Image 
+        src="/images/three.jpeg"
+        alt="Grad"
+        width={200}
+        height={285}
+        className="rounded-lg object-cover"
+      />
+    </div>
+  </div>
+</div>
 
-          {/* Text Side */}
-          <div>
-            <h2 className="text-3xl sm:text-4xl font-clash font-bold mb-4">
-              About <span className="text-primary">Me</span>
-            </h2>
-            <p className="text-base-content leading-relaxed mb-6">
-              I'm Omar Espinoza from Ventura, California. I love building things — whether it's software, music, or handmade furniture. 
-              My background in Linguistics & CS from UCLA taught me how to think deeply and create intentionally. I'm excited to keep learning, designing, and making tech that feels human.
-            </p>
-            <div className="flex justify-center md:justify-start gap-3 sm:gap-4 flex-wrap">
-              {[
-                ["mdi:code-braces", "Web Development"],
-                ["mdi:palette", "UI/UX Design"],
-                ["mdi:music", "Music"],
-                ["mdi:hammer-wrench", "DIY Projects"]
-              ].map(([icon, label]) => (
-                <div key={label} className="flex items-center gap-2 bg-base-200 rounded-full px-3 py-1 sm:px-4 sm:py-2 shadow-sm">
-                  <Icon icon={icon} className="text-primary" />
-                  <span className="text-xs sm:text-sm font-medium">{label}</span>
-                </div>
-              ))}
-            </div>
-          </div>
+
+
+{/* Text Side – Adjusted for position */}
+<div className="md:translate-x-28 md:translate-y-5">
+  <h2 className="text-3xl sm:text-4xl font-clash font-bold mb-4">
+    About <span className="text-primary">Me</span>
+  </h2>
+  <p className="text-base-content leading-relaxed mb-6">
+    I'm Omar Espinoza from Ventura, California. I love building things — whether it's software, music, or handmade furniture. 
+    My background in Linguistics & CS from UCLA taught me how to think deeply and create intentionally. I'm excited to keep learning, designing, and making tech that feels human.
+  </p>
+</div>
+
         </motion.div>
 
 {/* Education + Experience Timeline */}
@@ -551,7 +542,7 @@ const handleThemeChange = () => {
     {/* UCLA */}
     <div className="w-full bg-base-100 border border-base-300 rounded-lg p-4 sm:p-6 shadow-md">
       <h3 className="text-lg sm:text-xl font-bold flex items-center gap-2 mb-2">
-        <Icon icon="mdi:school-outline" className="text-secondary" /> UCLA – B.A. Linguistics & Computer Science
+        <Icon icon="mdi:school-outline" className="text-primary" /> UCLA – B.A. Linguistics & Computer Science
       </h3>
       <p className="text-xs sm:text-sm text-base-content/80 mb-2">2020–2024 · Los Angeles, CA</p>
       <ul className="list-disc ml-6 text-base-content/90 text-xs sm:text-sm space-y-1">
@@ -562,8 +553,9 @@ const handleThemeChange = () => {
     
     {/* Vertical dots with more spacing */}
     <div className="flex flex-col items-center py-4">
-      <div className="w-2 h-2 rounded-full bg-primary my-2"></div>
-      <div className="w-2 h-2 rounded-full bg-primary my-2"></div>
+      <div className="w-2 h-2 rounded-full bg-secondary my-2"></div>
+      <div className="w-2 h-2 rounded-full bg-secondary my-2"></div>
+      <div className="w-2 h-2 rounded-full bg-secondary my-2"></div>
     </div>
     
     {/* Experior Labs */}
@@ -601,22 +593,52 @@ const handleThemeChange = () => {
 </motion.div>
 
 
-        {/* Skills */}
-        <motion.div variants={itemVariants} className="space-y-6">
-          <h2 className="text-3xl sm:text-4xl font-clash font-bold text-center">Skills & Tools</h2>
-          <div className="flex flex-wrap justify-center gap-2 sm:gap-4 text-xs sm:text-sm">
-            {[
-              "HTML", "CSS", "JavaScript", "TypeScript", "React", "Tailwind",
-              "Next.js", "Node.js", "MongoDB", "SQL", "Firebase",
-              "Python", "C/C++", "Git", "Google Cloud", "Docker",
-              "Figma", "Photoshop", "Illustrator", "Adobe XD"
-            ].map((skill) => (
-              <span key={skill} className="bg-base-200 px-3 py-1 sm:px-4 sm:py-2 rounded-full shadow-sm border border-base-300">
-                {skill}
-              </span>
-            ))}
-          </div>
-        </motion.div>
+{/* Skills */}
+<motion.div variants={itemVariants} className="mt-20 sm:mt-28 space-y-10">
+  <h2 className="text-3xl sm:text-4xl font-clash font-bold text-center">Skills & Tools</h2>
+
+  <div className="max-w-4xl mx-auto px-4">
+    {/* Unified centered layout */}
+    <div className="space-y-6 text-center">
+      {/* Frontend */}
+      <div className="flex flex-wrap justify-center gap-2 sm:gap-3">
+        {["HTML/CSS", "JavaScript", "TypeScript", "React", "Next.js", "Tailwind"].map((skill) => (
+          <span key={skill} className="bg-base-200 px-3 py-1 rounded-full text-xs sm:text-sm shadow-sm">
+            {skill}
+          </span>
+        ))}
+      </div>
+
+      {/* Backend */}
+      <div className="flex flex-wrap justify-center gap-2 sm:gap-3 ">
+        {["Node.js", "Python", "C/C++", "MongoDB", "SQL", "Firebase", "Supabase"].map((skill) => (
+          <span key={skill} className="bg-base-200 px-3 py-1 rounded-full text-xs sm:text-sm shadow-sm">
+            {skill}
+          </span>
+        ))}
+      </div>
+
+      {/* DevOps */}
+      <div className="flex flex-wrap justify-center gap-2 sm:gap-3">
+        {["Git", "Google Cloud", "Docker", "CI/CD"].map((skill) => (
+          <span key={skill} className="bg-base-200 px-3 py-1 rounded-full text-xs sm:text-sm shadow-sm">
+            {skill}
+          </span>
+        ))}
+      </div>
+
+      {/* Design */}
+      <div className="flex flex-wrap justify-center gap-2 sm:gap-3">
+        {["Figma", "Photoshop", "Illustrator", "Adobe XD"].map((skill) => (
+          <span key={skill} className="bg-base-200 px-3 py-1 rounded-full text-xs sm:text-sm shadow-sm">
+            {skill}
+          </span>
+        ))}
+      </div>
+    </div>
+  </div>
+</motion.div>
+
       </motion.section>
 
       {/* Footer */}
