@@ -536,7 +536,7 @@ const handleThemeChange = () => {
         </motion.div>
 
 {/* Education + Experience Timeline - Add proper margin on mobile */}
-<motion.div className="space-y-8 sm:space-y-10 mt-16 sm:mt-20 md:mt-24" variants={itemVariants}>
+<motion.div className="space-y-8 sm:space-y-10 mt-16 sm:mt-10 md:mt-24 lg:-mt-10" variants={itemVariants}>
   <h2 className="text-3xl sm:text-4xl font-clash font-bold text-center">Journey</h2>
   <div className="flex flex-col items-center">
     {/* UCLA */}
