@@ -472,11 +472,11 @@ const handleThemeChange = () => {
         {/* About - Responsive Layout */}
         <motion.div 
           variants={itemVariants} 
-          className="grid md:grid-cols-2 gap-8 md:gap-12 items-center text-center md:text-left md:items-center"
+          className="grid grid-cols-1 md:grid-cols-2 gap-8 md:gap-12 items-center text-center md:text-left"
         >
           
-{/* Image Side – Responsive Photo Cluster */}
-<div className="relative w-full h-[580px] sm:h-[600px] md:h-[660px] lg:h-[720px] flex justify-center items-center mx-auto max-w-md sm:max-w-lg lg:max-w-2xl md:-translate-x-20 md:translate-y-16">
+{/* Image Side – Responsive Photo Cluster with adjusted heights */}
+<div className="relative w-full h-[380px] sm:h-[480px] md:h-[660px] lg:h-[720px] flex justify-center items-center mx-auto max-w-md sm:max-w-lg lg:max-w-2xl md:-translate-x-20 md:translate-y-16 mb-8 md:mb-0">
   {/* Glow Aura */}
   <div className="absolute w-[95%] h-[95%] bg-primary/10 blur-[50px] rounded-full top-[60px] left-[5%] md:left-0 md:top-[-50px] -z-10" />
 
@@ -507,7 +507,7 @@ const handleThemeChange = () => {
   </div>
 
   {/* Grad – center bottom */}
-  <div className="absolute top-[260px] md:top-[310px] left-1/2 -translate-x-1/2 rotate-[1deg] hover:rotate-[0deg] z-30 scale-105 sm:scale-110 md:scale-125">
+  <div className="absolute top-[260px] sm:top-[260px] md:top-[310px] left-1/2 -translate-x-1/2 rotate-[1deg] hover:rotate-[0deg] z-30 scale-100 sm:scale-105 md:scale-125">
     <div className="bg-base-100 border border-base-300 rounded-xl p-2 shadow-lg">
       <Image 
         src="/images/three.jpeg"
@@ -523,7 +523,7 @@ const handleThemeChange = () => {
 
 
 {/* Text Side – Adjusted for position */}
-<div className="md:translate-x-28 md:translate-y-5">
+<div className="md:translate-x-28 md:translate-y-5 mt-0 md:mt-0">
   <h2 className="text-3xl sm:text-4xl font-clash font-bold mb-4">
     About <span className="text-primary">Me</span>
   </h2>
@@ -535,8 +535,8 @@ const handleThemeChange = () => {
 
         </motion.div>
 
-{/* Education + Experience Timeline */}
-<motion.div className="space-y-8 sm:space-y-10" variants={itemVariants}>
+{/* Education + Experience Timeline - Add proper margin on mobile */}
+<motion.div className="space-y-8 sm:space-y-10 mt-16 sm:mt-20 md:mt-24" variants={itemVariants}>
   <h2 className="text-3xl sm:text-4xl font-clash font-bold text-center">Journey</h2>
   <div className="flex flex-col items-center">
     {/* UCLA */}
