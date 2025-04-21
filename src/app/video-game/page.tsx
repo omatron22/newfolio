@@ -10,22 +10,34 @@ import GameOver from '@/components/game/GameOver';
 import HowToPlay from '@/components/game/HowToPlay';
 import AudioManager from '@/components/game/AudioManager';
 
+// Move mobile detection outside the component
+const getIsMobile = () => {
+  if (typeof window === 'undefined') return false;
+  return /Mobi|Android|iPhone|iPad|iPod|BlackBerry|IEMobile|Opera Mini/i.test(
+    navigator.userAgent
+  );
+};
+
 export default function VideoGamePage() {
   const [currentScreen, setCurrentScreen] = useState<
     'intro' | 'characterSelect' | 'game'
   >('intro');
   const [selectedCharacter, setSelectedCharacter] = useState('og');
-  const [isMobile, setIsMobile] = useState(false);
+  // Initialize with the actual value during client-side render
+  const [isMobile, setIsMobile] = useState(() => getIsMobile());
+  const [isLoading, setIsLoading] = useState(true);
 
   useEffect(() => {
-    // Check if running on client-side
-    if (typeof window !== 'undefined') {
-      // Detect if the user is on a mobile device
-      const mobile = /Mobi|Android|iPhone|iPad|iPod|BlackBerry|IEMobile|Opera Mini/i.test(
-        navigator.userAgent
-      );
-      setIsMobile(mobile);
-    }
+    // Double-check on mount and when window is resized
+    const checkMobile = () => {
+      setIsMobile(getIsMobile());
+      setIsLoading(false);
+    };
+    
+    checkMobile();
+    window.addEventListener('resize', checkMobile);
+    
+    return () => window.removeEventListener('resize', checkMobile);
   }, []);
 
   // Handle character selection and start game
@@ -51,6 +63,18 @@ export default function VideoGamePage() {
     { src: '/images/camaro.jpg', alt: 'My Best Friend 4' },
     { src: '/images/walking.jpeg', alt: 'My Best Friend 5' },
   ];
+
+  // Show loading state initially to prevent flash
+  if (isLoading) {
+    return (
+      <div className="min-h-screen bg-gradient-to-b from-base-100 to-base-200 flex items-center justify-center">
+        <div className="animate-pulse text-center">
+          <Icon icon="mdi:loading" className="text-4xl text-primary mb-4 animate-spin" />
+          <p className="text-base-content">Loading...</p>
+        </div>
+      </div>
+    );
+  }
 
   return (
     <div className="min-h-screen bg-gradient-to-b from-base-100 to-base-200 text-base-content flex flex-col">

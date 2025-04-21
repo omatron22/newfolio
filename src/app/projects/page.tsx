@@ -51,7 +51,7 @@ export default function Projects() {
       The game features obstacle generation, collision detection, and a scoring system.
       You can choose between different characters, each with its own design.
       The background music and sound effects are original, recorded and mixed by me.`,
-      githubLink: "https://github.com/omatron22/Portfolio",
+      githubLink: "https://github.com/omatron22/newfolio",
       gameLink: "/video-game", 
       tags: ["personal"],
       status: "completed",
@@ -67,7 +67,7 @@ export default function Projects() {
       The colors dynamically adapt using DaisyUI theme switching, creating a seamless visual experience across different themes.
       The site also includes a typewriter text animation, an image slider, and smooth scrolling for responsive navigation.
       An integrated 2D runner game, created with React and Phaser, adds an interactive element, featuring original animations, dynamic character selection, and custom music composed and recorded for a unique touch.`,
-      githubLink: "https://github.com/omatron22/Portfolio",
+      githubLink: "https://github.com/omatron22/newfolio",
       tags: ["personal", "web"],
       status: "completed",
       image: "/images/heropage.png" // Placeholder image path
