@@ -9,7 +9,7 @@ interface CharacterSelectProps {
 export default function CharacterSelect({ onSelectCharacter }: CharacterSelectProps) {
   return (
     <div
-      className="relative w-[800px] h-[460px] mx-auto border-[8px] border-base-300 rounded-lg shadow-md hover:shadow-lg transition-shadow bg-gradient-to-b from-base-100 to-base-200 box-border overflow-hidden flex items-center justify-center"
+      className="relative w-[800px] h-[460px] mx-auto win-sunken bg-win-gray box-border overflow-hidden flex items-center justify-center"
       style={{
         backgroundImage: `url(/assets/choose.png)`,
         backgroundSize: 'cover',

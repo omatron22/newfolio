@@ -112,12 +112,12 @@ export default function IntroScreen({ onPlay }: IntroScreenProps) {
   // Fallback UI in case of error
   if (isError) {
     return (
-      <div className="relative w-[800px] h-[460px] mx-auto border-[8px] border-base-300 rounded-lg shadow-md hover:shadow-lg transition-shadow bg-gradient-to-b from-base-100 to-base-200 box-border overflow-hidden flex items-center justify-center">
+      <div className="relative w-[800px] h-[460px] mx-auto win-sunken bg-win-gray box-border overflow-hidden flex items-center justify-center">
         <div className="text-center">
           <h2 className="text-2xl font-bold mb-4">Samson The Game</h2>
-          <button 
+          <button
             onClick={onPlay}
-            className="btn btn-primary px-8 py-3"
+            className="win-btn px-8 py-3"
           >
             Start Game
           </button>
@@ -128,7 +128,7 @@ export default function IntroScreen({ onPlay }: IntroScreenProps) {
 
   return (
     <div
-      className="relative w-[800px] h-[460px] mx-auto border-[8px] border-base-300 rounded-lg shadow-md hover:shadow-lg transition-shadow bg-gradient-to-b from-base-100 to-base-200 box-border overflow-hidden"
+      className="relative w-[800px] h-[460px] mx-auto win-sunken bg-win-gray box-border overflow-hidden"
     >
       <div ref={introRef} className="w-full h-full"></div>
       <AudioManager currentScreen="intro" />

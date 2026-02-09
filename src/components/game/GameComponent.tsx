@@ -532,7 +532,7 @@ export default function GameComponent({
   };
 
   return (
-    <div className="relative w-[800px] h-[460px] mx-auto border-[8px] border-base-300 rounded-lg shadow-md hover:shadow-lg transition-shadow bg-gradient-to-b from-base-100 to-base-200 box-border overflow-hidden">
+    <div className="relative w-[800px] h-[460px] mx-auto win-sunken bg-win-gray box-border overflow-hidden">
       {/* Show the HowToPlay screen before starting the game */}
       {showGuide ? (
         <HowToPlay onClose={handleStartGame} />

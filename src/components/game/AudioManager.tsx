@@ -7,14 +7,15 @@ interface AudioManagerProps {
 }
 
 export default function AudioManager({ currentScreen }: AudioManagerProps) {
-  const [isMusicOn, setIsMusicOn] = useState(true);
+  // Start with music OFF so first click turns it on and plays
+  const [isMusicOn, setIsMusicOn] = useState(false);
   const audioInstanceRef = useRef<HTMLAudioElement | null>(null);
 
   useEffect(() => {
     // Cleanup previous audio instance if it exists
     if (audioInstanceRef.current) {
       audioInstanceRef.current.pause();
-      audioInstanceRef.current.src = ''; // Clear source to release memory
+      audioInstanceRef.current.src = '';
       audioInstanceRef.current = null;
     }
 
@@ -29,43 +30,31 @@ export default function AudioManager({ currentScreen }: AudioManagerProps) {
       return;
     }
 
-    audio.loop = true; // Loop the audio for background music
-
-    // Set the new audio instance in the ref
+    audio.loop = true;
     audioInstanceRef.current = audio;
 
-    // Play the music if it's enabled
-    if (isMusicOn) {
-      const playPromise = audio.play();
-      // Handle potential promise rejection due to autoplay restrictions
-      playPromise?.catch((error) => {
-        console.error('Playback prevented by browser: ', error);
-      });
-    }
-
     return () => {
-      // Clean up the audio when the component unmounts or on dependency change
       if (audioInstanceRef.current) {
         audioInstanceRef.current.pause();
-        audioInstanceRef.current.src = ''; // Clear source to release memory
+        audioInstanceRef.current.src = '';
       }
     };
-  }, [currentScreen, isMusicOn]); // Dependencies include `currentScreen` and `isMusicOn`
+  }, [currentScreen]); // only change when screen changes
 
   const toggleMusic = () => {
     setIsMusicOn((prev) => {
       const newState = !prev;
-      
+
       if (audioInstanceRef.current) {
         if (newState) {
-          audioInstanceRef.current.play().catch(error => {
+          audioInstanceRef.current.play().catch((error) => {
             console.error('Playback prevented by browser: ', error);
           });
         } else {
           audioInstanceRef.current.pause();
         }
       }
-      
+
       return newState;
     });
   };

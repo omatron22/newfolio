@@ -1,36 +1,34 @@
-// src/app/layout.tsx
-import { ThemeProvider } from '@/components/ui/ThemeProvider';
-import AppBar from '@/components/ui/AppBar';
 import './globals.css';
 import type { Metadata } from 'next';
 import { inter } from './fonts';
+import GrainOverlay from '@/components/ui/GrainOverlay';
 
 export const metadata: Metadata = {
-  title: 'Omar Espinoza | Portfolio',
-  description: 'Omar Espinoza\'s portfolio website showcasing projects and skills',
+  title: 'Omar Espinoza',
+  description: 'Omar Espinoza — developer, creator, builder of things.',
   icons: {
-    icon: '/images/icon.png', // This will be used for browser tabs
-    shortcut: '/images/icon.png', // For legacy browsers
-    apple: '/images/icon.png', // For Apple devices
+    icon: '/images/icon.png',
+    shortcut: '/images/icon.png',
+    apple: '/images/icon.png',
   },
   openGraph: {
     type: 'website',
-    url: 'https://omarsportfolio.com', // Replace with your actual URL
-    title: 'Omar Espinoza | Portfolio',
-    description: 'Omar Espinoza\'s portfolio website showcasing projects and skills',
-    siteName: 'Omar Espinoza Portfolio',
+    url: 'https://omarsportfolio.com',
+    title: 'Omar Espinoza',
+    description: 'Omar Espinoza — developer, creator, builder of things.',
+    siteName: 'Omar Espinoza',
     images: [{
-      url: '/images/heropage.png', // This will be used for social media sharing
+      url: '/images/heropage.png',
       width: 1200,
       height: 630,
-      alt: 'Omar Espinoza Portfolio',
+      alt: 'Omar Espinoza',
     }],
   },
   twitter: {
     card: 'summary_large_image',
-    title: 'Omar Espinoza | Portfolio',
-    description: 'Omar Espinoza\'s portfolio website showcasing projects and skills',
-    images: ['/images/heropage.png'], // This will be used for Twitter sharing
+    title: 'Omar Espinoza',
+    description: 'Omar Espinoza — developer, creator, builder of things.',
+    images: ['/images/heropage.png'],
   },
 };
 
@@ -40,14 +38,10 @@ export default function RootLayout({
   children: React.ReactNode;
 }) {
   return (
-    <html lang="en" suppressHydrationWarning>
-      <body className={`min-h-screen bg-base-100 text-base-content ${inter.className}`}>
-        <ThemeProvider>
-          <AppBar />
-          <main className="min-h-screen">
-            {children}
-          </main>
-        </ThemeProvider>
+    <html lang="en" className={inter.variable}>
+      <body className="h-screen overflow-hidden bg-win-desktop font-system">
+        <GrainOverlay />
+        {children}
       </body>
     </html>
   );

@@ -2,15 +2,11 @@
 
 import React, { useState, useEffect } from 'react';
 import Image from 'next/image';
-import { Icon } from '@iconify-icon/react';
+import Link from 'next/link';
 import GameComponent from '@/components/game/GameComponent';
 import CharacterSelect from '@/components/game/CharacterSelect';
 import IntroScreen from '@/components/game/IntroScreen';
-import GameOver from '@/components/game/GameOver';
-import HowToPlay from '@/components/game/HowToPlay';
-import AudioManager from '@/components/game/AudioManager';
 
-// Move mobile detection outside the component
 const getIsMobile = () => {
   if (typeof window === 'undefined') return false;
   return /Mobi|Android|iPhone|iPad|iPod|BlackBerry|IEMobile|Opera Mini/i.test(
@@ -23,37 +19,22 @@ export default function VideoGamePage() {
     'intro' | 'characterSelect' | 'game'
   >('intro');
   const [selectedCharacter, setSelectedCharacter] = useState('og');
-  // Initialize with the actual value during client-side render
   const [isMobile, setIsMobile] = useState(() => getIsMobile());
   const [isLoading, setIsLoading] = useState(true);
 
   useEffect(() => {
-    // Double-check on mount and when window is resized
     const checkMobile = () => {
       setIsMobile(getIsMobile());
       setIsLoading(false);
     };
-    
     checkMobile();
     window.addEventListener('resize', checkMobile);
-    
     return () => window.removeEventListener('resize', checkMobile);
   }, []);
 
-  // Handle character selection and start game
   const handleCharacterSelect = (character: string) => {
     setSelectedCharacter(character);
     setCurrentScreen('game');
-  };
-
-  // Handle navigation back to character selection screen
-  const handleGoToCharacterSelect = () => {
-    setCurrentScreen('characterSelect');
-  };
-
-  // Handle navigation back to the main menu (intro screen)
-  const handleGoToMainMenu = () => {
-    setCurrentScreen('intro');
   };
 
   const images = [
@@ -64,33 +45,36 @@ export default function VideoGamePage() {
     { src: '/images/walking.jpeg', alt: 'My Best Friend 5' },
   ];
 
-  // Show loading state initially to prevent flash
   if (isLoading) {
     return (
-      <div className="min-h-screen bg-gradient-to-b from-base-100 to-base-200 flex items-center justify-center">
-        <div className="animate-pulse text-center">
-          <Icon icon="mdi:loading" className="text-4xl text-primary mb-4 animate-spin" />
-          <p className="text-base-content">Loading...</p>
-        </div>
+      <div className="min-h-screen win95-desktop-bg flex items-center justify-center">
+        <p className="text-white text-[13px] animate-pulse">Loading...</p>
       </div>
     );
   }
 
   return (
-    <div className="min-h-screen bg-gradient-to-b from-base-100 to-base-200 text-base-content flex flex-col">
+    <div className="min-h-screen win95-desktop-bg text-win-black flex flex-col overflow-auto">
+      {/* Back link */}
+      <div className="p-4">
+        <Link
+          href="/"
+          className="win-btn text-[12px] no-underline text-win-black"
+        >
+          ← Back to Desktop
+        </Link>
+      </div>
+
       {/* Game Section */}
-      <section className="flex-grow flex items-center justify-center py-8">
+      <section className="flex-grow flex items-center justify-center py-4">
         {isMobile ? (
-          // Mobile-only message
-          <div className="bg-base-100 rounded-2xl shadow-lg p-8 text-center max-w-lg mx-6">
-            <Icon icon="mdi:monitor-off" className="text-5xl text-primary mb-4 mx-auto" />
-            <h1 className="text-2xl font-clash font-bold mb-4">Game Not Supported on Mobile Devices</h1>
-            <p className="text-base-content/80">
-              Sorry, this game is not supported on mobile devices. Please access it from a desktop or laptop computer.
+          <div className="win-window-border bg-win-gray p-6 text-center max-w-lg mx-4">
+            <p className="font-bold text-[14px] mb-3">Desktop Only</p>
+            <p className="text-[12px]">
+              This game requires a desktop or laptop computer.
             </p>
           </div>
         ) : (
-          // Desktop game components
           <>
             {currentScreen === 'intro' && (
               <IntroScreen onPlay={() => setCurrentScreen('characterSelect')} />
@@ -101,37 +85,34 @@ export default function VideoGamePage() {
             )}
 
             {currentScreen === 'game' && (
-              <GameComponent 
+              <GameComponent
                 character={selectedCharacter}
-                onCharacterSelect={handleGoToCharacterSelect}
-                onMainMenu={handleGoToMainMenu}
+                onCharacterSelect={() => setCurrentScreen('characterSelect')}
+                onMainMenu={() => setCurrentScreen('intro')}
               />
             )}
           </>
         )}
       </section>
 
-      {/* Dedication Section - Always visible */}
-      <section className="py-16 bg-gradient-to-b from-base-200 to-base-300">
-        <div className="max-w-6xl mx-auto text-center px-6">
-          <h2 className="text-3xl md:text-4xl font-clash font-bold text-base-content mb-6">
+      {/* Dedication Section */}
+      <section className="py-10 bg-win-gray border-t-2 border-win-gray-light">
+        <div className="max-w-3xl mx-auto text-center px-4">
+          <p className="font-bold text-[16px] mb-2">
             Dedicated to My Best Friend
-          </h2>
-          <p className="text-lg md:text-xl text-base-content/90 mb-12">
+          </p>
+          <p className="text-[12px] text-win-gray-dark mb-8">
             In loving memory of someone very important to me. Rest in peace Samson.
           </p>
-          
-          {/* Elegant 3-2 Layout */}
-          <div className="flex flex-col items-center gap-6 max-w-4xl mx-auto">
-            {/* Top row - 3 images */}
-            <div className="flex flex-wrap justify-center gap-6">
+
+          <div className="flex flex-col items-center gap-4">
+            <div className="flex flex-wrap justify-center gap-4">
               {images.slice(0, 3).map((image, index) => (
                 <div
                   key={index}
-                  className="w-40 sm:w-44 md:w-48 lg:w-52 overflow-hidden rounded-lg shadow-lg border border-base-200 transition-all duration-300 hover:scale-105 hover:shadow-xl"
-                  style={{ transform: `rotate(${index % 2 === 0 ? -2 : 2}deg)` }}
+                  className="w-36 win-sunken overflow-hidden"
                 >
-                  <div className="relative w-full aspect-square bg-base-300">
+                  <div className="relative w-full aspect-square">
                     <Image
                       src={image.src}
                       alt={image.alt}
@@ -142,16 +123,13 @@ export default function VideoGamePage() {
                 </div>
               ))}
             </div>
-            
-            {/* Bottom row - 2 images centered */}
-            <div className="flex flex-wrap justify-center gap-6">
+            <div className="flex flex-wrap justify-center gap-4">
               {images.slice(3, 5).map((image, index) => (
                 <div
                   key={index + 3}
-                  className="w-40 sm:w-44 md:w-48 lg:w-52 overflow-hidden rounded-lg shadow-lg border border-base-200 transition-all duration-300 hover:scale-105 hover:shadow-xl"
-                  style={{ transform: `rotate(${index % 2 === 0 ? -2 : 2}deg)` }}
+                  className="w-36 win-sunken overflow-hidden"
                 >
-                  <div className="relative w-full aspect-square bg-base-300">
+                  <div className="relative w-full aspect-square">
                     <Image
                       src={image.src}
                       alt={image.alt}

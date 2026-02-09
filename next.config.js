@@ -3,18 +3,22 @@ const nextConfig = {
   reactStrictMode: true,
   images: {
     domains: [],
-    formats: ['image/avif', 'image/webp'],
+    formats: ["image/avif", "image/webp"],
   },
-  // This is important to allow importing from node_modules
-  transpilePackages: ['phaser'],
-  // Ensure webpack can handle the Phaser file requirements
+
+  // Allow importing from node_modules (Phaser)
+  transpilePackages: ["phaser"],
+
+  // Empty turbopack config to silence warning (Phaser works fine with Turbopack)
+  turbopack: {},
+
+  // Webpack config kept for fallback builds
   webpack: (config) => {
-    // Add support for importing various file types used by Phaser
     config.module.rules.push({
-      test: /\.woff2?$|\.ttf$|\.eot$|\.wav$|\.mp3$|\.png$/,
-      type: 'asset/resource',
+      test: /\.(woff2?|ttf|eot|wav|mp3|png)$/,
+      type: "asset/resource",
     });
-    
+
     return config;
   },
 };
