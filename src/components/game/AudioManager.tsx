@@ -7,9 +7,10 @@ interface AudioManagerProps {
 }
 
 export default function AudioManager({ currentScreen }: AudioManagerProps) {
-  // Start with music OFF so first click turns it on and plays
-  const [isMusicOn, setIsMusicOn] = useState(false);
+  // Start with music ON
+  const [isMusicOn, setIsMusicOn] = useState(true);
   const audioInstanceRef = useRef<HTMLAudioElement | null>(null);
+  const hasInteracted = useRef(false);
 
   useEffect(() => {
     // Cleanup previous audio instance if it exists
@@ -33,13 +34,33 @@ export default function AudioManager({ currentScreen }: AudioManagerProps) {
     audio.loop = true;
     audioInstanceRef.current = audio;
 
+    // Auto-play if music is on
+    if (isMusicOn) {
+      audio.play().catch(() => {
+        // Browser blocked autoplay — will play on first user interaction
+        const handleFirstInteraction = () => {
+          if (audioInstanceRef.current && isMusicOn) {
+            audioInstanceRef.current.play().catch(() => {});
+          }
+          hasInteracted.current = true;
+          document.removeEventListener('click', handleFirstInteraction);
+          document.removeEventListener('keydown', handleFirstInteraction);
+        };
+        if (!hasInteracted.current) {
+          document.addEventListener('click', handleFirstInteraction);
+          document.addEventListener('keydown', handleFirstInteraction);
+        }
+      });
+    }
+
     return () => {
       if (audioInstanceRef.current) {
         audioInstanceRef.current.pause();
         audioInstanceRef.current.src = '';
       }
     };
-  }, [currentScreen]); // only change when screen changes
+  // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [currentScreen]);
 
   const toggleMusic = () => {
     setIsMusicOn((prev) => {
@@ -63,17 +84,27 @@ export default function AudioManager({ currentScreen }: AudioManagerProps) {
     <div
       style={{
         position: 'absolute',
-        top: '6.67px',
-        right: '6.67px',
+        top: '6px',
+        right: '6px',
         zIndex: 2,
       }}
     >
-      <img
-        src={isMusicOn ? '/assets/sound-on.png' : '/assets/sound-off.png'}
+      <button
         onClick={toggleMusic}
-        alt={isMusicOn ? 'Sound On' : 'Sound Off'}
-        style={{ cursor: 'pointer', width: '33px', height: '33px' }}
-      />
+        className="win-btn"
+        style={{
+          width: '28px',
+          height: '28px',
+          padding: 0,
+          display: 'flex',
+          alignItems: 'center',
+          justifyContent: 'center',
+          fontSize: '14px',
+        }}
+        title={isMusicOn ? 'Mute Sound' : 'Unmute Sound'}
+      >
+        {isMusicOn ? '🔊' : '🔇'}
+      </button>
     </div>
   );
 }

@@ -352,3 +352,21 @@
 .font-clash {
   font-family: var(--font-sans), Tahoma, sans-serif;
 }
+
+/* ===== Win95 flashing star effect ===== */
+@keyframes win95-star-flash {
+  0%, 100% { opacity: 0; transform: scale(0.5) rotate(0deg); }
+  25% { opacity: 1; transform: scale(1.2) rotate(20deg); }
+  50% { opacity: 0.6; transform: scale(0.8) rotate(-10deg); }
+  75% { opacity: 1; transform: scale(1) rotate(15deg); }
+}
+
+.win95-star {
+  position: absolute;
+  font-size: 12px;
+  color: #FFD700;
+  pointer-events: none;
+  z-index: 1;
+  animation: win95-star-flash 1.6s ease-in-out infinite;
+  text-shadow: 0 0 4px #FFD700, 0 0 8px #FFA500;
+}

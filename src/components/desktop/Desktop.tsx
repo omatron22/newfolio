@@ -21,12 +21,14 @@ interface WindowState {
   size: { width: number; height: number };
 }
 
-// Spread-out positions so all 3 auto-opened windows are visible at once
-const WINDOW_CONFIGS: Record<string, { title: string; position: { x: number; y: number }; size: { width: number; height: number } }> = {
-  about:    { title: 'About.txt - Notepad',  position: { x: 50,  y: 20  }, size: { width: 520, height: 420 } },
-  projects: { title: 'Projects - Explorer',   position: { x: 580, y: 20  }, size: { width: 560, height: 400 } },
-  game:     { title: 'Samson.exe',            position: { x: 140, y: 36  }, size: { width: 860, height: 540 } },
-  blog:     { title: 'Blog.txt - Notepad',    position: { x: 360, y: 260 }, size: { width: 420, height: 300 } },
+const TASKBAR_HEIGHT = 40;
+
+// Window sizes (positions computed dynamically to center on screen)
+const WINDOW_CONFIGS: Record<string, { title: string; size: { width: number; height: number } }> = {
+  about:    { title: 'About.txt - Notepad',  size: { width: 520, height: 420 } },
+  projects: { title: 'Projects - Explorer',   size: { width: 560, height: 400 } },
+  game:     { title: 'Samson.exe',            size: { width: 860, height: 540 } },
+  blog:     { title: 'Blog.txt - Notepad',    size: { width: 420, height: 300 } },
 };
 
 const DESKTOP_ICONS = [
@@ -45,9 +47,27 @@ const WINDOW_CONTENT: Record<string, React.ComponentType<any>> = {
   blog: BlogWindow,
 };
 
-// Only these three open on load — NOT game, NOT resume. About opens LAST.
+// Only these three open on load — NOT game, NOT resume. About opens LAST (on top).
 const AUTO_OPEN_SEQUENCE = ['projects', 'blog', 'about'];
 const AUTO_OPEN_DELAY = 450;
+
+// Compute a centered position for a window, with cascade offset to prevent overlap
+function computeCenteredPosition(
+  size: { width: number; height: number },
+  cascadeIndex: number,
+): { x: number; y: number } {
+  const vw = typeof window !== 'undefined' ? window.innerWidth : 1200;
+  const vh = typeof window !== 'undefined' ? window.innerHeight : 800;
+  const availableHeight = vh - TASKBAR_HEIGHT;
+
+  // Cascade offset: each window shifts 30px right and 30px down
+  const cascadeOffset = cascadeIndex * 30;
+
+  const x = Math.max(10, Math.round((vw - size.width) / 2) + cascadeOffset);
+  const y = Math.max(10, Math.round((availableHeight - size.height) / 2) + cascadeOffset);
+
+  return { x, y };
+}
 
 export default function Desktop() {
   const [windows, setWindows] = useState<WindowState[]>([]);
@@ -58,6 +78,7 @@ export default function Desktop() {
   const [mobileActiveId, setMobileActiveId] = useState<string | null>(null);
   const [anyDragging, setAnyDragging] = useState(false);
   const hasAutoOpened = useRef(false);
+  const openCountRef = useRef(0);
 
   useEffect(() => {
     const checkMobile = () => setIsMobile(window.innerWidth < 768);
@@ -76,6 +97,8 @@ export default function Desktop() {
         const config = WINDOW_CONFIGS[id];
         if (!config) return;
 
+        const position = computeCenteredPosition(config.size, index);
+
         setWindows((prev) => [
           ...prev,
           {
@@ -84,12 +107,13 @@ export default function Desktop() {
             minimized: false,
             maximized: false,
             zIndex: 100 + index,
-            position: config.position,
+            position,
             size: config.size,
           },
         ]);
         setNextZIndex(100 + index + 1);
         setActiveWindowId(id);
+        openCountRef.current = index + 1;
       }, AUTO_OPEN_DELAY * (index + 1));
     });
   }, [isMobile]);
@@ -118,6 +142,9 @@ export default function Desktop() {
       const config = WINDOW_CONFIGS[id];
       if (!config) return prev;
 
+      const position = computeCenteredPosition(config.size, openCountRef.current);
+      openCountRef.current += 1;
+
       return [
         ...prev,
         {
@@ -126,7 +153,7 @@ export default function Desktop() {
           minimized: false,
           maximized: false,
           zIndex: nextZIndex,
-          position: config.position,
+          position,
           size: config.size,
         },
       ];
@@ -176,9 +203,13 @@ export default function Desktop() {
     }
   }, [windows, activeWindowId, openWindow, minimizeWindow, focusWindow]);
 
-  // Global drag state — disables pointer-events on all window content areas
   const handleDragStateChange = useCallback((isDragging: boolean) => {
     setAnyDragging(isDragging);
+  }, []);
+
+  // Start button refreshes the page
+  const handleStartClick = useCallback(() => {
+    window.location.reload();
   }, []);
 
   // Mobile layout
@@ -273,10 +304,8 @@ export default function Desktop() {
     <div
       className="h-screen w-screen overflow-hidden relative win95-desktop-bg"
       onClick={() => setStartMenuOpen(false)}
-      // Global overlay to block all window content during ANY drag
-      style={anyDragging ? {} : undefined}
     >
-      {/* Pointer-event blocker overlay — sits above all window content but below titlebars */}
+      {/* Pointer-event blocker overlay */}
       {anyDragging && (
         <div
           className="fixed inset-0"
@@ -340,7 +369,7 @@ export default function Desktop() {
         openWindows={windows}
         activeWindowId={activeWindowId}
         onWindowClick={handleTaskbarWindowClick}
-        onStartClick={() => setStartMenuOpen((prev) => !prev)}
+        onStartClick={handleStartClick}
         startMenuOpen={startMenuOpen}
       />
     </div>

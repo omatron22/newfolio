@@ -538,30 +538,36 @@ export default function GameComponent({
         <HowToPlay onClose={handleStartGame} />
       ) : (
         <>
-          {/* Top-right control buttons */}
+          {/* Top-right control buttons — Win95 style */}
           <div
             style={{
               position: 'absolute',
-              top: '6.7px',
-              right: '60px',
+              top: '6px',
+              right: '42px',
               zIndex: 2,
               display: 'flex',
               flexDirection: 'row',
               alignItems: 'center',
-              gap: '20px',
+              gap: '4px',
             }}
           >
             {/* Pause Button */}
-            <img
-              src={isPaused ? '/assets/play-button.png' : '/assets/pause-button.png'}
+            <button
               onClick={togglePause}
-              alt={isPaused ? 'Play' : 'Pause'}
+              className="win-btn"
               style={{
-                cursor: 'pointer',
-                width: '33px',
-                height: '33px',
+                width: '28px',
+                height: '28px',
+                padding: 0,
+                display: 'flex',
+                alignItems: 'center',
+                justifyContent: 'center',
+                fontSize: '14px',
               }}
-            />
+              title={isPaused ? 'Resume' : 'Pause'}
+            >
+              {isPaused ? '▶' : '⏸'}
+            </button>
           </div>
 
           {/* Game container */}

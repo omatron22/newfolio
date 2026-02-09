@@ -14,15 +14,23 @@ export default function AboutWindow() {
       </div>
 
       <div className="flex gap-4 items-start mb-4">
-        <div className="shrink-0 win-sunken">
-          <Image
-            src="/images/three.jpeg"
-            alt="Omar Espinoza"
-            width={130}
-            height={170}
-            className="block object-cover"
-            style={{ width: 130, height: 'auto' }}
-          />
+        {/* Photo with flashing star effect */}
+        <div className="shrink-0 relative">
+          {/* Flashing star decorations */}
+          <div className="win95-star" style={{ top: -6, left: -6, animationDelay: '0s' }}>✦</div>
+          <div className="win95-star" style={{ top: -4, right: -8, animationDelay: '0.4s' }}>✦</div>
+          <div className="win95-star" style={{ bottom: -6, left: -4, animationDelay: '0.8s' }}>✦</div>
+          <div className="win95-star" style={{ bottom: -4, right: -6, animationDelay: '1.2s' }}>✦</div>
+          <div className="win-sunken">
+            <Image
+              src="/images/three.png"
+              alt="Omar Espinoza"
+              width={130}
+              height={170}
+              className="block object-cover"
+              style={{ width: 130, height: 'auto' }}
+            />
+          </div>
         </div>
         <div>
           <p className="font-bold text-[15px] mb-1">Omar Espinoza</p>
