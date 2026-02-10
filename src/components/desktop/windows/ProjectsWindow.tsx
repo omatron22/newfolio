@@ -33,6 +33,16 @@ const PROJECTS: Project[] = [
     ],
   },
   {
+    name: 'MayaSite',
+    type: 'Personal',
+    status: 'Completed',
+    tech: 'Next.js, TypeScript, Roboflow, RAG',
+    description: 'Semantic search engine for Maya glyphs with AI-powered image recognition and natural language processing.',
+    links: [
+      { label: 'Website', href: 'https://mayasite.vercel.app/', external: true, icon: '/icons/globe.png' },
+    ],
+  },
+  {
     name: 'Clearwater Pool & Spa',
     type: 'Family',
     status: 'Completed',
@@ -44,22 +54,32 @@ const PROJECTS: Project[] = [
     ],
   },
   {
+    name: 'Dianne Photography',
+    type: 'Client',
+    status: 'Completed',
+    tech: 'Next.js, TypeScript, Tailwind',
+    description: 'Portfolio website for a professional photographer featuring gallery showcases and responsive design.',
+    links: [
+      { label: 'Website', href: 'https://dianne-portfolio-dun.vercel.app/', external: true, icon: '/icons/globe.png' },
+    ],
+  },
+  {
+    name: 'GimmeMooreLight',
+    type: 'Client',
+    status: 'Completed',
+    tech: 'Next.js, TypeScript, Tailwind',
+    description: 'Custom website built for a client with modern design and responsive layout.',
+    links: [
+      { label: 'Website', href: 'https://gimmemoorelight.com/', external: true, icon: '/icons/globe.png' },
+    ],
+  },
+  {
     name: 'GPIB to SQL Automation',
     type: 'Professional',
     status: 'Completed',
     tech: 'C, LabVIEW, SQL',
     description: 'Automated data extraction from VISA machines into SQL databases, replacing manual processes. Built as a DLL for LabVIEW integration.',
     links: [],
-  },
-  {
-    name: 'BeanPod',
-    type: 'Academic',
-    status: 'Completed',
-    tech: 'React, Firebase, Git',
-    description: 'Private messaging app prototype with real-time chat, Google auth, image sharing. UCLA CS35L team project.',
-    links: [
-      { label: 'Source', href: 'https://github.com/omatron22/Bean-Pod', external: true, icon: '/icons/folder.png' },
-    ],
   },
 ];
 
