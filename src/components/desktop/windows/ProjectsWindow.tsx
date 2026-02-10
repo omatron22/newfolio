@@ -43,7 +43,7 @@ const PROJECTS: Project[] = [
     links: [
       { label: 'Website', href: 'https://mayasite.vercel.app/', external: true, icon: '/icons/globe.png' },
     ],
-    preview: '/images/heropage.png',
+    preview: '/preview/maya.png',
   },
   {
     name: 'Clearwater Pool & Spa',
@@ -55,7 +55,7 @@ const PROJECTS: Project[] = [
       { label: 'Website', href: 'https://www.clearwaterpoolandspaservice.com/', external: true, icon: '/icons/globe.png' },
       { label: 'Source', href: 'https://github.com/omatron22/clearwater', external: true, icon: '/icons/folder.png' },
     ],
-    preview: '/images/clearwater.png',
+    preview: '/preview/clearwater.png',
   },
   {
     name: 'Dianne Photography',
@@ -66,6 +66,7 @@ const PROJECTS: Project[] = [
     links: [
       { label: 'Website', href: 'https://dianne-portfolio-dun.vercel.app/', external: true, icon: '/icons/globe.png' },
     ],
+    preview: '/preview/dianne.png',
   },
   {
     name: 'GimmeMooreLight',
@@ -76,6 +77,7 @@ const PROJECTS: Project[] = [
     links: [
       { label: 'Website', href: 'https://gimmemoorelight.com/', external: true, icon: '/icons/globe.png' },
     ],
+    preview: '/preview/moore.png',
   },
   {
     name: 'GPIB to SQL Automation',
