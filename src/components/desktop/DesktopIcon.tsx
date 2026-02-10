@@ -1,6 +1,7 @@
 'use client';
 
 import { useState, useRef, useCallback } from 'react';
+import Image from 'next/image';
 
 interface DesktopIconProps {
   label: string;
@@ -32,8 +33,8 @@ export default function DesktopIcon({ label, icon, onOpen }: DesktopIconProps) {
       role="button"
       aria-label={`Open ${label}`}
     >
-      <div className="text-4xl leading-none win-icon-img flex items-center justify-center">
-        {icon}
+      <div className="win-icon-img flex items-center justify-center">
+        <Image src={icon} alt="" width={32} height={32} />
       </div>
       <span className="win-icon-label">{label}</span>
     </div>
