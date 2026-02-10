@@ -52,7 +52,7 @@ const WINDOW_CONTENT: Record<string, React.ComponentType<any>> = {
 const AUTO_OPEN_SEQUENCE = ['projects', 'blog', 'about'];
 const AUTO_OPEN_DELAY = 450;
 
-// Compute a centered position for a window, with cascade offset to prevent overlap
+// Compute positions with larger offsets so windows don't stack on top of each other
 function computeCenteredPosition(
   size: { width: number; height: number },
   cascadeIndex: number,
@@ -61,14 +61,16 @@ function computeCenteredPosition(
   const vh = typeof window !== 'undefined' ? window.innerHeight : 800;
   const availableHeight = vh - TASKBAR_HEIGHT;
 
-  // Cascade offset: each window shifts 30px right and 30px down
-  const cascadeOffset = cascadeIndex * 30;
+  // Larger cascade offset: 80px right and 60px down for better visibility
+  const cascadeOffsetX = cascadeIndex * 80;
+  const cascadeOffsetY = cascadeIndex * 60;
 
-  const x = Math.max(10, Math.round((vw - size.width) / 2) + cascadeOffset);
-  const y = Math.max(10, Math.round((availableHeight - size.height) / 2) + cascadeOffset);
+  const x = Math.max(10, Math.round((vw - size.width) / 2) + cascadeOffsetX);
+  const y = Math.max(10, Math.round((availableHeight - size.height) / 2) + cascadeOffsetY);
 
   return { x, y };
 }
+
 
 export default function Desktop() {
   const [windows, setWindows] = useState<WindowState[]>([]);
