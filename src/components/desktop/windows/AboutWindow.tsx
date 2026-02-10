@@ -37,7 +37,7 @@ export default function AboutWindow() {
           <p className="text-[12px] text-win-gray-dark mb-2">Software Engineer &middot; Ventura, CA</p>
           <p>
             I build things on the web, make music, and
-            occasionally craft furniture. UCLA grad —
+            love to be outside. UCLA grad —
             Linguistics & Computer Science.
           </p>
         </div>
@@ -50,12 +50,6 @@ export default function AboutWindow() {
         Laboratories building automation tools in C.
       </p>
 
-      <p className="mb-4">
-        When I&apos;m not writing code, I&apos;m on the
-        slopes, recording music, or making something
-        with my hands.
-      </p>
-
       {/* Experience section */}
       <div className="border-t border-win-gray-dark pt-3 mt-3">
         <p className="font-bold text-[13px] mb-2">[ Experience ]</p>
@@ -65,6 +59,11 @@ export default function AboutWindow() {
               <td className="py-1 pr-3 text-win-gray-dark whitespace-nowrap">2024-Now</td>
               <td className="py-1 font-bold">Lead Software Engineer</td>
               <td className="py-1 pl-2">QMIRAC (Startup)</td>
+            </tr>
+                        <tr className="border-b border-win-gray-light">
+              <td className="py-1 pr-3 text-win-gray-dark whitespace-nowrap">2025-Now</td>
+              <td className="py-1 font-bold">Fullstack Engineer</td>
+              <td className="py-1 pl-2">Hawkeye (Startup)</td>
             </tr>
             <tr className="border-b border-win-gray-light">
               <td className="py-1 pr-3 text-win-gray-dark whitespace-nowrap">2023</td>
