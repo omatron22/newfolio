@@ -1,6 +1,7 @@
 'use client';
 
 import { useState, useEffect } from 'react';
+import Image from 'next/image';
 
 interface TaskbarProps {
   openWindows: { id: string; title: string; minimized: boolean }[];
@@ -42,7 +43,7 @@ export default function Taskbar({
         className={`win-start-btn ${startMenuOpen ? 'active' : ''}`}
         onClick={onStartClick}
       >
-        <span className="text-[16px]">🪟</span>
+        <Image src="/icons/sun.png" alt="" width={16} height={16} />
         <span>Start</span>
       </button>
 
