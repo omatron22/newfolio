@@ -23,7 +23,7 @@ export default function AboutWindow() {
           <div className="win95-star" style={{ bottom: -4, right: -6, animationDelay: '1.2s' }}>✦</div>
           <div className="win-sunken">
             <Image
-              src="/images/three.png"
+              src="/images/one.JPG"
               alt="Omar Espinoza"
               width={130}
               height={170}
