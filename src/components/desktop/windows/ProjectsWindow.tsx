@@ -11,6 +11,7 @@ interface Project {
   tech: string;
   description: string;
   links: { label: string; href: string; external?: boolean; icon?: string }[];
+  preview?: string; // Optional preview image
 }
 
 const PROJECTS: Project[] = [
@@ -31,6 +32,7 @@ const PROJECTS: Project[] = [
     links: [
       { label: 'Source', href: 'https://github.com/omatron22/newfolio', external: true, icon: '/icons/folder.png' },
     ],
+    preview: '/images/videogame.png',
   },
   {
     name: 'MayaSite',
@@ -41,6 +43,7 @@ const PROJECTS: Project[] = [
     links: [
       { label: 'Website', href: 'https://mayasite.vercel.app/', external: true, icon: '/icons/globe.png' },
     ],
+    preview: '/images/heropage.png',
   },
   {
     name: 'Clearwater Pool & Spa',
@@ -52,6 +55,7 @@ const PROJECTS: Project[] = [
       { label: 'Website', href: 'https://www.clearwaterpoolandspaservice.com/', external: true, icon: '/icons/globe.png' },
       { label: 'Source', href: 'https://github.com/omatron22/clearwater', external: true, icon: '/icons/folder.png' },
     ],
+    preview: '/images/clearwater.png',
   },
   {
     name: 'Dianne Photography',
@@ -136,39 +140,59 @@ export default function ProjectsWindow() {
 
       {/* Detail panel */}
       {selectedIndex !== null && (
-        <div className="border-t-2 border-win-gray-dark bg-win-gray p-3 max-h-[150px] overflow-auto">
-          <p className="font-bold text-[13px] mb-1">{PROJECTS[selectedIndex].name}</p>
-          <p className="text-[12px] text-win-gray-dark mb-1">
-            Tech: {PROJECTS[selectedIndex].tech}
-          </p>
-          <p className="text-[12px] mb-2">{PROJECTS[selectedIndex].description}</p>
-          {PROJECTS[selectedIndex].links.length > 0 && (
-            <div className="flex gap-3">
-              {PROJECTS[selectedIndex].links.map((link) =>
-                link.external ? (
-                  <a
-                    key={link.label}
-                    href={link.href}
-                    target="_blank"
-                    rel="noopener noreferrer"
-                    className="win-btn text-[12px] no-underline text-win-black flex items-center gap-1"
-                  >
-                    {link.icon && <Image src={link.icon} alt="" width={16} height={16} />}
-                    {link.label}
-                  </a>
-                ) : (
-                  <Link
-                    key={link.label}
-                    href={link.href}
-                    className="win-btn text-[12px] no-underline text-win-black flex items-center gap-1"
-                  >
-                    {link.icon && <Image src={link.icon} alt="" width={16} height={16} />}
-                    {link.label}
-                  </Link>
-                )
+        <div className="border-t-2 border-win-gray-dark bg-win-gray p-3 max-h-[180px] overflow-auto">
+          <div className="flex gap-3">
+            {/* Preview thumbnail */}
+            {PROJECTS[selectedIndex].preview && (
+              <div className="flex-shrink-0 win-sunken bg-win-white" style={{ width: 120, height: 90 }}>
+                <div className="relative w-full h-full">
+                  <Image
+                    src={PROJECTS[selectedIndex].preview}
+                    alt={`${PROJECTS[selectedIndex].name} preview`}
+                    fill
+                    className="object-cover"
+                    sizes="120px"
+                  />
+                </div>
+              </div>
+            )}
+
+            {/* Text content */}
+            <div className="flex-1 min-w-0">
+              <p className="font-bold text-[13px] mb-1">{PROJECTS[selectedIndex].name}</p>
+              <p className="text-[12px] text-win-gray-dark mb-1">
+                Tech: {PROJECTS[selectedIndex].tech}
+              </p>
+              <p className="text-[12px] mb-2">{PROJECTS[selectedIndex].description}</p>
+              {PROJECTS[selectedIndex].links.length > 0 && (
+                <div className="flex gap-2 flex-wrap">
+                  {PROJECTS[selectedIndex].links.map((link) =>
+                    link.external ? (
+                      <a
+                        key={link.label}
+                        href={link.href}
+                        target="_blank"
+                        rel="noopener noreferrer"
+                        className="win-btn text-[12px] no-underline text-win-black flex items-center gap-1"
+                      >
+                        {link.icon && <Image src={link.icon} alt="" width={16} height={16} />}
+                        {link.label}
+                      </a>
+                    ) : (
+                      <Link
+                        key={link.label}
+                        href={link.href}
+                        className="win-btn text-[12px] no-underline text-win-black flex items-center gap-1"
+                      >
+                        {link.icon && <Image src={link.icon} alt="" width={16} height={16} />}
+                        {link.label}
+                      </Link>
+                    )
+                  )}
+                </div>
               )}
             </div>
-          )}
+          </div>
         </div>
       )}
     </div>
