@@ -52,25 +52,46 @@ const WINDOW_CONTENT: Record<string, React.ComponentType<any>> = {
 const AUTO_OPEN_SEQUENCE = ['projects', 'blog', 'about'];
 const AUTO_OPEN_DELAY = 450;
 
-// Compute positions with larger offsets so windows don't stack on top of each other
-function computeCenteredPosition(
+// Custom positioning for each window to create the desired layout
+function computeInitialPosition(
+  id: string,
   size: { width: number; height: number },
-  cascadeIndex: number,
 ): { x: number; y: number } {
   const vw = typeof window !== 'undefined' ? window.innerWidth : 1200;
   const vh = typeof window !== 'undefined' ? window.innerHeight : 800;
   const availableHeight = vh - TASKBAR_HEIGHT;
 
-  // Larger cascade offset: 80px right and 60px down for better visibility
-  const cascadeOffsetX = cascadeIndex * 80;
-  const cascadeOffsetY = cascadeIndex * 60;
-
-  const x = Math.max(10, Math.round((vw - size.width) / 2) + cascadeOffsetX);
-  const y = Math.max(10, Math.round((availableHeight - size.height) / 2) + cascadeOffsetY);
-
-  return { x, y };
+  // Position each window based on ID
+  switch (id) {
+    case 'projects':
+      // Upper right
+      return {
+        x: Math.max(10, vw - size.width - 50),
+        y: 40
+      };
+    
+    case 'blog':
+      // Bottom middle
+      return {
+        x: Math.max(10, Math.round((vw - size.width) / 2)),
+        y: Math.max(10, availableHeight - size.height - 60)
+      };
+    
+    case 'about':
+      // Upper left
+      return {
+        x: 180,
+        y: 40
+      };
+    
+    default:
+      // Fallback to center
+      return {
+        x: Math.max(10, Math.round((vw - size.width) / 2)),
+        y: Math.max(10, Math.round((availableHeight - size.height) / 2))
+      };
+  }
 }
-
 
 export default function Desktop() {
   const [windows, setWindows] = useState<WindowState[]>([]);
@@ -100,7 +121,7 @@ export default function Desktop() {
         const config = WINDOW_CONFIGS[id];
         if (!config) return;
 
-        const position = computeCenteredPosition(config.size, index);
+        const position = computeInitialPosition(id, config.size);
 
         setWindows((prev) => [
           ...prev,
@@ -145,7 +166,7 @@ export default function Desktop() {
       const config = WINDOW_CONFIGS[id];
       if (!config) return prev;
 
-      const position = computeCenteredPosition(config.size, openCountRef.current);
+      const position = computeInitialPosition(id, config.size);
       openCountRef.current += 1;
 
       return [
@@ -306,7 +327,7 @@ export default function Desktop() {
 
         <div className="win-taskbar">
           <div className="flex items-center gap-2 px-3 w-full">
-            <span className="text-[16px]">🪟</span>
+            <Image src="/icons/sun.png" alt="" width={16} height={16} />
             <span className="font-bold text-[12px]">Omar95</span>
             <div className="ml-auto win-clock">
               {new Date().toLocaleTimeString('en-US', { hour: 'numeric', minute: '2-digit', hour12: true })}
