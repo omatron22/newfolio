@@ -1,6 +1,7 @@
 'use client';
 
 import { motion, AnimatePresence } from 'framer-motion';
+import Image from 'next/image';
 
 interface StartMenuProps {
   isOpen: boolean;
@@ -9,17 +10,17 @@ interface StartMenuProps {
 }
 
 const MENU_ITEMS = [
-  { id: 'about', label: 'About.txt', icon: '📄' },
-  { id: 'projects', label: 'Projects', icon: '📁' },
-  { id: 'game', label: 'Samson.exe', icon: '🎮' },
-  { id: 'blog', label: 'Blog.txt', icon: '📝' },
-  { id: 'resume', label: 'Resume.pdf', icon: '📋' },
+  { id: 'about', label: 'About.txt', icon: '/icons/text-file.png' },
+  { id: 'projects', label: 'Projects', icon: '/icons/folder.png' },
+  { id: 'game', label: 'Samson.exe', icon: '/icons/game.png' },
+  { id: 'blog', label: 'Blog.txt', icon: '/icons/notepad.png' },
+  { id: 'resume', label: 'Resume.pdf', icon: '/icons/document.png' },
 ];
 
 const LINKS = [
-  { label: 'LinkedIn', icon: '🔗', href: 'https://www.linkedin.com/in/omaresp22/' },
-  { label: 'GitHub', icon: '💻', href: 'https://github.com/omatron22' },
-  { label: 'Email', icon: '📧', href: 'mailto:omaresp35@gmail.com' },
+  { label: 'LinkedIn', icon: '/icons/link.png', href: 'https://www.linkedin.com/in/omaresp22/' },
+  { label: 'GitHub', icon: '/icons/computer.png', href: 'https://github.com/omatron22' },
+  { label: 'Email', icon: '/icons/mail.png', href: 'mailto:omaresp35@gmail.com' },
 ];
 
 export default function StartMenu({ isOpen, onClose, onOpenWindow }: StartMenuProps) {
@@ -68,7 +69,7 @@ export default function StartMenu({ isOpen, onClose, onOpenWindow }: StartMenuPr
                       onClose();
                     }}
                   >
-                    <span>{item.icon}</span>
+                    <Image src={item.icon} alt="" width={16} height={16} />
                     <span>{item.label}</span>
                   </div>
                 ))}
@@ -85,7 +86,7 @@ export default function StartMenu({ isOpen, onClose, onOpenWindow }: StartMenuPr
                     className="win-menu-item no-underline text-inherit"
                     onClick={onClose}
                   >
-                    <span>{link.icon}</span>
+                    <Image src={link.icon} alt="" width={16} height={16} />
                     <span>{link.label}</span>
                   </a>
                 ))}
@@ -104,7 +105,7 @@ export default function StartMenu({ isOpen, onClose, onOpenWindow }: StartMenuPr
                     }, 2000);
                   }}
                 >
-                  <span>🔌</span>
+                  <Image src="/icons/shutdown.png" alt="" width={16} height={16} />
                   <span>Shut Down...</span>
                 </div>
               </div>

@@ -34,21 +34,31 @@ export default function AboutWindow() {
         </div>
         <div>
           <p className="font-bold text-[15px] mb-1">Omar Espinoza</p>
-          <p className="text-[12px] text-win-gray-dark mb-2">Software Engineer &middot; Ventura, CA</p>
+          <p className="text-[12px] text-win-gray-dark mb-2">
+            Software Engineer &middot; Ventura, CA
+          </p>
           <p>
-            I build things on the web, make music, and
-            love to be outside. UCLA grad —
-            Linguistics & Computer Science.
+            I build things on the web, make music, and love to be outside. 
+            UCLA grad – Linguistics & Computer Science.
           </p>
         </div>
       </div>
 
-      <p className="mb-3">
-        Currently leading software engineering at a
-        startup, working on AI systems and core
-        infrastructure. Previously interned at Experior
-        Laboratories building automation tools in C.
-      </p>
+      {/* About section */}
+      <div className="space-y-3 mb-4">
+        <p>
+          Right now I'm leading software engineering at a startup, working on 
+          AI systems and core infrastructure. Also doing fullstack work at Hawkeye. 
+          I'm learning a lot and building exciting systems.
+        </p>
+        
+        <p>
+          But what really drives me is building things that make people feel 
+          something. I think UI/UX is inherently artistic, and when I have creative 
+          freedom, I want every interaction to land. That's the work I want to do 
+          for the rest of my life—creating products that people actually connect with.
+        </p>
+      </div>
 
       {/* Experience section */}
       <div className="border-t border-win-gray-dark pt-3 mt-3">
@@ -60,7 +70,7 @@ export default function AboutWindow() {
               <td className="py-1 font-bold">Lead Software Engineer</td>
               <td className="py-1 pl-2">QMIRAC (Startup)</td>
             </tr>
-                        <tr className="border-b border-win-gray-light">
+            <tr className="border-b border-win-gray-light">
               <td className="py-1 pr-3 text-win-gray-dark whitespace-nowrap">2025-Now</td>
               <td className="py-1 font-bold">Fullstack Engineer</td>
               <td className="py-1 pl-2">Hawkeye (Startup)</td>
@@ -84,15 +94,17 @@ export default function AboutWindow() {
           href="/images/resume.pdf"
           target="_blank"
           rel="noopener noreferrer"
-          className="win-btn text-[12px] no-underline text-win-black"
+          className="win-btn text-[12px] no-underline text-win-black flex items-center gap-1"
         >
-          📋 Open Resume
+          <Image src="/icons/document.png" alt="" width={16} height={16} />
+          Open Resume
         </a>
         <a
           href="mailto:omaresp35@gmail.com"
-          className="win-btn text-[12px] no-underline text-win-black"
+          className="win-btn text-[12px] no-underline text-win-black flex items-center gap-1"
         >
-          📧 Contact
+          <Image src="/icons/mail.png" alt="" width={16} height={16} />
+          Contact
         </a>
       </div>
     </div>
