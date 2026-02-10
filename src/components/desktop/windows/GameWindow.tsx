@@ -53,7 +53,9 @@ export default function GameWindow({ isMaximized = false }: GameWindowProps) {
     return (
       <div className="font-system text-[13px] p-6 flex flex-col items-center justify-center h-full bg-win-gray">
         <div className="text-center">
-          <p className="text-[28px] mb-3">🐕</p>
+          <div className="mb-3 flex justify-center">
+            <Image src="/icons/tree.png" alt="" width={32} height={32} />
+          </div>
           <p className="font-bold text-[15px] mb-1">Samson The Game</p>
           <p className="text-[12px] text-win-gray-dark mb-6">
             A 2D runner dedicated to my best friend
