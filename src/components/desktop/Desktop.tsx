@@ -2,6 +2,7 @@
 
 import { useState, useCallback, useEffect, useRef } from 'react';
 import { AnimatePresence, motion } from 'framer-motion';
+import Image from 'next/image';
 import DesktopIcon from './DesktopIcon';
 import Window from './Window';
 import Taskbar from './Taskbar';
@@ -32,11 +33,11 @@ const WINDOW_CONFIGS: Record<string, { title: string; size: { width: number; hei
 };
 
 const DESKTOP_ICONS = [
-  { id: 'about', label: 'About.txt', icon: '📄' },
-  { id: 'projects', label: 'Projects', icon: '📁' },
-  { id: 'game', label: 'Samson.exe', icon: '🎮' },
-  { id: 'blog', label: 'Blog.txt', icon: '📝' },
-  { id: 'resume', label: 'Resume.pdf', icon: '📋' },
+  { id: 'about', label: 'About.txt', icon: '/icons/text-file.png' },
+  { id: 'projects', label: 'Projects', icon: '/icons/folder.png' },
+  { id: 'game', label: 'Samson.exe', icon: '/icons/game.png' },
+  { id: 'blog', label: 'Blog.txt', icon: '/icons/notepad.png' },
+  { id: 'resume', label: 'Resume.pdf', icon: '/icons/document.png' },
 ];
 
 // eslint-disable-next-line @typescript-eslint/no-explicit-any
@@ -233,7 +234,10 @@ export default function Desktop() {
                   <a key={item.id} href="/images/resume.pdf" target="_blank" rel="noopener noreferrer" className="no-underline">
                     <div className="win-window-border bg-win-gray">
                       <div className="win-titlebar">
-                        <span className="truncate">{item.icon} Resume.pdf</span>
+                        <span className="truncate flex items-center gap-2">
+                          <Image src={item.icon} alt="" width={16} height={16} />
+                          Resume.pdf
+                        </span>
                         <span className="text-[12px]">↗</span>
                       </div>
                     </div>
@@ -251,7 +255,10 @@ export default function Desktop() {
                     className={`win-titlebar cursor-pointer ${!isOpen ? 'win-titlebar-inactive' : ''}`}
                     onClick={() => setMobileActiveId(isOpen ? null : item.id)}
                   >
-                    <span className="truncate">{item.icon} {WINDOW_CONFIGS[item.id]?.title || item.label}</span>
+                    <span className="truncate flex items-center gap-2">
+                      <Image src={item.icon} alt="" width={16} height={16} />
+                      {WINDOW_CONFIGS[item.id]?.title || item.label}
+                    </span>
                     <div className="flex gap-[2px]">
                       <span className="win-titlebar-btn text-[10px]">{isOpen ? '−' : '+'}</span>
                     </div>
@@ -280,9 +287,18 @@ export default function Desktop() {
           </div>
 
           <div className="flex justify-center gap-3 mt-4">
-            <a href="https://www.linkedin.com/in/omaresp22/" target="_blank" rel="noopener noreferrer" className="win-btn text-[12px] no-underline text-win-black">🔗 LinkedIn</a>
-            <a href="https://github.com/omatron22" target="_blank" rel="noopener noreferrer" className="win-btn text-[12px] no-underline text-win-black">💻 GitHub</a>
-            <a href="mailto:omaresp35@gmail.com" className="win-btn text-[12px] no-underline text-win-black">📧 Email</a>
+            <a href="https://www.linkedin.com/in/omaresp22/" target="_blank" rel="noopener noreferrer" className="win-btn text-[12px] no-underline text-win-black flex items-center gap-1">
+              <Image src="/icons/link.png" alt="" width={16} height={16} />
+              LinkedIn
+            </a>
+            <a href="https://github.com/omatron22" target="_blank" rel="noopener noreferrer" className="win-btn text-[12px] no-underline text-win-black flex items-center gap-1">
+              <Image src="/icons/computer.png" alt="" width={16} height={16} />
+              GitHub
+            </a>
+            <a href="mailto:omaresp35@gmail.com" className="win-btn text-[12px] no-underline text-win-black flex items-center gap-1">
+              <Image src="/icons/mail.png" alt="" width={16} height={16} />
+              Email
+            </a>
           </div>
         </div>
 
