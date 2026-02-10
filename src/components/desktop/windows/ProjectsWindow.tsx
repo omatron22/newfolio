@@ -2,6 +2,7 @@
 
 import { useState } from 'react';
 import Link from 'next/link';
+import Image from 'next/image';
 
 interface Project {
   name: string;
@@ -9,7 +10,7 @@ interface Project {
   status: string;
   tech: string;
   description: string;
-  links: { label: string; href: string; external?: boolean }[];
+  links: { label: string; href: string; external?: boolean; icon?: string }[];
 }
 
 const PROJECTS: Project[] = [
@@ -28,7 +29,7 @@ const PROJECTS: Project[] = [
     tech: 'TypeScript, React, Phaser, Illustrator',
     description: 'A custom 2D runner with hand-drawn animations, original music, and multiple playable characters. Dedicated to my best friend.',
     links: [
-      { label: '📂 Source', href: 'https://github.com/omatron22/newfolio', external: true },
+      { label: 'Source', href: 'https://github.com/omatron22/newfolio', external: true, icon: '/icons/folder.png' },
     ],
   },
   {
@@ -38,8 +39,8 @@ const PROJECTS: Project[] = [
     tech: 'Next.js, TypeScript, Tailwind, Google Maps',
     description: 'Professional website for a family business. Google Maps integration, reCAPTCHA, responsive design.',
     links: [
-      { label: '🌐 Website', href: 'https://www.clearwaterpoolandspaservice.com/', external: true },
-      { label: '📂 Source', href: 'https://github.com/omatron22/clearwater', external: true },
+      { label: 'Website', href: 'https://www.clearwaterpoolandspaservice.com/', external: true, icon: '/icons/globe.png' },
+      { label: 'Source', href: 'https://github.com/omatron22/clearwater', external: true, icon: '/icons/folder.png' },
     ],
   },
   {
@@ -57,7 +58,7 @@ const PROJECTS: Project[] = [
     tech: 'React, Firebase, Git',
     description: 'Private messaging app prototype with real-time chat, Google auth, image sharing. UCLA CS35L team project.',
     links: [
-      { label: '📂 Source', href: 'https://github.com/omatron22/Bean-Pod', external: true },
+      { label: 'Source', href: 'https://github.com/omatron22/Bean-Pod', external: true, icon: '/icons/folder.png' },
     ],
   },
 ];
@@ -77,7 +78,10 @@ export default function ProjectsWindow() {
 
       {/* Address bar */}
       <div className="flex items-center gap-2 px-3 py-1.5 bg-win-gray border-b border-win-gray-dark">
-        <span className="text-[12px]">📁 Address:</span>
+        <div className="flex items-center gap-1">
+          <Image src="/icons/folder.png" alt="" width={16} height={16} />
+          <span className="text-[12px]">Address:</span>
+        </div>
         <div className="flex-1 win-sunken bg-win-white px-2 py-[2px] text-[12px]">
           C:\Omar\Projects\
         </div>
@@ -101,7 +105,8 @@ export default function ProjectsWindow() {
             onClick={() => setSelectedIndex(i)}
           >
             <div className="px-3 py-[5px] border-b border-win-gray-light flex items-center gap-2 truncate">
-              <span>📁</span> {project.name}
+              <Image src="/icons/folder.png" alt="" width={16} height={16} />
+              {project.name}
             </div>
             <div className="px-3 py-[5px] border-b border-win-gray-light">{project.type}</div>
             <div className="px-3 py-[5px] border-b border-win-gray-light">{project.status}</div>
@@ -126,16 +131,18 @@ export default function ProjectsWindow() {
                     href={link.href}
                     target="_blank"
                     rel="noopener noreferrer"
-                    className="win-btn text-[12px] no-underline text-win-black"
+                    className="win-btn text-[12px] no-underline text-win-black flex items-center gap-1"
                   >
+                    {link.icon && <Image src={link.icon} alt="" width={16} height={16} />}
                     {link.label}
                   </a>
                 ) : (
                   <Link
                     key={link.label}
                     href={link.href}
-                    className="win-btn text-[12px] no-underline text-win-black"
+                    className="win-btn text-[12px] no-underline text-win-black flex items-center gap-1"
                   >
+                    {link.icon && <Image src={link.icon} alt="" width={16} height={16} />}
                     {link.label}
                   </Link>
                 )
