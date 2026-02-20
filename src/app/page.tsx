@@ -1,6 +1,6 @@
 'use client';
 
-import { useState, useRef, useCallback, useEffect } from 'react';
+import { useState, useRef, useCallback, useEffect, useReducer } from 'react';
 import { AnimatePresence, motion } from 'framer-motion';
 import Link from 'next/link';
 import HologramImage from '@/components/ui/HologramImage';
@@ -44,8 +44,22 @@ const PROJECTS = [
 ];
 
 type Project = (typeof PROJECTS)[number];
-const COPIES = 7;
-const REPEATED = Array.from({ length: COPIES }, () => PROJECTS).flat();
+
+// Distribute N points evenly on a sphere (Fibonacci sphere)
+const SPHERE_POINTS = 12;
+const SPHERE_ITEMS = Array.from({ length: SPHERE_POINTS }, (_, i) => {
+  const project = PROJECTS[i % PROJECTS.length];
+  const golden = Math.PI * (3 - Math.sqrt(5));
+  const y = 1 - ((i + 0.5) / SPHERE_POINTS) * 2; // offset so no point sits on a pole
+  const radius = Math.sqrt(1 - y * y);
+  const theta = golden * i;
+  return {
+    project,
+    baseX: Math.cos(theta) * radius,
+    baseY: y,
+    baseZ: Math.sin(theta) * radius,
+  };
+});
 
 interface OpenWindow {
   id: number;
@@ -60,19 +74,87 @@ let windowIdCounter = 0;
 export default function Home() {
   const [windows, setWindows] = useState<OpenWindow[]>([]);
   const [topZ, setTopZ] = useState(100);
-  const scrollRef = useRef<HTMLDivElement>(null);
 
-  const innerRef = useRef<HTMLDivElement>(null);
+  // Orb rotation — refs for smooth 60fps updates, single forceRender per frame
+  const rot = useRef({ x: -0.3, y: 0 });
+  const isDragging = useRef(false);
+  const lastMouse = useRef({ x: 0, y: 0 });
+  const velocity = useRef({ x: 0, y: 0 });
+  const animFrame = useRef<number>(0);
+  const [, forceRender] = useReducer((n: number) => n + 1, 0);
 
-  // Start scrolled to the middle so we can scroll both directions
+  // Single animation loop: idle spin + momentum + render trigger
   useEffect(() => {
-    const el = scrollRef.current;
-    const inner = innerRef.current;
-    if (el && inner) {
-      const setHeight = inner.scrollHeight / COPIES;
-      el.scrollTop = setHeight * Math.floor(COPIES / 2);
-    }
+    const animate = () => {
+      if (!isDragging.current) {
+        velocity.current.x *= 0.95;
+        velocity.current.y *= 0.95;
+
+        rot.current.y += velocity.current.x + 0.002;
+        rot.current.x += velocity.current.y;
+      }
+      forceRender();
+      animFrame.current = requestAnimationFrame(animate);
+    };
+    animFrame.current = requestAnimationFrame(animate);
+    return () => cancelAnimationFrame(animFrame.current);
   }, []);
+
+  // Drag handlers — mutate refs directly, no setState
+  const handlePointerDown = useCallback((e: React.PointerEvent) => {
+    isDragging.current = true;
+    lastMouse.current = { x: e.clientX, y: e.clientY };
+    velocity.current = { x: 0, y: 0 };
+  }, []);
+
+  const handlePointerMove = useCallback((e: React.PointerEvent) => {
+    if (!isDragging.current) return;
+    const dx = e.clientX - lastMouse.current.x;
+    const dy = e.clientY - lastMouse.current.y;
+    const sensitivity = 0.004;
+
+    // Apply rotation immediately
+    rot.current.y += dx * sensitivity;
+    rot.current.x += dy * sensitivity;
+
+    // Smoothed velocity for momentum on release
+    velocity.current.x = velocity.current.x * 0.5 + dx * sensitivity * 0.5;
+    velocity.current.y = velocity.current.y * 0.5 + dy * sensitivity * 0.5;
+
+    lastMouse.current = { x: e.clientX, y: e.clientY };
+  }, []);
+
+  const handlePointerUp = useCallback(() => {
+    isDragging.current = false;
+  }, []);
+
+  // Compute rotated 3D positions from ref values
+  const orbRadius = 140;
+  const { x: rx, y: ry } = rot.current;
+  const cosY = Math.cos(ry);
+  const sinY = Math.sin(ry);
+  const cosX = Math.cos(rx);
+  const sinX = Math.sin(rx);
+
+  const sphereItems = SPHERE_ITEMS.map((item) => {
+    // Rotate around Y axis
+    const x1 = item.baseX * cosY + item.baseZ * sinY;
+    const z1 = -item.baseX * sinY + item.baseZ * cosY;
+
+    // Rotate around X axis
+    const y = item.baseY * cosX - z1 * sinX;
+    const z = item.baseY * sinX + z1 * cosX;
+
+    const depth = (z + 1) / 2;
+    return {
+      ...item,
+      screenX: x1 * orbRadius,
+      screenY: y * orbRadius,
+      z,
+      opacity: 0.15 + depth * 0.85,
+      scale: 0.6 + depth * 0.4,
+    };
+  });
 
   const openWindow = useCallback((project: Project) => {
     const id = ++windowIdCounter;
@@ -96,20 +178,6 @@ export default function Home() {
       prev.map((w) => (w.id === id ? { ...w, zIndex: newZ } : w))
     );
   }, [topZ]);
-
-  const handleScroll = useCallback(() => {
-    const el = scrollRef.current;
-    const inner = innerRef.current;
-    if (!el || !inner) return;
-    const setHeight = inner.scrollHeight / COPIES;
-    const midStart = setHeight * Math.floor(COPIES / 2);
-    // Snap back when straying too far from center
-    if (el.scrollTop < setHeight) {
-      el.scrollTop += setHeight;
-    } else if (el.scrollTop > midStart + setHeight) {
-      el.scrollTop -= setHeight;
-    }
-  }, []);
 
   return (
     <main className="relative h-screen w-screen overflow-hidden bg-bg">
@@ -175,26 +243,37 @@ export default function Home() {
         />
       </div>
 
-      {/* Project list — centered, infinite user scroll */}
+      {/* 3D Project Orb */}
       <div
-        ref={scrollRef}
-        onScroll={handleScroll}
-        className="absolute top-[55%] left-1/2 -translate-x-1/2 -translate-y-1/2 z-[5] h-[30vh] overflow-y-scroll scrollbar-hide mask-fade"
+        className="absolute top-[55%] left-1/2 -translate-x-1/2 -translate-y-1/2 z-[5] select-none"
+        style={{ width: orbRadius * 2 + 120, height: orbRadius * 2 + 120, touchAction: 'none' }}
+        onPointerDown={handlePointerDown}
+        onPointerMove={handlePointerMove}
+        onPointerUp={handlePointerUp}
+        onPointerLeave={handlePointerUp}
       >
-        <div ref={innerRef} className="flex flex-col items-center">
-          {REPEATED.map((project, i) => (
+        {/* Render items sorted back-to-front by z */}
+        {[...sphereItems]
+          .sort((a, b) => a.z - b.z)
+          .map((item, i) => (
             <button
-              key={`${project.name}-${i}`}
-              onClick={() => openWindow(project)}
-              className="group py-2.5 cursor-pointer text-center"
-              style={{ '--proj-accent': project.accent } as React.CSSProperties}
+              key={`${item.project.name}-${i}`}
+              onClick={() => openWindow(item.project)}
+              className="absolute group cursor-pointer whitespace-nowrap"
+              style={{
+                left: '50%',
+                top: '50%',
+                transform: `translate(-50%, -50%) translate(${item.screenX}px, ${item.screenY}px) scale(${item.scale})`,
+                opacity: item.opacity,
+                zIndex: Math.round(item.z * 10) + 10,
+                pointerEvents: item.z < -0.3 ? 'none' : 'auto',
+              }}
             >
-              <span className="font-geist text-lg md:text-2xl font-bold text-white tracking-tight group-hover:text-[var(--proj-accent)] transition-colors duration-200">
-                {project.name}
+              <span className="font-geist text-lg md:text-2xl font-bold text-white tracking-tight group-hover:text-[#00FF88] transition-colors duration-200">
+                {item.project.name}
               </span>
             </button>
           ))}
-        </div>
       </div>
 
       {/* Draggable project windows */}

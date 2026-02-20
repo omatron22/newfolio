@@ -1,7 +1,6 @@
 'use client';
 
 import React, { useState, useEffect } from 'react';
-import Image from 'next/image';
 import Link from 'next/link';
 import GameComponent from '@/components/game/GameComponent';
 import CharacterSelect from '@/components/game/CharacterSelect';
@@ -14,12 +13,12 @@ const getIsMobile = () => {
   );
 };
 
-const images = [
-  { src: '/images/mybestfriend.JPG', alt: 'My Best Friend 1' },
-  { src: '/images/happy.JPG', alt: 'My Best Friend 2' },
-  { src: '/images/fun.JPG', alt: 'My Best Friend 3' },
-  { src: '/images/camaro.jpg', alt: 'My Best Friend 4' },
-  { src: '/images/walking.jpeg', alt: 'My Best Friend 5' },
+const SAMSON_PHOTOS = [
+  '/images/mybestfriend.JPG',
+  '/images/happy.JPG',
+  '/images/fun.JPG',
+  '/images/camaro.jpg',
+  '/images/walking.jpeg',
 ];
 
 export default function VideoGamePage() {
@@ -55,32 +54,59 @@ export default function VideoGamePage() {
 
   return (
     <div className="h-screen bg-bg text-text-primary relative overflow-hidden">
-      {/* Back button */}
+      {/* Tiled Samson photo collage background — fills entire screen */}
+      <div className="absolute inset-0 z-0 pointer-events-none overflow-hidden">
+        <div className="grid grid-cols-6 w-full h-full">
+          {Array.from({ length: 30 }, (_, i) => (
+            <img
+              key={i}
+              src={SAMSON_PHOTOS[i % SAMSON_PHOTOS.length]}
+              alt=""
+              className="w-full h-full object-cover block"
+            />
+          ))}
+        </div>
+      </div>
+
+      {/* Back link */}
       <Link
         href="/"
-        className="fixed top-6 left-6 z-50 font-mono text-[10px] text-text-muted hover:text-[#00FF88] transition-colors uppercase tracking-widest"
+        className="fixed top-5 left-5 z-50 font-geist text-[#00FF88] hover:opacity-70 transition-opacity uppercase"
+        style={{ fontSize: '0.7rem', fontWeight: 800, textShadow: '0 2px 20px rgba(0,0,0,0.9)', letterSpacing: '0.05em' }}
       >
-        &larr; Back
+        i dont feel like looking at your dead dog
       </Link>
 
-      {/* Game + memorial — all in one screen */}
-      <div className="h-full flex flex-col items-center justify-center px-6">
-        {/* Memorial text — above game */}
-        <p className="font-mono text-[10px] text-white tracking-widest uppercase text-center max-w-lg mb-4">
-          For my best friend Samson, I really miss you buddy, rest in peace
+      {/* Content — text above, game below, shifted up */}
+      <div className="h-full flex flex-col items-center justify-center relative z-[2]" style={{ marginTop: '-8vh' }}>
+        {/* Memorial text — above game with gap */}
+        <p
+          className="font-geist text-[#00FF88] text-center uppercase"
+          style={{
+            fontSize: '2.5vw',
+            fontWeight: 800,
+            letterSpacing: '-0.02em',
+            lineHeight: 1.1,
+            textShadow: '0 2px 20px rgba(0,0,0,0.9), 0 0 40px rgba(0,0,0,0.7)',
+            marginBottom: '4vh',
+          }}
+        >
+          For my best friend Samson,<br />I really miss you buddy, rest in peace
         </p>
 
-        {/* Game frame */}
-        <div className="w-full max-w-3xl">
+        {/* Game — scaled up, keeps 800x460 resolution */}
+        <div style={{ transform: 'scale(1.15)', transformOrigin: 'center top' }}>
           {isMobile ? (
-            <div className="border border-white/10 bg-surface p-8 text-center">
-              <p className="font-geist text-xl font-bold mb-3 text-white">Desktop Only</p>
-              <p className="font-geist text-sm text-text-muted">
-                This game requires a desktop or laptop computer.
-              </p>
+            <div className="w-[800px] h-[460px] border border-white/10 bg-surface flex items-center justify-center">
+              <div className="text-center">
+                <p className="font-geist text-xl font-bold mb-3 text-white">Desktop Only</p>
+                <p className="font-geist text-sm text-text-muted">
+                  This game requires a desktop or laptop computer.
+                </p>
+              </div>
             </div>
           ) : (
-            <div className="border border-white/10">
+            <div>
               {currentScreen === 'intro' && (
                 <IntroScreen onPlay={() => setCurrentScreen('characterSelect')} />
               )}
@@ -96,25 +122,6 @@ export default function VideoGamePage() {
               )}
             </div>
           )}
-        </div>
-
-        {/* Memorial photos — below game */}
-        <div className="flex items-center justify-center gap-3 mt-4">
-          {images.map((image, index) => (
-            <div
-              key={index}
-              className="w-24 h-24 md:w-28 md:h-28 overflow-hidden border border-white/20 hover:border-[#00FF88]/40 transition-colors"
-            >
-              <div className="relative w-full h-full">
-                <Image
-                  src={image.src}
-                  alt={image.alt}
-                  fill
-                  className="object-cover"
-                />
-              </div>
-            </div>
-          ))}
         </div>
       </div>
     </div>
