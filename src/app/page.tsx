@@ -129,7 +129,8 @@ export default function Home() {
   }, []);
 
   // Compute rotated 3D positions from ref values
-  const orbRadius = 140;
+  const isMobile = typeof window !== 'undefined' && window.innerWidth < 768;
+  const orbRadius = isMobile ? 110 : 140;
   const { x: rx, y: ry } = rot.current;
   const cosY = Math.cos(ry);
   const sinY = Math.sin(ry);
@@ -158,9 +159,11 @@ export default function Home() {
 
   const openWindow = useCallback((project: Project) => {
     const id = ++windowIdCounter;
-    const offsetX = (windows.length % 5) * 30;
-    const offsetY = (windows.length % 5) * 30;
-    const x = Math.min(window.innerWidth / 2 - 180 + offsetX, window.innerWidth - 380);
+    const w = window.innerWidth;
+    const winW = w < 768 ? 280 : 340;
+    const offsetX = (windows.length % 5) * 20;
+    const offsetY = (windows.length % 5) * 20;
+    const x = Math.min(w / 2 - winW / 2 + offsetX, w - winW - 10);
     const y = Math.min(window.innerHeight / 2 - 150 + offsetY, window.innerHeight - 320);
     const newZ = topZ + 1;
     setTopZ(newZ);
@@ -192,14 +195,15 @@ export default function Home() {
 
       {/* Title — full-width, Geist bold */}
       <h1
-        className="absolute top-[10vh] left-0 w-full z-10 px-4 font-geist uppercase text-white leading-[0.92] whitespace-nowrap"
+        className="absolute top-[10vh] left-0 w-full z-10 px-4 font-geist uppercase text-white leading-[0.92] text-center md:text-left"
         style={{
           fontSize: '11.5vw',
           fontWeight: 800,
           letterSpacing: '-0.02em',
         }}
       >
-        OMAR ESPINOZA
+        <span className="hidden md:inline">OMAR ESPINOZA</span>
+        <span className="md:hidden">OMAR<br />ESPINOZA</span>
       </h1>
 
       {/* Blog marquee ticker — pixelated blur, top of screen */}
@@ -269,7 +273,7 @@ export default function Home() {
                 pointerEvents: item.z < -0.3 ? 'none' : 'auto',
               }}
             >
-              <span className="font-geist text-lg md:text-2xl font-bold text-white tracking-tight group-hover:text-[#00FF88] transition-colors duration-200">
+              <span className="font-geist text-xs md:text-2xl font-bold text-white tracking-tight group-hover:text-[#00FF88] transition-colors duration-200">
                 {item.project.name}
               </span>
             </button>
@@ -288,7 +292,7 @@ export default function Home() {
             drag
             dragMomentum={false}
             onPointerDown={() => bringToFront(w.id)}
-            className="fixed w-[340px] shadow-2xl shadow-black/50"
+            className="fixed w-[280px] md:w-[340px] shadow-2xl shadow-black/50"
             style={{
               left: w.x,
               top: w.y,
@@ -354,48 +358,48 @@ export default function Home() {
 
       {/* Bottom bar — Studio Freight style footer */}
       <div className="absolute bottom-0 left-0 right-0 z-10 border-t border-white">
-        <div className="grid grid-cols-3 px-6 md:px-10 py-4">
+        <div className="grid grid-cols-3 px-3 md:px-10 py-2 md:py-4">
           {/* Bio — left */}
           <div className="space-y-0.5">
-            <p className="font-mono text-[10px] md:text-xs text-white uppercase tracking-wider">
+            <p className="font-mono text-[7px] md:text-xs text-white uppercase tracking-wider">
               Senior eng at QMIRAC
             </p>
-            <p className="font-mono text-[10px] md:text-xs text-white uppercase tracking-wider">
+            <p className="font-mono text-[7px] md:text-xs text-white uppercase tracking-wider">
               Fullstack UI/UX at Hawkeye
             </p>
           </div>
 
           {/* Links — centered, 2-col grid */}
-          <div className="grid grid-cols-2 gap-x-8 gap-y-1 justify-self-center">
-            <a href="https://github.com/omatron22" target="_blank" rel="noopener noreferrer" className="group relative font-mono text-[10px] md:text-xs text-white uppercase tracking-wider transition-colors hover:text-[#00FF88] w-fit">
+          <div className="grid grid-cols-2 gap-x-3 md:gap-x-8 gap-y-0.5 md:gap-y-1 justify-self-center">
+            <a href="https://github.com/omatron22" target="_blank" rel="noopener noreferrer" className="group relative font-mono text-[7px] md:text-xs text-white uppercase tracking-wider transition-colors hover:text-[#00FF88] w-fit">
               GITHUB
               <span className="absolute left-0 -bottom-px h-px w-0 bg-[#00FF88] transition-all duration-300 group-hover:w-full" />
             </a>
-            <a href="/images/resume.pdf" target="_blank" rel="noopener noreferrer" className="group relative font-mono text-[10px] md:text-xs text-white uppercase tracking-wider transition-colors hover:text-[#00FF88] w-fit">
+            <a href="/images/resume.pdf" target="_blank" rel="noopener noreferrer" className="group relative font-mono text-[7px] md:text-xs text-white uppercase tracking-wider transition-colors hover:text-[#00FF88] w-fit">
               RESUME
               <span className="absolute left-0 -bottom-px h-px w-0 bg-[#00FF88] transition-all duration-300 group-hover:w-full" />
             </a>
-            <a href="https://linkedin.com/in/omaresp22/" target="_blank" rel="noopener noreferrer" className="group relative font-mono text-[10px] md:text-xs text-white uppercase tracking-wider transition-colors hover:text-[#00FF88] w-fit">
+            <a href="https://linkedin.com/in/omaresp22/" target="_blank" rel="noopener noreferrer" className="group relative font-mono text-[7px] md:text-xs text-white uppercase tracking-wider transition-colors hover:text-[#00FF88] w-fit">
               LINKEDIN
               <span className="absolute left-0 -bottom-px h-px w-0 bg-[#00FF88] transition-all duration-300 group-hover:w-full" />
             </a>
-            <span className="font-mono text-[10px] md:text-xs text-white uppercase tracking-wider">
+            <span className="font-mono text-[7px] md:text-xs text-white uppercase tracking-wider whitespace-nowrap">
               E: omaresp35@gmail.com
             </span>
           </div>
 
           {/* Copyright + hidden game link — right */}
-          <div className="flex flex-col items-end gap-1">
-            <span className="font-mono text-[10px] md:text-xs text-white">
-              &copy; {new Date().getFullYear()}
-            </span>
+          <div className="flex flex-col items-end gap-0.5 md:gap-1">
             <Link
               href="/video-game"
-              className="font-mono text-[10px] text-white hover:text-[#00FF88] transition-colors duration-300"
+              className="font-mono text-[7px] md:text-[10px] text-white hover:text-[#00FF88] transition-colors duration-300"
               title="Play Samson The Game"
             >
               {'>'}_{'<'} PLAY?
             </Link>
+            <span className="font-mono text-[7px] md:text-xs text-white">
+              &copy; {new Date().getFullYear()}
+            </span>
           </div>
         </div>
       </div>

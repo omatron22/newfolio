@@ -6,13 +6,6 @@ import GameComponent from '@/components/game/GameComponent';
 import CharacterSelect from '@/components/game/CharacterSelect';
 import IntroScreen from '@/components/game/IntroScreen';
 
-const getIsMobile = () => {
-  if (typeof window === 'undefined') return false;
-  return /Mobi|Android|iPhone|iPad|iPod|BlackBerry|IEMobile|Opera Mini/i.test(
-    navigator.userAgent
-  );
-};
-
 const SAMSON_PHOTOS = [
   '/images/mybestfriend.JPG',
   '/images/happy.JPG',
@@ -26,17 +19,22 @@ export default function VideoGamePage() {
     'intro' | 'characterSelect' | 'game'
   >('intro');
   const [selectedCharacter, setSelectedCharacter] = useState('og');
-  const [isMobile, setIsMobile] = useState(() => getIsMobile());
+  const [gameScale, setGameScale] = useState(1.15);
+  const [isMobileLayout, setIsMobileLayout] = useState(false);
   const [isLoading, setIsLoading] = useState(true);
 
   useEffect(() => {
-    const checkMobile = () => {
-      setIsMobile(getIsMobile());
+    const updateScale = () => {
+      const vw = window.innerWidth;
+      const vh = window.innerHeight;
+      const calculated = Math.min((vw * 0.95) / 800, (vh * 0.55) / 460);
+      setGameScale(calculated >= 1.15 ? 1.15 : calculated);
+      setIsMobileLayout(vw < 768);
       setIsLoading(false);
     };
-    checkMobile();
-    window.addEventListener('resize', checkMobile);
-    return () => window.removeEventListener('resize', checkMobile);
+    updateScale();
+    window.addEventListener('resize', updateScale);
+    return () => window.removeEventListener('resize', updateScale);
   }, []);
 
   const handleCharacterSelect = (character: string) => {
@@ -72,18 +70,18 @@ export default function VideoGamePage() {
       <Link
         href="/"
         className="fixed top-5 left-5 z-50 font-geist text-[#00FF88] hover:opacity-70 transition-opacity uppercase"
-        style={{ fontSize: '0.7rem', fontWeight: 800, textShadow: '0 2px 20px rgba(0,0,0,0.9)', letterSpacing: '0.05em' }}
+        style={{ fontSize: '0.7rem', fontWeight: 800, textShadow: '0 2px 20px rgba(0,0,0,0.9), 0 0 40px rgba(0,0,0,0.7)', letterSpacing: '0.05em' }}
       >
         i dont feel like looking at your dead dog
       </Link>
 
       {/* Content — text above, game below, shifted up */}
-      <div className="h-full flex flex-col items-center justify-center relative z-[2]" style={{ marginTop: '-8vh' }}>
+      <div className="h-full flex flex-col items-center justify-center relative z-[2]" style={{ marginTop: isMobileLayout ? '0' : '-8vh' }}>
         {/* Memorial text — above game with gap */}
         <p
           className="font-geist text-[#00FF88] text-center uppercase"
           style={{
-            fontSize: '2.5vw',
+            fontSize: isMobileLayout ? '3.5vw' : '2.5vw',
             fontWeight: 800,
             letterSpacing: '-0.02em',
             lineHeight: 1.1,
@@ -94,34 +92,23 @@ export default function VideoGamePage() {
           For my best friend Samson,<br />I really miss you buddy, rest in peace
         </p>
 
-        {/* Game — scaled up, keeps 800x460 resolution */}
-        <div style={{ transform: 'scale(1.15)', transformOrigin: 'center top' }}>
-          {isMobile ? (
-            <div className="w-[800px] h-[460px] border border-white/10 bg-surface flex items-center justify-center">
-              <div className="text-center">
-                <p className="font-geist text-xl font-bold mb-3 text-white">Desktop Only</p>
-                <p className="font-geist text-sm text-text-muted">
-                  This game requires a desktop or laptop computer.
-                </p>
-              </div>
-            </div>
-          ) : (
-            <div>
-              {currentScreen === 'intro' && (
-                <IntroScreen onPlay={() => setCurrentScreen('characterSelect')} />
-              )}
-              {currentScreen === 'characterSelect' && (
-                <CharacterSelect onSelectCharacter={handleCharacterSelect} />
-              )}
-              {currentScreen === 'game' && (
-                <GameComponent
-                  character={selectedCharacter}
-                  onCharacterSelect={() => setCurrentScreen('characterSelect')}
-                  onMainMenu={() => setCurrentScreen('intro')}
-                />
-              )}
-            </div>
-          )}
+        {/* Game — responsive scale, keeps 800x460 resolution */}
+        <div style={{ transform: `scale(${gameScale})`, transformOrigin: 'center top' }}>
+          <div>
+            {currentScreen === 'intro' && (
+              <IntroScreen onPlay={() => setCurrentScreen('characterSelect')} />
+            )}
+            {currentScreen === 'characterSelect' && (
+              <CharacterSelect onSelectCharacter={handleCharacterSelect} />
+            )}
+            {currentScreen === 'game' && (
+              <GameComponent
+                character={selectedCharacter}
+                onCharacterSelect={() => setCurrentScreen('characterSelect')}
+                onMainMenu={() => setCurrentScreen('intro')}
+              />
+            )}
+          </div>
         </div>
       </div>
     </div>

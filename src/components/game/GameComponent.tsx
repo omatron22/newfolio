@@ -29,19 +29,23 @@ export default function GameComponent({
   const gameOverRef = useRef(false);
   const spawnTimerRef = useRef<Phaser.Time.TimerEvent | null>(null);
 
+  // Touch controls ref — checked in Phaser update loop
+  const touchControls = useRef({ left: false, right: false, up: false, down: false });
+
   // React state
   const [gameOver, setGameOver] = useState(false);
   const [isPaused, setIsPaused] = useState(false);
   const [showGuide, setShowGuide] = useState(true);
   const [currentScore, setCurrentScore] = useState(0);
   const [highScore, setHighScore] = useState<number>(0);
+  const [isTouchDevice, setIsTouchDevice] = useState(false);
 
   // Keep gameOverRef in sync
   useEffect(() => {
     gameOverRef.current = gameOver;
   }, [gameOver]);
 
-  // Initialize highScore from localStorage once on client
+  // Initialize highScore from localStorage once on client + detect touch
   useEffect(() => {
     if (typeof window !== 'undefined') {
       const guideShown = sessionStorage.getItem('guideShown') === 'true';
@@ -51,6 +55,8 @@ export default function GameComponent({
       const parsedHighScore = savedHighScore ? parseInt(savedHighScore, 10) : 0;
       setHighScore(parsedHighScore);
       highScoreRef.current = parsedHighScore;
+
+      setIsTouchDevice('ontouchstart' in window || navigator.maxTouchPoints > 0);
     }
   }, []);
 
@@ -97,6 +103,9 @@ export default function GameComponent({
     const duckHitboxHeight = 147;
     const groundHeightLevel = 400;
     const characterPrefix = getCharacterPrefix(character);
+
+    // Capture touch ref for use inside Phaser
+    const touchRef = touchControls;
 
     const initializePhaser = async () => {
       if (typeof window === 'undefined') return;
@@ -326,18 +335,19 @@ export default function GameComponent({
 
               player.setVelocityX(0);
               const isOnGround = player.body?.blocked.down;
-              const isDownPressed = cursors.down?.isDown;
-              const isLeftPressed = cursors.left?.isDown;
-              const isRightPressed = cursors.right?.isDown;
-              const isUpPressed = cursors.up?.isDown;
+              const isDownPressed = cursors.down?.isDown || touchRef.current.down;
+              const isLeftPressed = cursors.left?.isDown || touchRef.current.left;
+              const isRightPressed = cursors.right?.isDown || touchRef.current.right;
+              const isUpPressed = cursors.up?.isDown || touchRef.current.up;
 
               let isDucking = false;
               let isMoving = false;
 
-              // Jump
+              // Jump — consume touch jump immediately (one-shot)
               if (isUpPressed && isOnGround) {
                 player.setVelocityY(-400);
                 player.anims.play(animKeys.jump, true);
+                touchRef.current.up = false;
               }
 
               // Movement
@@ -467,6 +477,31 @@ export default function GameComponent({
     }
   }, []);
 
+  // Touch button handler helpers
+  const onTouchStart = (dir: 'left' | 'right' | 'up' | 'down') => {
+    touchControls.current[dir] = true;
+  };
+  const onTouchEnd = (dir: 'left' | 'right' | 'up' | 'down') => {
+    touchControls.current[dir] = false;
+  };
+
+  const dpadButtonStyle: React.CSSProperties = {
+    width: 56,
+    height: 56,
+    display: 'flex',
+    alignItems: 'center',
+    justifyContent: 'center',
+    background: 'rgba(255,255,255,0.08)',
+    border: '1.5px solid rgba(255,255,255,0.25)',
+    borderRadius: 12,
+    color: '#fff',
+    fontSize: 22,
+    userSelect: 'none',
+    WebkitUserSelect: 'none',
+    touchAction: 'none',
+    cursor: 'pointer',
+  };
+
   return (
     <div className="relative w-[800px] h-[460px] mx-auto border border-border bg-surface box-border overflow-hidden">
       {showGuide ? (
@@ -511,6 +546,71 @@ export default function GameComponent({
 
           {/* Game container */}
           <div ref={gameContainerRef} style={{ width: '100%', height: '100%' }} />
+
+          {/* D-pad touch controls — touch devices only, WASD formation */}
+          {!gameOver && isTouchDevice && (
+            <div
+              style={{
+                position: 'absolute',
+                bottom: 10,
+                left: '50%',
+                transform: 'translateX(-50%)',
+                zIndex: 10,
+                display: 'flex',
+                flexDirection: 'column',
+                alignItems: 'center',
+                gap: 4,
+                pointerEvents: 'none',
+              }}
+            >
+              {/* Top row: Jump (up) */}
+              <div style={{ pointerEvents: 'auto' }}>
+                <button
+                  style={dpadButtonStyle}
+                  onPointerDown={() => onTouchStart('up')}
+                  onPointerUp={() => onTouchEnd('up')}
+                  onPointerLeave={() => onTouchEnd('up')}
+                  onPointerCancel={() => onTouchEnd('up')}
+                  aria-label="Jump"
+                >
+                  &#9650;
+                </button>
+              </div>
+              {/* Bottom row: Left, Duck (down), Right */}
+              <div style={{ display: 'flex', gap: 4, pointerEvents: 'auto' }}>
+                <button
+                  style={dpadButtonStyle}
+                  onPointerDown={() => onTouchStart('left')}
+                  onPointerUp={() => onTouchEnd('left')}
+                  onPointerLeave={() => onTouchEnd('left')}
+                  onPointerCancel={() => onTouchEnd('left')}
+                  aria-label="Move left"
+                >
+                  &#9664;
+                </button>
+                <button
+                  style={dpadButtonStyle}
+                  onPointerDown={() => onTouchStart('down')}
+                  onPointerUp={() => onTouchEnd('down')}
+                  onPointerLeave={() => onTouchEnd('down')}
+                  onPointerCancel={() => onTouchEnd('down')}
+                  aria-label="Duck"
+                >
+                  &#9660;
+                </button>
+                <button
+                  style={dpadButtonStyle}
+                  onPointerDown={() => onTouchStart('right')}
+                  onPointerUp={() => onTouchEnd('right')}
+                  onPointerLeave={() => onTouchEnd('right')}
+                  onPointerCancel={() => onTouchEnd('right')}
+                  aria-label="Move right"
+                >
+                  &#9654;
+                </button>
+              </div>
+            </div>
+          )}
 
           {/* Game Over */}
           {gameOver && (
