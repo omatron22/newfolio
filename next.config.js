@@ -9,8 +9,10 @@ const nextConfig = {
   // Allow importing from node_modules (Phaser)
   transpilePackages: ["phaser"],
 
-  // Empty turbopack config to silence warning (Phaser works fine with Turbopack)
-  turbopack: {},
+  // Pin turbopack root to this project directory
+  turbopack: {
+    root: __dirname,
+  },
 
   // Webpack config kept for fallback builds
   webpack: (config) => {

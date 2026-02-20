@@ -1,7 +1,8 @@
 import './globals.css';
 import type { Metadata } from 'next';
-import { inter } from './fonts';
+import { geist, geistMono } from './fonts';
 import GrainOverlay from '@/components/ui/GrainOverlay';
+import Navigation from '@/components/ui/Navigation';
 
 export const metadata: Metadata = {
   title: 'Omar Espinoza',
@@ -38,9 +39,10 @@ export default function RootLayout({
   children: React.ReactNode;
 }) {
   return (
-    <html lang="en" className={inter.variable}>
-      <body className="h-screen overflow-hidden bg-win-desktop font-system">
+    <html lang="en" className={`${geist.variable} ${geistMono.variable}`}>
+      <body className="bg-bg text-text-primary font-geist scan-lines">
         <GrainOverlay />
+        <Navigation />
         {children}
       </body>
     </html>

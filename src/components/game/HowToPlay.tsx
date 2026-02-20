@@ -6,7 +6,7 @@ interface HowToPlayProps {
   onClose: () => void;
 }
 
-export default function HowToPlay({ onClose }: HowToPlayProps) {
+function HowToPlay({ onClose }: HowToPlayProps) {
   return (
     <div
       style={{
@@ -50,3 +50,5 @@ export default function HowToPlay({ onClose }: HowToPlayProps) {
     </div>
   );
 }
+
+export default React.memo(HowToPlay);

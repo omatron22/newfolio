@@ -10,7 +10,7 @@ interface GameOverProps {
   onMainMenu: () => void;
 }
 
-export default function GameOver({
+function GameOver({
   currentScore,
   highScore,
   handleRestart,
@@ -31,7 +31,6 @@ export default function GameOver({
         alignItems: 'center',
       }}
     >
-      {/* Game Over Background Image */}
       <div
         style={{
           position: 'relative',
@@ -47,7 +46,6 @@ export default function GameOver({
           }}
         />
 
-        {/* High Score and Current Score */}
         <div
           style={{
             position: 'absolute',
@@ -81,7 +79,6 @@ export default function GameOver({
           </p>
         </div>
 
-        {/* Restart, Main Menu, and Paw Buttons */}
         <div
           style={{
             position: 'absolute',
@@ -93,7 +90,6 @@ export default function GameOver({
             gap: '40px',
           }}
         >
-          {/* Restart Button */}
           <img
             src="/assets/restart.png"
             alt="Restart Button"
@@ -111,7 +107,6 @@ export default function GameOver({
               (e.currentTarget.style.transform = 'scale(1)')
             }
           />
-          {/* Main Menu Button */}
           <img
             src="/assets/home-button.png"
             alt="Main Menu Button"
@@ -129,7 +124,6 @@ export default function GameOver({
               (e.currentTarget.style.transform = 'scale(1)')
             }
           />
-          {/* Paw Button to Go to Character Select */}
           {onCharacterSelect && (
             <img
               src="/assets/paw-button.png"
@@ -154,3 +148,5 @@ export default function GameOver({
     </div>
   );
 }
+
+export default React.memo(GameOver);
