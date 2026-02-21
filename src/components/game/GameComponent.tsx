@@ -155,13 +155,15 @@ export default function GameComponent({
           scene: {
             key: 'mainScene',
             preload: function(this: Phaser.Scene) {
-              // Load common assets
-              this.load.spritesheet('background', '/assets/background.png', {
-                frameWidth: 1200, frameHeight: 690, endFrame: 199,
-              });
-              this.load.spritesheet('background2', '/assets/background2.png', {
-                frameWidth: 1200, frameHeight: 690, endFrame: 68,
-              });
+              // Animated backgrounds — skip on mobile to save ~888MB of texture memory
+              if (!isMobile) {
+                this.load.spritesheet('background', '/assets/background.png', {
+                  frameWidth: 1200, frameHeight: 690, endFrame: 199,
+                });
+                this.load.spritesheet('background2', '/assets/background2.png', {
+                  frameWidth: 1200, frameHeight: 690, endFrame: 68,
+                });
+              }
               this.load.spritesheet('chocolate', '/assets/choco.png', {
                 frameWidth: 1200, frameHeight: 690, endFrame: 3,
               });
@@ -190,17 +192,19 @@ export default function GameComponent({
               score = 0;
               setCurrentScore(0);
 
-              // Background animations
-              this.anims.create({
-                key: 'background_animation',
-                frames: this.anims.generateFrameNumbers('background', { start: 0, end: 199 }),
-                frameRate: 8, repeat: -1,
-              });
-              this.anims.create({
-                key: 'background2_animation',
-                frames: this.anims.generateFrameNumbers('background2', { start: 0, end: 68 }),
-                frameRate: 8, repeat: -1,
-              });
+              // Background animations — desktop only
+              if (!isMobile) {
+                this.anims.create({
+                  key: 'background_animation',
+                  frames: this.anims.generateFrameNumbers('background', { start: 0, end: 199 }),
+                  frameRate: 8, repeat: -1,
+                });
+                this.anims.create({
+                  key: 'background2_animation',
+                  frames: this.anims.generateFrameNumbers('background2', { start: 0, end: 68 }),
+                  frameRate: 8, repeat: -1,
+                });
+              }
 
               // Player animations
               this.anims.create({
@@ -246,14 +250,16 @@ export default function GameComponent({
                 frameRate: 2, repeat: -1,
               });
 
-              // Background sprites
-              const background = this.add.sprite(0, 0, 'background').setOrigin(0, 0);
-              background.setDisplaySize(800, 460);
-              background.anims.play('background_animation');
+              // Background sprites — desktop only
+              if (!isMobile) {
+                const background = this.add.sprite(0, 0, 'background').setOrigin(0, 0);
+                background.setDisplaySize(800, 460);
+                background.anims.play('background_animation');
 
-              const background2 = this.add.sprite(0, 0, 'background2').setOrigin(0, 0);
-              background2.setDisplaySize(800, 460);
-              background2.anims.play('background2_animation');
+                const background2 = this.add.sprite(0, 0, 'background2').setOrigin(0, 0);
+                background2.setDisplaySize(800, 460);
+                background2.anims.play('background2_animation');
+              }
 
               // World bounds
               this.physics.world.setBounds(0, 0, 800, groundHeightLevel);
@@ -508,7 +514,14 @@ export default function GameComponent({
   };
 
   return (
-    <div className="relative w-[800px] h-[460px] mx-auto border border-border bg-surface box-border overflow-hidden">
+    <div
+      className="relative w-[800px] h-[460px] mx-auto border border-border box-border overflow-hidden"
+      style={{
+        background: isTouchDevice
+          ? 'linear-gradient(180deg, #1a3a2a 0%, #0d1f15 60%, #0a1a10 100%)'
+          : '#12121A',
+      }}
+    >
       {showGuide ? (
         <HowToPlay onClose={handleStartGame} />
       ) : (
