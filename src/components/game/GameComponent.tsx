@@ -514,14 +514,27 @@ export default function GameComponent({
   };
 
   return (
-    <div
-      className="relative w-[800px] h-[460px] mx-auto border border-border box-border overflow-hidden"
-      style={{
-        background: isTouchDevice
-          ? 'linear-gradient(180deg, #1a3a2a 0%, #0d1f15 60%, #0a1a10 100%)'
-          : '#12121A',
-      }}
-    >
+    <div className="relative w-[800px] h-[460px] mx-auto border border-border bg-surface box-border overflow-hidden">
+      {/* Mobile: composited background video instead of 888MB of spritesheets */}
+      {isTouchDevice && (
+        <video
+          autoPlay
+          loop
+          muted
+          playsInline
+          style={{
+            position: 'absolute',
+            inset: 0,
+            width: '100%',
+            height: '100%',
+            objectFit: 'cover',
+            zIndex: 0,
+            pointerEvents: 'none',
+          }}
+        >
+          <source src="/assets/background-mobile.mp4" type="video/mp4" />
+        </video>
+      )}
       {showGuide ? (
         <HowToPlay onClose={handleStartGame} />
       ) : (
@@ -562,8 +575,8 @@ export default function GameComponent({
             </button>
           </div>
 
-          {/* Game container */}
-          <div ref={gameContainerRef} style={{ width: '100%', height: '100%' }} />
+          {/* Game container — z-index above video bg */}
+          <div ref={gameContainerRef} style={{ position: 'relative', zIndex: 1, width: '100%', height: '100%' }} />
 
           {/* D-pad touch controls — touch devices only, WASD formation */}
           {!gameOver && isTouchDevice && (
