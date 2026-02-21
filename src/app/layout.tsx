@@ -3,6 +3,7 @@ import type { Metadata } from 'next';
 import { geist, geistMono } from './fonts';
 import GrainOverlay from '@/components/ui/GrainOverlay';
 import Navigation from '@/components/ui/Navigation';
+import CustomCursor from '@/components/ui/CustomCursor';
 
 export const metadata: Metadata = {
   title: 'Omar Espinoza',
@@ -41,6 +42,7 @@ export default function RootLayout({
   return (
     <html lang="en" className={`${geist.variable} ${geistMono.variable}`}>
       <body className="bg-bg text-text-primary font-geist scan-lines">
+        <CustomCursor />
         <GrainOverlay />
         <Navigation />
         {children}

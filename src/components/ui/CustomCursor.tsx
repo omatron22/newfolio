@@ -3,28 +3,25 @@
 import { useEffect, useRef, useState } from 'react';
 
 export default function CustomCursor() {
-  const dotRef = useRef<HTMLDivElement>(null);
-  const ringRef = useRef<HTMLDivElement>(null);
-  const [isPointer, setIsPointer] = useState(false);
+  const cursorRef = useRef<HTMLDivElement>(null);
   const [visible, setVisible] = useState(false);
-  const mouse = useRef({ x: 0, y: 0 });
-  const ring = useRef({ x: 0, y: 0 });
+  const [isPointer, setIsPointer] = useState(false);
+  const pos = useRef({ x: 0, y: 0 });
+  const smoothPos = useRef({ x: 0, y: 0 });
 
   useEffect(() => {
-    // Skip on touch devices
     if (window.matchMedia('(pointer: coarse)').matches) return;
-    if (typeof window === 'undefined') return;
+    if (window.matchMedia('(prefers-reduced-motion: reduce)').matches) return;
 
-    const prefersReduced = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
-    if (prefersReduced) return;
+    // Hide default cursor globally
+    document.documentElement.style.cursor = 'none';
+    const style = document.createElement('style');
+    style.textContent = '*, *::before, *::after { cursor: none !important; }';
+    document.head.appendChild(style);
 
     const onMouseMove = (e: MouseEvent) => {
-      mouse.current = { x: e.clientX, y: e.clientY };
+      pos.current = { x: e.clientX, y: e.clientY };
       if (!visible) setVisible(true);
-
-      if (dotRef.current) {
-        dotRef.current.style.transform = `translate(${e.clientX - 4}px, ${e.clientY - 4}px)`;
-      }
 
       const target = e.target as HTMLElement;
       const isHover = target.closest('a, button, [role="button"], input, textarea, select, [data-hover]');
@@ -36,11 +33,11 @@ export default function CustomCursor() {
 
     let animId: number;
     const animate = () => {
-      ring.current.x += (mouse.current.x - ring.current.x) * 0.15;
-      ring.current.y += (mouse.current.y - ring.current.y) * 0.15;
+      smoothPos.current.x += (pos.current.x - smoothPos.current.x) * 0.35;
+      smoothPos.current.y += (pos.current.y - smoothPos.current.y) * 0.35;
 
-      if (ringRef.current) {
-        ringRef.current.style.transform = `translate(${ring.current.x - 20}px, ${ring.current.y - 20}px)`;
+      if (cursorRef.current) {
+        cursorRef.current.style.transform = `translate(${smoothPos.current.x}px, ${smoothPos.current.y}px)`;
       }
       animId = requestAnimationFrame(animate);
     };
@@ -55,45 +52,52 @@ export default function CustomCursor() {
       document.removeEventListener('mouseleave', onMouseLeave);
       document.removeEventListener('mouseenter', onMouseEnter);
       cancelAnimationFrame(animId);
+      document.documentElement.style.cursor = '';
+      style.remove();
     };
   }, [visible]);
 
-  // Don't render on touch devices (SSR safe)
   if (typeof window !== 'undefined' && window.matchMedia('(pointer: coarse)').matches) {
     return null;
   }
 
   return (
-    <>
-      {/* Dot */}
-      <div
-        ref={dotRef}
-        className="fixed top-0 left-0 z-[10000] pointer-events-none mix-blend-difference"
+    <div
+      ref={cursorRef}
+      className="fixed top-0 left-0 z-[10000] pointer-events-none"
+      style={{
+        opacity: visible ? 1 : 0,
+        transition: 'opacity 0.15s',
+      }}
+    >
+      {/* Classic pixel arrow cursor, scaled up 2x for retro chunky feel */}
+      <svg
+        width="32"
+        height="42"
+        viewBox="0 0 16 21"
+        fill="none"
+        xmlns="http://www.w3.org/2000/svg"
         style={{
-          width: 8,
-          height: 8,
-          borderRadius: '50%',
-          backgroundColor: 'var(--accent)',
-          opacity: visible ? 1 : 0,
-          transition: 'opacity 0.2s',
+          marginLeft: -1,
+          marginTop: -1,
+          filter: isPointer ? 'drop-shadow(0 0 6px var(--accent))' : 'none',
+          transition: 'filter 0.2s',
         }}
-      />
-      {/* Ring */}
-      <div
-        ref={ringRef}
-        className="fixed top-0 left-0 z-[10000] pointer-events-none mix-blend-difference"
-        style={{
-          width: 40,
-          height: 40,
-          borderRadius: '50%',
-          border: '1px solid var(--accent)',
-          opacity: visible ? 0.5 : 0,
-          transition: 'opacity 0.2s, width 0.3s, height 0.3s, margin 0.3s',
-          ...(isPointer
-            ? { width: 60, height: 60, marginLeft: -10, marginTop: -10 }
-            : {}),
-        }}
-      />
-    </>
+        shapeRendering="crispEdges"
+      >
+        {/* Black outline */}
+        <path
+          d="M0 0 L0 17 L4 13 L7 20 L10 19 L7 12 L12 12 Z"
+          fill="black"
+          stroke="black"
+          strokeWidth="1"
+        />
+        {/* White fill */}
+        <path
+          d="M1 1.5 L1 15 L4.5 11.5 L7.5 18.5 L9 18 L6 11 L11 11 Z"
+          fill="white"
+        />
+      </svg>
+    </div>
   );
 }

@@ -14,7 +14,8 @@ const PROJECTS = [
     category: 'WEB',
     accent: '#00FF88',
     link: 'https://gimmemoorelight.com',
-    description: 'Creative portfolio and brand website for a lighting designer.',
+    description: 'Portfolio & brand site for a lighting designer.',
+    image: '/images/gimmemoorelight.png',
     tech: ['Next.js', 'Framer Motion', 'Tailwind'],
   },
   {
@@ -22,7 +23,7 @@ const PROJECTS = [
     category: 'WEB',
     accent: '#00FF88',
     link: 'https://dianne-portfolio-dun.vercel.app',
-    description: 'Elegant portfolio website showcasing creative work and projects.',
+    description: 'Photography portfolio with gallery showcases.',
     tech: ['Next.js', 'TypeScript', 'CSS'],
   },
   {
@@ -30,7 +31,7 @@ const PROJECTS = [
     category: 'RESEARCH',
     accent: '#00FF88',
     link: 'https://mayasite.vercel.app',
-    description: 'Research-focused website with interactive data visualizations.',
+    description: 'Semantic search engine for Maya glyphs.',
     tech: ['React', 'D3.js', 'TypeScript'],
   },
   {
@@ -38,7 +39,7 @@ const PROJECTS = [
     category: 'WEB',
     accent: '#00FF88',
     link: 'https://clearwaterpoolandspaservice.com',
-    description: 'Business website for a pool and spa service company.',
+    description: 'Business site for a pool & spa company.',
     tech: ['Next.js', 'Tailwind', 'Vercel'],
   },
 ];
@@ -50,7 +51,7 @@ const SPHERE_POINTS = 12;
 const SPHERE_ITEMS = Array.from({ length: SPHERE_POINTS }, (_, i) => {
   const project = PROJECTS[i % PROJECTS.length];
   const golden = Math.PI * (3 - Math.sqrt(5));
-  const y = 1 - ((i + 0.5) / SPHERE_POINTS) * 2; // offset so no point sits on a pole
+  const y = 1 - ((i + 0.5) / SPHERE_POINTS) * 2;
   const radius = Math.sqrt(1 - y * y);
   const theta = golden * i;
   return {
@@ -61,19 +62,8 @@ const SPHERE_ITEMS = Array.from({ length: SPHERE_POINTS }, (_, i) => {
   };
 });
 
-interface OpenWindow {
-  id: number;
-  project: Project;
-  x: number;
-  y: number;
-  zIndex: number;
-}
-
-let windowIdCounter = 0;
-
 export default function Home() {
-  const [windows, setWindows] = useState<OpenWindow[]>([]);
-  const [topZ, setTopZ] = useState(100);
+  const [selectedProject, setSelectedProject] = useState<Project | null>(null);
 
   // Orb rotation — refs for smooth 60fps updates, single forceRender per frame
   const rot = useRef({ x: -0.3, y: 0 });
@@ -81,18 +71,46 @@ export default function Home() {
   const lastMouse = useRef({ x: 0, y: 0 });
   const velocity = useRef({ x: 0, y: 0 });
   const animFrame = useRef<number>(0);
+  const scatter = useRef(0); // 0 = orb, 1 = fully scattered — smoothly lerped
+  const selectedRef = useRef<Project | null>(null);
   const [, forceRender] = useReducer((n: number) => n + 1, 0);
 
-  // Single animation loop: idle spin + momentum + render trigger
+  // Keep selectedRef in sync so rAF loop can read it without stale closures
+  selectedRef.current = selectedProject;
+  const isExpanded = selectedProject !== null;
+
+  // ESC to close
+  useEffect(() => {
+    const onKey = (e: KeyboardEvent) => {
+      if (e.key === 'Escape') setSelectedProject(null);
+    };
+    window.addEventListener('keydown', onKey);
+    return () => window.removeEventListener('keydown', onKey);
+  }, []);
+
+  // Single animation loop: spin + scatter interpolation
   useEffect(() => {
     const animate = () => {
-      if (!isDragging.current) {
-        velocity.current.x *= 0.95;
-        velocity.current.y *= 0.95;
+      const expanded = selectedRef.current !== null;
 
-        rot.current.y += velocity.current.x + 0.002;
-        rot.current.x += velocity.current.y;
+      // Smooth scatter lerp — eases in/out over ~600ms
+      const target = expanded ? 1 : 0;
+      scatter.current += (target - scatter.current) * 0.045;
+      // Snap to target when very close to avoid infinite micro-updates
+      if (Math.abs(scatter.current - target) < 0.001) scatter.current = target;
+
+      if (!isDragging.current) {
+        if (expanded) {
+          // Subtle slow drift when expanded
+          rot.current.y += 0.0005;
+        } else {
+          velocity.current.x *= 0.95;
+          velocity.current.y *= 0.95;
+          rot.current.y += velocity.current.x + 0.002;
+          rot.current.x += velocity.current.y;
+        }
       }
+
       forceRender();
       animFrame.current = requestAnimationFrame(animate);
     };
@@ -100,24 +118,27 @@ export default function Home() {
     return () => cancelAnimationFrame(animFrame.current);
   }, []);
 
+  const selectProject = useCallback((project: Project) => {
+    setSelectedProject(project);
+  }, []);
+
   // Drag handlers — mutate refs directly, no setState
   const handlePointerDown = useCallback((e: React.PointerEvent) => {
+    if (selectedRef.current) return;
     isDragging.current = true;
     lastMouse.current = { x: e.clientX, y: e.clientY };
     velocity.current = { x: 0, y: 0 };
   }, []);
 
   const handlePointerMove = useCallback((e: React.PointerEvent) => {
-    if (!isDragging.current) return;
+    if (!isDragging.current || selectedRef.current) return;
     const dx = e.clientX - lastMouse.current.x;
     const dy = e.clientY - lastMouse.current.y;
     const sensitivity = 0.004;
 
-    // Apply rotation immediately
     rot.current.y += dx * sensitivity;
     rot.current.x += dy * sensitivity;
 
-    // Smoothed velocity for momentum on release
     velocity.current.x = velocity.current.x * 0.5 + dx * sensitivity * 0.5;
     velocity.current.y = velocity.current.y * 0.5 + dy * sensitivity * 0.5;
 
@@ -131,6 +152,10 @@ export default function Home() {
   // Compute rotated 3D positions from ref values
   const isMobile = typeof window !== 'undefined' && window.innerWidth < 768;
   const orbRadius = isMobile ? 110 : 140;
+  const scatterMultiplier = isMobile ? 1.8 : 2;
+  const s = scatter.current;
+  const currentRadius = orbRadius * (1 + (scatterMultiplier - 1) * s);
+
   const { x: rx, y: ry } = rot.current;
   const cosY = Math.cos(ry);
   const sinY = Math.sin(ry);
@@ -147,43 +172,31 @@ export default function Home() {
     const z = item.baseY * sinX + z1 * cosX;
 
     const depth = (z + 1) / 2;
+    const isSelected = selectedProject && item.project.name === selectedProject.name;
+
+    // Opacity: lerp between normal and dimmed based on scatter
+    const normalOpacity = 0.15 + depth * 0.85;
+    const scatteredOpacity = isSelected ? 0 : 0.15 + depth * 0.25;
+    const opacity = normalOpacity + (scatteredOpacity - normalOpacity) * s;
+
     return {
       ...item,
-      screenX: x1 * orbRadius,
-      screenY: y * orbRadius,
+      screenX: x1 * currentRadius,
+      screenY: y * currentRadius,
       z,
-      opacity: 0.15 + depth * 0.85,
+      opacity,
       scale: 0.6 + depth * 0.4,
     };
   });
 
-  const openWindow = useCallback((project: Project) => {
-    const id = ++windowIdCounter;
-    const w = window.innerWidth;
-    const winW = w < 768 ? 280 : 340;
-    const offsetX = (windows.length % 5) * 20;
-    const offsetY = (windows.length % 5) * 20;
-    const x = Math.min(w / 2 - winW / 2 + offsetX, w - winW - 10);
-    const y = Math.min(window.innerHeight / 2 - 150 + offsetY, window.innerHeight - 320);
-    const newZ = topZ + 1;
-    setTopZ(newZ);
-    setWindows((prev) => [...prev, { id, project, x, y, zIndex: newZ }]);
-  }, [windows.length, topZ]);
-
-  const closeWindow = useCallback((id: number) => {
-    setWindows((prev) => prev.filter((w) => w.id !== id));
-  }, []);
-
-  const bringToFront = useCallback((id: number) => {
-    const newZ = topZ + 1;
-    setTopZ(newZ);
-    setWindows((prev) =>
-      prev.map((w) => (w.id === id ? { ...w, zIndex: newZ } : w))
-    );
-  }, [topZ]);
+  // Show detail card once scatter has progressed enough
+  const showDetail = selectedProject && s > 0.4;
 
   return (
-    <main className="relative h-screen w-screen overflow-hidden bg-bg">
+    <main
+      className="relative h-screen w-screen overflow-hidden bg-bg"
+      onClick={() => { if (isExpanded) setSelectedProject(null); }}
+    >
       {/* Subtle ambient glow */}
       <div
         className="absolute inset-0 pointer-events-none"
@@ -195,7 +208,7 @@ export default function Home() {
 
       {/* Title — full-width, Geist bold */}
       <h1
-        className="absolute top-[10vh] left-0 w-full z-10 px-4 font-geist uppercase text-white leading-[0.92] text-center md:text-left"
+        className="absolute top-[10vh] left-0 w-full z-10 px-4 font-geist uppercase text-white leading-[0.92] text-center md:text-left pointer-events-none"
         style={{
           fontSize: '11.5vw',
           fontWeight: 800,
@@ -210,6 +223,7 @@ export default function Home() {
       <Link
         href="/blog"
         className="absolute top-0 left-0 right-0 z-40 overflow-hidden py-2 cursor-pointer block group"
+        onClick={(e) => e.stopPropagation()}
       >
         <div className="pixel-blur transition-all duration-500">
           <div className="marquee-track opacity-50 group-hover:opacity-100 transition-opacity duration-500">
@@ -247,6 +261,12 @@ export default function Home() {
         />
       </div>
 
+      {/* Dim overlay — opacity driven by scatter amount */}
+      <div
+        className="absolute inset-0 z-[4] pointer-events-none"
+        style={{ backgroundColor: `rgba(0,0,0,${s * 0.5})` }}
+      />
+
       {/* 3D Project Orb */}
       <div
         className="absolute top-[55%] left-1/2 -translate-x-1/2 -translate-y-1/2 z-[5] select-none"
@@ -262,7 +282,14 @@ export default function Home() {
           .map((item, i) => (
             <button
               key={`${item.project.name}-${i}`}
-              onClick={() => openWindow(item.project)}
+              onClick={(e) => {
+                e.stopPropagation();
+                if (!isExpanded) {
+                  selectProject(item.project);
+                } else if (item.project.name !== selectedProject?.name) {
+                  setSelectedProject(item.project);
+                }
+              }}
               className="absolute group cursor-pointer whitespace-nowrap"
               style={{
                 left: '50%',
@@ -270,7 +297,7 @@ export default function Home() {
                 transform: `translate(-50%, -50%) translate(${item.screenX}px, ${item.screenY}px) scale(${item.scale})`,
                 opacity: item.opacity,
                 zIndex: Math.round(item.z * 10) + 10,
-                pointerEvents: item.z < -0.3 ? 'none' : 'auto',
+                pointerEvents: item.z < -0.3 && !isExpanded ? 'none' : 'auto',
               }}
             >
               <span className="font-geist text-xs md:text-2xl font-bold text-white tracking-tight group-hover:text-[#00FF88] transition-colors duration-200">
@@ -280,84 +307,62 @@ export default function Home() {
           ))}
       </div>
 
-      {/* Draggable project windows */}
-      <AnimatePresence>
-        {windows.map((w) => (
+      {/* Center detail — title, image, one-liner. Small and tight. */}
+      <AnimatePresence mode="wait">
+        {showDetail && selectedProject && (
           <motion.div
-            key={w.id}
-            initial={{ opacity: 0, scale: 0.8 }}
-            animate={{ opacity: 1, scale: 1 }}
-            exit={{ opacity: 0, scale: 0.8 }}
-            transition={{ duration: 0.15, ease: 'easeOut' }}
-            drag
-            dragMomentum={false}
-            onPointerDown={() => bringToFront(w.id)}
-            className="fixed w-[280px] md:w-[340px] shadow-2xl shadow-black/50"
-            style={{
-              left: w.x,
-              top: w.y,
-              zIndex: w.zIndex,
-            }}
+            key={selectedProject.name}
+            initial={{ opacity: 0 }}
+            animate={{ opacity: 1 }}
+            exit={{ opacity: 0 }}
+            transition={{ duration: 0.25 }}
+            className="fixed inset-0 z-[20] flex items-center justify-center pointer-events-none"
           >
-            {/* Title bar — drag handle */}
-            <div className="flex items-center justify-between bg-[#1a1a24] border border-white/10 border-b-0 px-3 py-2 cursor-grab active:cursor-grabbing select-none">
-              <div className="flex items-center gap-2">
-                <span className="w-2 h-2 rounded-full bg-[#00FF88]" />
-                <span className="font-mono text-[10px] text-white uppercase tracking-widest">
-                  {w.project.name}
-                </span>
-              </div>
-              <button
-                onClick={(e) => {
-                  e.stopPropagation();
-                  closeWindow(w.id);
-                }}
-                className="font-mono text-[10px] text-text-muted hover:text-red-400 transition-colors cursor-pointer leading-none"
+            <div
+              className="text-center pointer-events-auto"
+              onClick={(e) => e.stopPropagation()}
+            >
+              {/* Title */}
+              <h3 className="font-geist text-base md:text-lg font-bold text-white tracking-tight mb-2">
+                {selectedProject.name}
+              </h3>
+
+              {/* Clickable image */}
+              <a
+                href={selectedProject.link}
+                target="_blank"
+                rel="noopener noreferrer"
+                className="block mx-auto w-[180px] md:w-[240px] h-[100px] md:h-[140px] border border-white/10 bg-surface/60 backdrop-blur-md overflow-hidden group cursor-pointer relative"
               >
-                &#10005;
-              </button>
-            </div>
+                {'image' in selectedProject && selectedProject.image ? (
+                  <img
+                    src={selectedProject.image as string}
+                    alt={selectedProject.name}
+                    className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-300"
+                  />
+                ) : (
+                  <div className="w-full h-full flex items-center justify-center group-hover:bg-white/5 transition-colors duration-300">
+                    <span className="font-mono text-[9px] text-text-muted tracking-widest uppercase group-hover:text-[#00FF88] transition-colors">
+                      VISIT &#8599;
+                    </span>
+                  </div>
+                )}
+              </a>
 
-            {/* Window body */}
-            <div className="bg-surface border border-white/10 p-5">
-              <span className="font-mono text-[10px] text-text-muted tracking-widest">
-                {w.project.category}
-              </span>
-
-              <p className="mt-4 font-inter text-sm text-text-muted leading-relaxed">
-                {w.project.description}
+              {/* Short description */}
+              <p className="mt-2 font-mono text-[9px] md:text-[10px] text-text-muted max-w-[200px] mx-auto">
+                {selectedProject.description}
               </p>
-
-              {/* Tech stack */}
-              <div className="mt-4 flex flex-wrap gap-1.5">
-                {w.project.tech.map((t) => (
-                  <span
-                    key={t}
-                    className="font-mono text-[9px] px-2 py-0.5 border border-white/10 text-text-muted tracking-wider"
-                  >
-                    {t}
-                  </span>
-                ))}
-              </div>
-
-              {/* Link */}
-              {w.project.link && (
-                <a
-                  href={w.project.link}
-                  target="_blank"
-                  rel="noopener noreferrer"
-                  className="inline-flex items-center gap-2 mt-5 font-mono text-[10px] text-[#00FF88] tracking-wider hover:underline"
-                >
-                  VISIT SITE &#8599;
-                </a>
-              )}
             </div>
           </motion.div>
-        ))}
+        )}
       </AnimatePresence>
 
       {/* Bottom bar — Studio Freight style footer */}
-      <div className="absolute bottom-0 left-0 right-0 z-10 border-t border-white">
+      <div
+        className="absolute bottom-0 left-0 right-0 z-10 border-t border-white"
+        onClick={(e) => e.stopPropagation()}
+      >
         <div className="grid grid-cols-3 px-3 md:px-10 py-2 md:py-4">
           {/* Bio — left */}
           <div className="space-y-0.5">
@@ -388,19 +393,15 @@ export default function Home() {
             </span>
           </div>
 
-          {/* Copyright + hidden game link — right */}
-          <div className="flex flex-col items-end gap-0.5 md:gap-1">
-            <Link
-              href="/video-game"
-              className="font-mono text-[7px] md:text-[10px] text-white hover:text-[#00FF88] transition-colors duration-300"
-              title="Play Samson The Game"
-            >
-              {'>'}_{'<'} PLAY?
-            </Link>
-            <span className="font-mono text-[7px] md:text-xs text-white">
-              &copy; {new Date().getFullYear()}
-            </span>
-          </div>
+          {/* Game link — >_< stacked over PLAY? */}
+          <Link
+            href="/video-game"
+            className="flex flex-col items-end justify-center font-mono text-sm md:text-lg text-white hover:text-[#00FF88] transition-colors duration-300 leading-none"
+            title="Play Samson The Game"
+          >
+            <span>{'>'}_{'<'}</span>
+            <span>PLAY?</span>
+          </Link>
         </div>
       </div>
     </main>
