@@ -135,8 +135,10 @@ export default function GameComponent({
           jump: `${characterPrefix}jump_animation`,
         };
 
+        const isMobile = 'ontouchstart' in window || navigator.maxTouchPoints > 0;
+
         const config: Phaser.Types.Core.GameConfig = {
-          type: Phaser.AUTO,
+          type: isMobile ? Phaser.CANVAS : Phaser.AUTO,
           width: 800,
           height: 460,
           transparent: true,
@@ -146,6 +148,9 @@ export default function GameComponent({
               gravity: { x: 0, y: 533 },
               debug: false,
             },
+          },
+          input: {
+            keyboard: !isMobile,
           },
           scene: {
             key: 'mainScene',
@@ -331,14 +336,14 @@ export default function GameComponent({
             },
             update: function(this: Phaser.Scene) {
               if (isPausedRef.current || gameOverRef.current) return;
-              if (!player || !cursors) return;
+              if (!player) return;
 
               player.setVelocityX(0);
               const isOnGround = player.body?.blocked.down;
-              const isDownPressed = cursors.down?.isDown || touchRef.current.down;
-              const isLeftPressed = cursors.left?.isDown || touchRef.current.left;
-              const isRightPressed = cursors.right?.isDown || touchRef.current.right;
-              const isUpPressed = cursors.up?.isDown || touchRef.current.up;
+              const isDownPressed = cursors?.down?.isDown || touchRef.current.down;
+              const isLeftPressed = cursors?.left?.isDown || touchRef.current.left;
+              const isRightPressed = cursors?.right?.isDown || touchRef.current.right;
+              const isUpPressed = cursors?.up?.isDown || touchRef.current.up;
 
               let isDucking = false;
               let isMoving = false;
