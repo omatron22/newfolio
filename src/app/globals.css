@@ -180,6 +180,84 @@
   mix-blend-mode: screen;
 }
 
+/* ===== TV static background (used on the holding page) ===== */
+/* Two stacked noise layers with different sizes + offset periods so the
+   eye can't lock onto a repeating cycle. Toned-down opacity keeps the
+   page readable without text outlines. */
+.tv-static-bg {
+  position: fixed;
+  inset: 0;
+  z-index: 0;
+  pointer-events: none;
+  background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 256 256'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='2.4' numOctaves='4' stitchTiles='stitch'/%3E%3CfeColorMatrix values='0 0 0 0 1 0 0 0 0 1 0 0 0 0 1 0 0 0 1.6 -0.4'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)'/%3E%3C/svg%3E");
+  background-repeat: repeat;
+  background-size: 180px 180px;
+  animation: tv-static-a 0.41s steps(11) infinite;
+  opacity: 0.45;
+}
+
+.tv-static-bg::before {
+  content: '';
+  position: absolute;
+  inset: 0;
+  background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 256 256'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='1.8' numOctaves='3' stitchTiles='stitch'/%3E%3CfeColorMatrix values='0 0 0 0 1 0 0 0 0 1 0 0 0 0 1 0 0 0 1.4 -0.3'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)'/%3E%3C/svg%3E");
+  background-repeat: repeat;
+  background-size: 240px 240px;
+  animation: tv-static-b 0.59s steps(9) infinite;
+  mix-blend-mode: lighten;
+  opacity: 0.7;
+}
+
+/* Soft halo around white text so it reads against the static
+   without the hard outline look. */
+.broadcast-text {
+  color: #fff;
+  text-shadow:
+    0 0 2px rgba(0, 0, 0, 0.9),
+    0 1px 6px rgba(0, 0, 0, 0.65),
+    0 2px 14px rgba(0, 0, 0, 0.45);
+}
+
+.broadcast-text-sm {
+  color: #fff;
+  text-shadow:
+    0 0 2px rgba(0, 0, 0, 0.95),
+    0 1px 3px rgba(0, 0, 0, 0.7);
+}
+
+@keyframes tv-static-a {
+  0%   { background-position: 0% 0%; }
+  9%   { background-position: 37% -22%; }
+  18%  { background-position: -53% 41%; }
+  27%  { background-position: 71% 18%; }
+  36%  { background-position: -19% -47%; }
+  45%  { background-position: 44% 63%; }
+  54%  { background-position: -67% -11%; }
+  63%  { background-position: 23% 39%; }
+  72%  { background-position: 58% -36%; }
+  81%  { background-position: -41% 27%; }
+  90%  { background-position: 13% -18%; }
+  100% { background-position: 0% 0%; }
+}
+
+@keyframes tv-static-b {
+  0%   { background-position: 0% 0%; }
+  11%  { background-position: -28% 53%; }
+  22%  { background-position: 49% -31%; }
+  33%  { background-position: -61% 17%; }
+  44%  { background-position: 33% 68%; }
+  55%  { background-position: -14% -42%; }
+  66%  { background-position: 56% 24%; }
+  77%  { background-position: -47% -19%; }
+  88%  { background-position: 21% 47%; }
+  100% { background-position: 0% 0%; }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .tv-static-bg,
+  .tv-static-bg::before { animation: none; }
+}
+
 /* ===== Cursor blink ===== */
 @keyframes blink {
   0%, 100% { opacity: 1; }
